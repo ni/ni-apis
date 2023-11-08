@@ -28,4 +28,4 @@ jobs:
         working-directory: ./.github/check_protos
       - name: Check .proto files
         run: poetry run python _check_protos.py
-        working-directory: ./.github/check_protos
+        working-directory: ./.github/workflows
