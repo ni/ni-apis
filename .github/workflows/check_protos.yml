@@ -23,7 +23,9 @@ jobs:
         uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-      - name: Check for lock changes (ni-measurementlink-service)
+      - name: Install the dependencies for checking .proto files
         run: poetry install -v
         working-directory: ./.github/check_protos
-      # Run _check_protos.py and check the result code
+      - name: Check .proto files
+        run: poetry run python _check_protos.py
+        working-directory: ./.github/check_protos
