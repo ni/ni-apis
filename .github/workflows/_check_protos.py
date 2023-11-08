@@ -5,7 +5,7 @@ import pathlib
 import sys
 import grpc_tools.protoc
 
-PROTO_PATH = pathlib.Path(__file__).parent.parent.parent / "ni" / "measurementlink" / "discovery" / "v1"
+PROTO_PATH = pathlib.Path(__file__).parent.parent.parent / "ni"
 PROTO_FILES = list(PROTO_PATH.rglob("*.proto"))
 
 # Generate python files from .proto files with protoc.
