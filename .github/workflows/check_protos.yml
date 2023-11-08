@@ -1,0 +1,28 @@
+name: Check .proto files
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  POETRY_VERSION: 1.2.2
+  PYTHON_VERSION: 3.9
+
+jobs:
+  check_protos:
+    name: Check .proto files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Set up Poetry
+        uses: Gr1N/setup-poetry@v8
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      - name: Check for lock changes (ni-measurementlink-service)
+        run: poetry lock --check
+      # Run _check_protos.py and check the result code

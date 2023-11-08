@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "check_protos"
+version = "0.1"
+description = "Check .proto files in the repo"
+authors = ["NI <opensource@ni.com>"]
+readme = "README.md" # apply the repo readme to the package as well
+repository = "https://github.com/ni/ni-apis/"
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.group.dev.dependencies]
+grpcio-tools = [
+  {version = "1.49.1", python = ">=3.8,<3.12"},
+  {version = "1.59.0", python = "^3.12"},
+]
+mypy-protobuf = ">=3.4"
+
+[build-system]
+requires = ["poetry-core>=1.2.0"]
+build-backend = "poetry.core.masonry.api"
