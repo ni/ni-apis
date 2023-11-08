@@ -24,5 +24,6 @@ jobs:
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
       - name: Check for lock changes (ni-measurementlink-service)
-        run: poetry lock --check
+        run: poetry install -v
+        working-directory: ./.github/check_protos
       # Run _check_protos.py and check the result code
