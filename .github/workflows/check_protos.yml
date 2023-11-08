@@ -27,5 +27,5 @@ jobs:
         run: poetry install -v
         working-directory: ./.github/check_protos
       - name: Check .proto files
-        run: poetry run python _check_protos.py
-        working-directory: ./.github/workflows
+        run: poetry run python ./.github/_check_protos.py
+        working-directory: ./.github/check_protos
