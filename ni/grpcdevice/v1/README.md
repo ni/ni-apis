@@ -1,7 +1,13 @@
-# grpd-device .proto files
+# NI gRPC Device Server APIs
 
-This repository contains several `.proto` files. These files are here because the ones in the [grpc-device GitHub repository](https://github.com/ni/grpc-device/tree/main/imports/protobuf) are not following our current conventions and style for `.proto` files. For example, they have the 'grpc_device' package name but are not in a folder of that name. They don't include the 'ni' package name.
+These are APIs for [NI gRPC Device Server](https://github.com/ni/grpc-device/).
 
-Since some of the other .proto files in this repository reference the grpc-device .proto files, we are including our own copy of these `.proto` files in this repository. We point to the 'ni/grpcdevice/v1' directory as an include path when we compile the other .proto files.
+These APIs predate the NI gRPC Protocol Buffer Style Guide, so they do not
+follow our current conventions and style for `.proto` files. For example, the
+files are not organized by package name, and their package names are in a flat
+namespace (`nidevice_grpc`, `nidcpower_grpc`, etc.) as opposed to a hierarchy
+under the `ni` package.
 
-See the [NI gRPC Protocol Buffer Style Guide](https://dev.azure.com/ni/DevCentral/_wiki/wikis/AppCentral.wiki/37475/NI-gRPC-Protocol-Buffer-Style-Guide) for details.
+When you run `protoc` on these APIs or other APIs that depend on them, add
+`ni/grpcdevice/v1` to the include path in order to satisfy import directives
+such as `import "session.proto"`.

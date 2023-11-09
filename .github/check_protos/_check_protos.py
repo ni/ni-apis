@@ -15,20 +15,19 @@ def main():
     # Generate python files from .proto files with protoc.
     arguments = [
         "protoc",
-        f"--proto_path={str(GRPC_DEVICE_PROTO_PATH)}",
         f"--proto_path={str(PROTO_ROOT_PATH)}",
+        f"--proto_path={str(GRPC_DEVICE_PROTO_PATH)}",
         f"--proto_path={pkg_resources.resource_filename('grpc_tools', '_proto')}",
         f"--python_out={str(PROTO_PATH)}",
         f"--grpc_python_out={str(PROTO_PATH)}",
     ]
 
     arguments += [str(path.relative_to(PROTO_ROOT_PATH)).replace("\\", "/") for path in PROTO_FILES]
-    print("** Arguments for protoc:")
+    print("::group::Arguments for protoc")
     for argument in arguments:
         print(argument)
-    print("** .proto files:")
-    for proto_file in PROTO_FILES:
-        print(str(proto_file))
+    print("::endgroup::")
+    
     result = grpc_tools.protoc.main(arguments)
     if result != 0:
         sys.exit(result)
