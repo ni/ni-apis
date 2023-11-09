@@ -1,0 +1,10 @@
+name: CI
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  check_protos:
+    name: Check .proto files
+    uses: ./.github/workflows/check_protos.yml
