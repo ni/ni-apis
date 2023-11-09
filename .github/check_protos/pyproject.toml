@@ -11,10 +11,7 @@ license = "MIT"
 python = "^3.9"
 
 [tool.poetry.group.dev.dependencies]
-grpcio-tools = [
-  {version = "1.49.1", python = ">=3.8,<3.12"},
-  {version = "1.59.0", python = "^3.12"},
-]
+grpcio-tools = ">=1.59.0"
 mypy-protobuf = ">=3.4"
 
 [build-system]
