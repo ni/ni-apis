@@ -25,7 +25,6 @@ jobs:
           poetry-version: ${{ env.POETRY_VERSION }}
       - name: Cache virtualenv
         uses: actions/cache@v3
-        id: cache
         with:
           path: .github/check_protos/.venv
           key: check-protos-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('.github/check_protos/poetry.lock') }}
