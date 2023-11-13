@@ -3,6 +3,7 @@
   "branchPrefix": "users/renovate/",
   "extends": ["config:recommended", ":maintainLockFilesMonthly"],
   "git-submodules": {
-    "enabled": true
+    "enabled": true,
+    "extends": ["schedule:monthly"]
   }
 }
