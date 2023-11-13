@@ -3,7 +3,12 @@
   "branchPrefix": "users/renovate/",
   "extends": ["config:recommended", ":maintainLockFilesMonthly"],
   "git-submodules": {
-    "enabled": true,
-    "extends": ["schedule:monthly"]
-  }
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "matchPackageNames": ["third_party/googleapis"],
+      "extends": ["schedule:monthly"]
+    }
+  ]
 }
