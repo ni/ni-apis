@@ -21,8 +21,8 @@ def main():
         f"--proto_path={str(PROTO_ROOT_PATH)}",
         f"--proto_path={str(GRPC_DEVICE_PROTO_PATH)}",
         f"--proto_path={pkg_resources.resource_filename('grpc_tools', '_proto')}",
-        f"--python_out={str(PROTO_PATH)}",
-        f"--grpc_python_out={str(PROTO_PATH)}",
+        f"--python_out={str(PROTO_ROOT_PATH)}",
+        f"--grpc_python_out={str(PROTO_ROOT_PATH)}",
     ]
 
     arguments += [str(path.relative_to(PROTO_ROOT_PATH)).replace("\\", "/") for path in PROTO_FILES]
