@@ -23,7 +23,12 @@ jobs:
         uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-      - name: Install the dependencies for checking .proto files
+      - name: Cache virtualenv
+        uses: actions/cache@v3
+        with:
+          path: .github/check_protos/.venv
+          key: check-protos-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('.github/check_protos/poetry.lock') }}
+      - name: Install dependencies
         run: poetry install -v
         working-directory: ./.github/check_protos
       - name: Check .proto files
