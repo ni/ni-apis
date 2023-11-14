@@ -8,7 +8,6 @@ import pkg_resources
 
 PROTO_ROOT_PATH = pathlib.Path(__file__).parent.parent.parent
 PROTO_PATH = PROTO_ROOT_PATH / "ni"
-COMMON_FILES_PROTO_PATH = PROTO_ROOT_PATH / "ni" / "protobuf"
 GRPC_DEVICE_PROTO_PATH = PROTO_ROOT_PATH / "ni" / "grpcdevice" / "v1"
 
 PROTO_FILES = list(path for path in PROTO_PATH.rglob("*.proto") if not path.is_relative_to(GRPC_DEVICE_PROTO_PATH))
