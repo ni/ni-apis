@@ -7,12 +7,12 @@ import grpc_tools.protoc
 import pkg_resources
 
 PROTO_ROOT_PATH = pathlib.Path(__file__).parent.parent.parent
-PROTO_PATH = PROTO_ROOT_PATH / "ni" / "measurementlink"
+PROTO_PATH = PROTO_ROOT_PATH / "ni"
 COMMON_FILES_PROTO_PATH = PROTO_ROOT_PATH / "ni" / "protobuf"
-PROTO_FILES = list(PROTO_PATH.rglob("*.proto"))
-for file in list(COMMON_FILES_PROTO_PATH.rglob("*.proto")):
-    PROTO_FILES.append(file)
 GRPC_DEVICE_PROTO_PATH = PROTO_ROOT_PATH / "ni" / "grpcdevice" / "v1"
+
+PROTO_FILES = list(path for path in PROTO_PATH.rglob("*.proto") if not path.is_relative_to(GRPC_DEVICE_PROTO_PATH))
+GRPC_DEVICE_PROTO_FILES = list(GRPC_DEVICE_PROTO_PATH.rglob("*.proto"))
 
 def main():
     # Generate python files from .proto files with protoc.
@@ -26,11 +26,13 @@ def main():
     ]
 
     arguments += [str(path.relative_to(PROTO_ROOT_PATH)).replace("\\", "/") for path in PROTO_FILES]
+    arguments += [str(path.relative_to(GRPC_DEVICE_PROTO_PATH)).replace("\\", "/") for path in GRPC_DEVICE_PROTO_FILES]
+
     print("::group::Arguments for protoc")
     for argument in arguments:
         print(argument)
     print("::endgroup::")
-    
+
     result = grpc_tools.protoc.main(arguments)
     if result != 0:
         sys.exit(result)
