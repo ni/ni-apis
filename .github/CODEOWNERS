@@ -1,6 +1,8 @@
 # Default code owners for the repository
-* @bkeryan @cumitche
+* @bkeryan @cumitche 
 
-# .proto files
+# Default code owners by file type
+*.md @bkeryan @cumitche @nstokes-nati
 *.proto @ccifra @jasonmreding
-/ni/ @ccifra @jasonmreding
+
+# Code owners for specific APIs (e.g. /ni/grpcdevice/)
