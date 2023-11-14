@@ -8,7 +8,10 @@ import pkg_resources
 
 PROTO_ROOT_PATH = pathlib.Path(__file__).parent.parent.parent
 PROTO_PATH = PROTO_ROOT_PATH / "ni" / "measurementlink"
+COMMON_FILES_PROTO_PATH = PROTO_ROOT_PATH / "ni" / "protobuf"
 PROTO_FILES = list(PROTO_PATH.rglob("*.proto"))
+for file in list(COMMON_FILES_PROTO_PATH.rglob("*.proto")):
+    PROTO_FILES.append(file)
 GRPC_DEVICE_PROTO_PATH = PROTO_ROOT_PATH / "ni" / "grpcdevice" / "v1"
 
 def main():
