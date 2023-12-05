@@ -3,7 +3,7 @@
   "branchPrefix": "users/renovate/",
   "extends": [
     "config:recommended",
-    ":maintainLockFilesMonthly"
+    ":maintainLockFilesMonthly",
     ":automergePatch",
     "schedule:automergeDaily"
   ],
