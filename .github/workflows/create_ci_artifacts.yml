@@ -17,21 +17,6 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v2
 
-    - name: Setup python3
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-
-    - name: Set up Poetry
-      uses: Gr1N/setup-poetry@v8
-      with:
-        poetry-version: ${{ env.POETRY_VERSION }}
-    - name: Cache virtualenv
-      uses: actions/cache@v3
-      with:
-          path: .github/check_protos/.venv
-          key: create-artifacts-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('.github/artifacts/poetry.lock') }}
-
     - name: Create staging directory
       run: |
         mkdir -p ${{ runner.temp }}/staging/ni
