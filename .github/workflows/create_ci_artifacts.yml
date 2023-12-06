@@ -26,7 +26,7 @@ jobs:
         rsync -av --prune-empty-dirs --include "*/" --include "*.proto" --exclude "*" ni/ ${{ runner.temp }}/staging/ni/
 
     - name: Upload proto artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ni-apis
         path: |
