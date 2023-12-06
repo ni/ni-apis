@@ -32,6 +32,10 @@ jobs:
           path: .github/check_protos/.venv
           key: create-artifacts-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('.github/artifacts/poetry.lock') }}
 
+    - name: Create staging directory
+      run: |
+        mkdir -p ${{ runner.temp }}/staging/ni
+        
     - name: Stage Client Files
       run: |
         rsync -av --prune-empty-dirs --include "*/" --include "*.proto" --exclude "*" ni/ ${{ runner.temp }}/staging/ni/
