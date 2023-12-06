@@ -25,6 +25,9 @@ jobs:
       run: |
         python ./.github/artifacts/stage_ci_files.py -o ${{ runner.temp }}/staging/
 
+    - name: Echo github ref
+      run: echo ${{ github.ref }}
+      
     - name: Upload Windows Client Files Artifact
       uses: actions/upload-artifact@v2
       if: ${{ (github.ref == 'refs/heads/main') }}
