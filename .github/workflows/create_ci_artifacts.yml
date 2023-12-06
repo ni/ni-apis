@@ -14,18 +14,18 @@ jobs:
     runs-on: 'ubuntu-latest'
 
     steps:
-    - name: Checkout Repo
+    - name: Checkout repo
       uses: actions/checkout@v2
 
     - name: Create staging directory
       run: |
         mkdir -p ${{ runner.temp }}/staging/ni
         
-    - name: Stage Client Files
+    - name: Stage protos
       run: |
         rsync -av --prune-empty-dirs --include "*/" --include "*.proto" --exclude "*" ni/ ${{ runner.temp }}/staging/ni/
 
-    - name: Upload Windows Client Files Artifact
+    - name: Upload proto artifact
       uses: actions/upload-artifact@v2
       with:
         name: ni-apis
