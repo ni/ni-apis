@@ -17,6 +17,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
+        id: setup-python
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Set up Poetry
@@ -27,7 +28,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .github/check_protos/.venv
-          key: check-protos-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('.github/check_protos/poetry.lock') }}
+          key: check-protos-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('.github/check_protos/poetry.lock') }}
       - name: Install dependencies
         run: poetry install -v
         working-directory: ./.github/check_protos
