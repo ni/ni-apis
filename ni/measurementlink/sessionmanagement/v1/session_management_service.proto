@@ -84,8 +84,8 @@ message SessionInformation{
     // This field is readonly.
     bool session_exists = 5;
 
-    // List of site and pin/relay mappings with the multiplexer info for each channel in the channel_list.
-    // Each item represents a channel-to-pin connection for this instrument resource. In the case of shared pins, there is a separate item for each connection.
+    // List of site and pin/relay mappings that correspond to each channel in the channel_list.
+    // Each item contains a mapping corresponding to a channel in this instrument resource, in the order of the channel_list.
     // This field is empty for any SessionInformation returned from ReserveAllRegisteredSessions.
     // This field is readonly.
     repeated ChannelMapping channel_mappings = 6;
