@@ -1,11 +1,11 @@
-# Contributing to \<reponame\> 
+# Contributing to ni-apis 
 
-Contributions to \<reponame\> are welcome from all!
+Contributions to ni-apis are welcome from all!
 
-\<reponame\> is managed via [git](https://git-scm.com), with the canonical upstream
-repository hosted on [GitHub](https://github.com/ni/<reponame>/).
+ni-apis is managed via [git](https://git-scm.com), with the canonical upstream
+repository hosted on [GitHub](https://github.com/ni/ni-apis/).
 
-\<reponame\> follows a pull-request model for development.  If you wish to
+ni-apis follows a pull-request model for development.  If you wish to
 contribute, you will need to create a GitHub account, fork this project, push a
 branch with your changes to your project, and then submit a pull request.
 
@@ -21,11 +21,15 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 
 # Getting Started
 
-- TODO: include build steps here.
+This repo is source-only. Simply clone the repo locally to get the source with
+a command such as
+
+`git clone https://github.com/ni/ni-apis.git`
 
 # Testing
 
-- TODO: include testing steps here.
+All testing is done by various GitHub workflows during the PR process. There are
+no tests to run before submitting.
 
 # Developer Certificate of Origin (DCO)
 
@@ -57,5 +61,5 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 
 (taken from [developercertificate.org](https://developercertificate.org/))
 
-See [LICENSE](https://github.com/ni/<reponame>/blob/main/LICENSE)
-for details about how \<reponame\> is licensed.
+See [LICENSE](https://github.com/ni/ni-apis/blob/main/LICENSE)
+for details about how ni-apis is licensed.
