@@ -49,6 +49,12 @@ service DiscoveryService {
   // - NOT_FOUND: No service matching the resolve request was found
   // - FAILED_PRECONDITION: More than one service matching the resolve request was found
   rpc ResolveService(ResolveServiceRequest) returns (ServiceLocation);
+
+  // Enumerate all compute nodes that have registered themselves with TestHub.
+  // These compute nodes are targets available for execution of services.
+  // A compute node can be used as an argument to the ResolveService method to
+  // get the service location for a service running on that compute node.
+  rpc EnumerateComputeNodes(EnumerateComputeNodesRequest) returns (EnumerateComputeNodesResponse);
 }
 
 // Description of a registered service. This information can be used to display information to the user
@@ -140,4 +146,29 @@ message ResolveServiceRequest {
   // Optional. The service "class" that should be matched. If the value of this field is not specified and there
   // is more than one matching service registered, an error is returned.
   string service_class = 2;
+
+  // Optional. Indicates the deployment target from which the service should be resolved.
+  // The value of this field can be obtained from the results of the EnumerateComputeNodes method.
+  // If the value of this field is not specified, the service will be resolved from the
+  // local deployment target.  If the service cannot be resolved from the specified deployment
+  // target, an error is returned.
+  string deployment_target = 3;
+}
+
+// Represents a location capable resolving and running a service.
+message ComputeNodeInfo {
+  // The resolvable name of the compute node.
+  string node_name = 1;
+  // indicates whether the compute node is considered the local node.
+  bool is_local = 2;
+}
+
+// Message sent to enumerate the compute nodes that have registered themselves with TestHub.
+message EnumerateComputeNodesRequest {
+}
+
+// Message returned from the EnumerateComputeNodes method.
+message EnumerateComputeNodesResponse {
+  // The list of compute nodes that have registered themselves with TestHub.
+  repeated ComputeNodeInfo compute_nodes = 1;
 }
