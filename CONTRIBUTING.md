@@ -1,23 +1,25 @@
-# Contributing to ni-apis 
+# Contributing to `ni-apis` 
 
-Contributions to ni-apis are welcome from all!
+Contributions to `ni-apis` are welcome from all!
 
-ni-apis is managed via [git](https://git-scm.com), with the canonical upstream
+`ni-apis` is managed via [git](https://git-scm.com), with the canonical upstream
 repository hosted on [GitHub](https://github.com/ni/ni-apis/).
 
-ni-apis follows a pull-request model for development.  If you wish to
+`ni-apis` follows a pull-request model for development.  If you wish to
 contribute, you will need to create a GitHub account, fork this project, push a
 branch with your changes to your project, and then submit a pull request.
 
 Please remember to sign off your commits (e.g., by using `git commit -s` if you
-are using the command line client). This amends your git commit message with a line
-of the form `Signed-off-by: Name Lastname <name.lastmail@emailaddress.com>`. Please
-include all authors of any given commit into the commit message with a
-`Signed-off-by` line. This indicates that you have read and signed the Developer
-Certificate of Origin (see below) and are able to legally submit your code to
-this repository.
+are using the command line client). This amends your git commit message with a
+line of the form `Signed-off-by: Name Lastname
+<name.lastmail@emailaddress.com>`. Please include all authors of any given
+commit into the commit message with a `Signed-off-by` line. This indicates that
+you have read and signed the Developer Certificate of Origin (see below) and are
+able to legally submit your code to this repository.
 
-See [GitHub's official documentation](https://help.github.com/articles/using-pull-requests/) for more details.
+See [GitHub's official
+documentation](https://help.github.com/articles/using-pull-requests/) for more
+details.
 
 # Getting Started
 
@@ -62,4 +64,4 @@ no tests to run before submitting.
 (taken from [developercertificate.org](https://developercertificate.org/))
 
 See [LICENSE](https://github.com/ni/ni-apis/blob/main/LICENSE)
-for details about how ni-apis is licensed.
+for details about how `ni-apis` is licensed.
