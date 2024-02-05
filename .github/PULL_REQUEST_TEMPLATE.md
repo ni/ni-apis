@@ -1,3 +1,5 @@
+- [ ] This contribution adheres to [CONTRIBUTING.md](https://github.com/ni/ni-apis/blob/main/CONTRIBUTING.md).
+
 ### What does this Pull Request accomplish?
 
 TODO: Include high-level description of the changes in this pull request.
