@@ -62,6 +62,17 @@ service SessionManagementService {
 
     // Unregisters the multiplexer sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again.
     rpc UnregisterMultiplexerSessions(UnregisterMultiplexerSessionsRequest) returns (UnregisterMultiplexerSessionsResponse);
+
+    // Gets all the connected multiplexer session(s) for the given pin map context with the information needed to create or access the session.
+    // Status Codes for errors:
+    // - INVALID_ARGUMENT:
+    //     - Pin Map Context references a site number that is not defined in the pin map.
+    // - NOT_FOUND:
+    //     - Pin Map Context has a pin map ID that does not match any pin maps registered with the Pin Map Service.
+    rpc GetMultiplexerSessions(GetMultiplexerSessionsRequest) returns (GetMultiplexerSessionsResponse);
+
+    // Gets all multiplexer sessions currently registered with this service.
+    rpc GetAllRegisteredMultiplexerSessions(GetAllRegisteredMultiplexerSessionsRequest) returns (GetAllRegisteredMultiplexerSessionsResponse);
 }
 
 message SessionInformation{
@@ -233,4 +244,29 @@ message UnregisterMultiplexerSessionsRequest {
 }
 
 message UnregisterMultiplexerSessionsResponse{
+}
+
+message GetMultiplexerSessionsRequest {
+   // Required. Includes the pin map ID for the pin map in the Pin Map Service, as well as the list of sites for the measurement.
+   PinMapContext pin_map_context = 1;
+
+   // Optional. User-defined identifier for the multiplexer type in the pin map editor.
+   string multiplexer_type_id = 2;
+}
+
+message GetMultiplexerSessionsResponse{
+   // List of information needed to create or use each multiplexer session for the given pin map context and multiplexer type ID.
+   // This field is readonly.
+   repeated MultiplexerSessionInformation multiplexer_sessions = 1;
+}
+
+message GetAllRegisteredMultiplexerSessionsRequest{
+    // Optional. User-defined identifier for the multiplexer type in the pin map editor.
+    string multiplexer_type_id = 1;
+}
+
+message GetAllRegisteredMultiplexerSessionsResponse{
+    // Multiplexer sessions currently registered in the session management service.
+    // This field is readonly.
+    repeated MultiplexerSessionInformation multiplexer_sessions = 1;
 }
