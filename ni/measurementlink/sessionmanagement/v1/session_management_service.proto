@@ -132,21 +132,21 @@ message ChannelMapping {
 }
 
 message MultiplexerSessionInformation {
-   // Session identifier used to identify the session in the session management service, as well as in driver services such as grpc-device.
-   // This field is readonly.
-   nidevice_grpc.Session session = 1;
+    // Session identifier used to identify the session in the session management service, as well as in driver services such as grpc-device.
+    // This field is readonly.
+    nidevice_grpc.Session session = 1;
 
-   // Resource name is used to open this session in the driver.
-   // This field is readonly.
-   string resource_name = 2;
+    // Resource name is used to open this session in the driver.
+    // This field is readonly.
+    string resource_name = 2;
 
-   // User-defined identifier for the multiplexer type in the pin map editor.
-   // This field is readonly.
-   string multiplexer_type_id = 3;
+    // User-defined identifier for the multiplexer type in the pin map editor.
+    // This field is readonly.
+    string multiplexer_type_id = 3;
 
-   // Indicates whether the session exists in the Session Manager. This indicates whether the session has been created.
-   // This field is readonly.
-   bool session_exists = 4;
+    // Indicates whether the session exists in the Session Manager. This indicates whether the session has been created.
+    // This field is readonly.
+    bool session_exists = 4;
 }
 
 message ReserveSessionsRequest {
@@ -231,8 +231,8 @@ message ReserveAllRegisteredSessionsResponse{
 }
 
 message RegisterMultiplexerSessionsRequest {
-   // Required. List of multiplexer sessions to register with the session management service to track as the sessions are open.
-   repeated MultiplexerSessionInformation multiplexer_sessions = 1;
+    // Required. List of multiplexer sessions to register with the session management service to track as the sessions are open.
+    repeated MultiplexerSessionInformation multiplexer_sessions = 1;
 }
 
 message RegisterMultiplexerSessionsResponse{
@@ -247,17 +247,17 @@ message UnregisterMultiplexerSessionsResponse{
 }
 
 message GetMultiplexerSessionsRequest {
-   // Required. Includes the pin map ID for the pin map in the Pin Map Service, as well as the list of sites for the measurement.
-   PinMapContext pin_map_context = 1;
+    // Required. Includes the pin map ID for the pin map in the Pin Map Service, as well as the list of sites for the measurement.
+    PinMapContext pin_map_context = 1;
 
-   // Optional. User-defined identifier for the multiplexer type in the pin map editor.
-   // If unspecified, information for all multiplexer types is returned.
-   string multiplexer_type_id = 2;
+    // Optional. User-defined identifier for the multiplexer type in the pin map editor.
+    // If unspecified, information for all multiplexer types is returned.
+    string multiplexer_type_id = 2;
 }
 
 message GetMultiplexerSessionsResponse{
-   // List of information needed to create or use each multiplexer session for the given pin map context and multiplexer type ID.
-   repeated MultiplexerSessionInformation multiplexer_sessions = 1;
+    // List of information needed to create or use each multiplexer session for the given pin map context and multiplexer type ID.
+    repeated MultiplexerSessionInformation multiplexer_sessions = 1;
 }
 
 message GetAllRegisteredMultiplexerSessionsRequest{
