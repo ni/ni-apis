@@ -136,6 +136,11 @@ message EnumerateServicesRequest {
 message EnumerateServicesResponse {
   // The list of available services which implement the specified service interface.
   repeated ServiceDescriptor available_services = 1;
+  // Information about any unreachable resources. Each string in the list will be a
+  // 'ServiceDescriptor.service_class' entry for each of the unreachable resources.
+  // To get extended information about the unreachable resources, use ResolveService
+  // and handle the resulting error.
+  repeated string unreachable = 2;
 }
 
 message ResolveServiceRequest {
