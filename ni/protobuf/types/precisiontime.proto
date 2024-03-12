@@ -1,0 +1,32 @@
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+syntax = "proto3";
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+package ni.protobuf.types;
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+option csharp_namespace = "NationalInstruments.Protobuf.Types";
+option go_package = "types";
+option java_multiple_files = true;
+option java_outer_classname = "PrecisionTimeProto";
+option java_package = "com.ni.protobuf.types";
+option objc_class_prefix = "NIPT";
+option php_namespace = "NI\\PROTOBUF\\TYPES";
+option ruby_package = "NI::Protobuf::Types";
+
+// PrecisionTimestamp with a more accurate fractional seconds than the built-in Timestamp.
+message PrecisionTimestamp
+{
+  int64 seconds_since_epoch = 1;
+  uint64 fractional_seconds = 2;
+}
+
+// PrecisionDuration with a more accurate fractional seconds than the built-in Duration.
+message PrecisionDuration
+{
+  int64 seconds = 1;
+  uint64 fractional_seconds = 2;
+}

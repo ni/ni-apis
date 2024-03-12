@@ -6,7 +6,7 @@ syntax = "proto3";
 //---------------------------------------------------------------------
 package ni.protobuf.types;
 
-import "google/protobuf/timestamp.proto";
+import "ni/protobuf/types/precisiontime.proto";
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -19,10 +19,38 @@ option objc_class_prefix = "NIPT";
 option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
-// Waveform datatype.
-message Waveform
+// Waveform Attribute Value
+message AttributeValue
 {
-  google.protobuf.Timestamp t0 = 1;
-  double dt = 2;
-  repeated double y_data = 3;
+  // The kind of attribute value.
+  oneof attribute
+  {
+    // Represents a bool attribute.
+    bool bool_value = 1;
+    // Represents an integer attribute.
+    i32 integer_value = 2;
+    // Represents a double attribute.
+    double double_value = 3;
+    // Represents a string attribute.
+    string string_value = 4;
+  }
+}
+
+// DoubleWaveform datatype.
+message DoubleWaveform
+{
+  PrecisionTimestamp t0 = 1;
+  oneof dt
+  {
+    double double_dt = 2;
+    PrecisionDuration duration_dt = 3;
+  }
+  repeated double y_data = 4;
+  map<string, AttributeValue> attributes = 5;
+}
+
+// Array of DoubleWaveforms.
+message DoubleWaveformArray
+{
+  repeated DoubleWaveform waveforms = 1;
 }
