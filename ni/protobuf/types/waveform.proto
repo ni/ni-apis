@@ -28,7 +28,7 @@ message AttributeValue
     // Represents a bool attribute.
     bool bool_value = 1;
     // Represents an integer attribute.
-    i32 integer_value = 2;
+    int32 integer_value = 2;
     // Represents a double attribute.
     double double_value = 3;
     // Represents a string attribute.
