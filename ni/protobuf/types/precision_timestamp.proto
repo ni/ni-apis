@@ -17,16 +17,17 @@ option objc_class_prefix = "NIPT";
 option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
-// PrecisionTimestamp with a more accurate fractional seconds than the built-in Timestamp.
+// A PrecisionTimestamp represents a point in time expressed in NI Binary Time Format (NI-BTF).
+// NI-BTF stores time values in Coordinated Universal Time (UTC) format.
+// A PrecisionTimestamp is encoded as a count of seconds and fractions of seconds at
+// 2 exp(-64) resolution. The count is relative to an epoch at UTC midnight on
+// January 1, 1904, Universal Time.
 message PrecisionTimestamp
 {
-  int64 seconds_since_epoch = 1;
-  uint64 fractional_seconds = 2;
-}
-
-// PrecisionDuration with a more accurate fractional seconds than the built-in Duration.
-message PrecisionDuration
-{
+  // Represents seconds of UTC time since epoch
+  // 1904-01-01T00:00:00Z.
   int64 seconds = 1;
+  
+  // Non-negative fractions of a second at 2 exp(-64) resolution.
   uint64 fractional_seconds = 2;
 }

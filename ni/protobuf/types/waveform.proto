@@ -6,7 +6,7 @@ syntax = "proto3";
 //---------------------------------------------------------------------
 package ni.protobuf.types;
 
-import "ni/protobuf/types/precisiontime.proto";
+import "ni/protobuf/types/precision_timestamp.proto";
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -20,7 +20,7 @@ option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
 // Waveform Attribute Value
-message AttributeValue
+message WaveformAttributeValue
 {
   // The kind of attribute value.
   oneof attribute
@@ -39,18 +39,12 @@ message AttributeValue
 // DoubleWaveform datatype.
 message DoubleWaveform
 {
+  // The trigger time of the waveform.
   PrecisionTimestamp t0 = 1;
-  oneof dt
-  {
-    double double_dt = 2;
-    PrecisionDuration duration_dt = 3;
-  }
-  repeated double y_data = 4;
-  map<string, AttributeValue> attributes = 5;
-}
-
-// Array of DoubleWaveforms.
-message DoubleWaveformArray
-{
-  repeated DoubleWaveform waveforms = 1;
+  // The time interval in seconds between data points in the waveform.
+  double dt = 2;
+  // The data values of the waveform.
+  repeated double y_data = 3;
+  // The names and values of all waveform attributes.
+  map<string, WaveformAttributeValue> attributes = 4;
 }
