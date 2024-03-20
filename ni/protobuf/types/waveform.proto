@@ -19,8 +19,8 @@ option objc_class_prefix = "NIPT";
 option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
-// DoubleWaveform datatype.
-message DoubleWaveform
+// DoubleAnalogWaveform datatype.
+message DoubleAnalogWaveform
 {
   // The trigger time of the waveform.
   PrecisionTimestamp t0 = 1;
