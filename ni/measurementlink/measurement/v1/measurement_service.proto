@@ -122,9 +122,9 @@ message ConfigurationParameter {
   // Well-known annotations:
   // - Type specialization. The keys to other annotations will be read based on the value of `ni/type_specialization` annotation.
   //   - Key: "ni/type_specialization"
-  //   - Common Values: "pin" ...    
-  // - For string parameter with ni/type_specialization annotation equals "pin"
-  //   - Key: "ni/pin.instrument_type"
+  //   - Common Values: "ioresource" ...    
+  // - For string parameter with ni/type_specialization annotation equals "ioresource"
+  //   - Key: "ni/ioresource.instrument_type"
   //   - Common Values: "niDCPower", "niScope"...
   map<string, string> annotations = 5;
 }
