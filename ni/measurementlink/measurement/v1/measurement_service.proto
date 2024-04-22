@@ -123,7 +123,7 @@ message ConfigurationParameter {
   // - Type specialization. The keys to other annotations will be read based on the value of `ni/type_specialization` annotation.
   //   - Key: "ni/type_specialization"
   //   - Common Values: "ioresource" ...    
-  // - For string parameter with ni/type_specialization annotation equals "ioresource"
+  // - For string parameter with ni/type_specialization annotation equals "ioresource", the "ni/ioresource.instrument_type" annotation will be used by UIs to limit selection of I/O to the specified instrument type.
   //   - Key: "ni/ioresource.instrument_type"
   //   - Common Values: "niDCPower", "niScope"...
   map<string, string> annotations = 5;
