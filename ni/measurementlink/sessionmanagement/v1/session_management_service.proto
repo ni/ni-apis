@@ -14,9 +14,9 @@ option objc_class_prefix = "NIMS";
 option php_namespace = "NI\\MeasurementLink\\SessionManagement\\V1";
 option ruby_package = "NI::MeasurementLink::SessionManagement::V1";
 
-// Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.
+// Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by I/O resource and site.
 service SessionManagementService {
-  // Reserve session(s) for the given pins or relays, sites, and instrument type ID and returns the information needed to create or access the session.
+  // Reserve session(s) for the given I/O resources (pins, relays, channels), sites, and instrument type ID and returns the information needed to create or access the session.
   // Also reserves the session so other processes cannot access it with a ReserveSessions() call.
   // Status Codes for errors:
   // - INVALID_ARGUMENT:
@@ -90,7 +90,7 @@ message SessionInformation{
   string channel_list = 3;
 
   // Instrument type ID to identify which type of instrument the session represents.
-  // Pin maps have built in instrument definitions using the following NI driver based instrument type ids:
+  // The session management service has built in instrument definitions using the following NI driver based instrument type ids:
   //      "niDCPower"
   //      "niDigitalPattern"
   //      "niScope"
@@ -98,7 +98,7 @@ message SessionInformation{
   //      "niDAQmx"
   //      "niFGen"
   //      "niRelayDriver"
-  // For custom instruments the user defined instrument type id is defined in the pin map file.
+  // For custom instruments the user defined instrument type id is defined in the pin map file or custom session management plugin service.
   // This field is readonly.
   string instrument_type_id = 4;
 
@@ -106,22 +106,22 @@ message SessionInformation{
   // This field is readonly.
   bool session_exists = 5;
 
-  // List of site and pin/relay mappings with optional multiplexer information for each channel in the channel_list.
-  // Each item represents a channel-to-pin connection for this instrument resource. In the case of shared pins, there is a separate item for each connection.
+  // List of site and I/O resource mappings with optional multiplexer information for each channel in the channel_list.
+  // Each item represents a channel-to-I/O-resource connection for this instrument resource. In the case of shared pins, there is a separate item for each connection.
   // This field is empty for any SessionInformation returned from ReserveAllRegisteredSessions.
   // This field is readonly.
   repeated ChannelMapping channel_mappings = 6;
 }
 
 message ChannelMapping {
-  // The pin or relay that is mapped to a channel.
+  // The I/O resource that is mapped to a channel.
   string pin_or_relay_name = 1;
 
-  // The site on which the pin or relay is mapped to a channel.
+  // The site on which the I/O resource is mapped to a channel.
   // For system pins/relays the site number is -1 since they do not belong to a specific site.
   int32 site = 2;
 
-  // The channel to which the pin or relay is mapped on this site.
+  // The channel to which the I/O resource is mapped on this site.
   string channel = 3;
 
   // The multiplexer resource name is used to open the multiplexer session in the driver.
@@ -150,14 +150,14 @@ message MultiplexerSessionInformation {
 }
 
 message ReserveSessionsRequest {
-  // Required. Includes the pin map ID for the pin map in the Pin Map Service, as well as the list of sites for the measurement.
+  // Optional. Includes the pin map ID for the pin map in the Pin Map Service, as well as the list of sites for the measurement. If unspecified, specify non-pin I/O resources for pin_or_relay_names.
   PinMapContext pin_map_context = 1;
 
-  // Optional. List of pins, pin groups, relays, or relay groups to use for the measurement. If unspecified, reserve sessions for all pins and relays in the registered pin map resource.
+  // Optional. List of I/O resources (pins, pin groups, relays, relay groups, or channels) to use for the measurement. If unspecified, reserve sessions for all pins and relays in the registered pin map resource.
   repeated string pin_or_relay_names = 2;
 
   // Optional. Instrument type ID for the measurement. If unspecified, reserve sessions for all instrument types connected in the registered pin map resource.
-  // Pin maps have built in instrument definitions using the following NI driver based instrument type ids:
+  // The session management service has built in instrument definitions using the following NI driver based instrument type ids:
   //      "niDCPower"
   //      "niDigitalPattern"
   //      "niScope"
@@ -165,7 +165,7 @@ message ReserveSessionsRequest {
   //      "niDAQmx"
   //      "niFGen"
   //      "niRelayDriver"
-  // For custom instruments the user defined instrument type id is defined in the pin map file.
+  // For custom instruments the user defined instrument type id is defined in the pin map file or custom session management plugin service.
   string instrument_type_id = 3;
 
   // Optional. Timeout for the reservation request.
@@ -174,10 +174,10 @@ message ReserveSessionsRequest {
 }
 
 message ReserveSessionsResponse{
-  // List of information needed to create or use each session for the given pin, site, and instrument type ID.
+  // List of information needed to create or use each session for the given I/O resource, site, and instrument type ID.
   repeated SessionInformation sessions = 1;
 
-  // List of information needed to create or use each multiplexer session for the given pin, site, and instrument type ID.
+  // List of information needed to create or use each multiplexer session for the given I/O resource, site, and instrument type ID.
   repeated MultiplexerSessionInformation multiplexer_sessions = 2;
   
   // Represents the mapping between pin or relay groups and their respective pin or relay names.
@@ -214,7 +214,7 @@ message ReserveAllRegisteredSessionsRequest {
   int32 timeout_in_milliseconds = 1;
 
   // Optional. Instrument type ID of the registered sessions to reserve. If unspecified, reserve sessions for all instrument types connected in the registered pin map resource.
-  // Pin maps have built in instrument definitions using the following NI driver based instrument type ids:
+  // The session management service has built in instrument definitions using the following NI driver based instrument type ids:
   //      "niDCPower"
   //      "niDigitalPattern"
   //      "niScope"
@@ -222,7 +222,7 @@ message ReserveAllRegisteredSessionsRequest {
   //      "niDAQmx"
   //      "niFGen"
   //      "niRelayDriver"
-  // For custom instruments the user defined instrument type id is defined in the pin map file.
+  // For custom instruments the user defined instrument type id is defined in the pin map file or custom session management plugin service.
   string instrument_type_id = 2;
 }
 
