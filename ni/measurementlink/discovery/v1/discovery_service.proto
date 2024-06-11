@@ -186,5 +186,5 @@ message ResolveServiceWithInformationResponse {
   ServiceLocation service_location = 1;
 
   // Url which provides descriptive information about the service.
-  string service_description = 2;
+  string service_description_url = 2;
 }
