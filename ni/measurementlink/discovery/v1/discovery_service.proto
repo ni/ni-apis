@@ -50,7 +50,7 @@ service DiscoveryService {
   // - FAILED_PRECONDITION: More than one service matching the resolve request was found
   rpc ResolveService(ResolveServiceRequest) returns (ServiceLocation);
 
-  // Similar to ResolveService, returns information for the service in addition to the location of the service. 
+  // Similar to ResolveService, returns information for the service in addition to the location of the service.
   // This is useful if you want to avoid the overhead of having to call EnumerateServices to get this information as part of
   // resolution of the service. See ResolveService for additional documentation related to resolving the service.
   rpc ResolveServiceWithInformation(ResolveServiceWithInformationRequest) returns (ResolveServiceWithInformationResponse);
@@ -136,6 +136,13 @@ message EnumerateServicesRequest {
   // Optional. The gRPC full name of the service interface that is needed. If empty,
   // information for all services registered with the discovery service will be returned.
   string provided_interface = 1;
+
+  // Optional. The "class" of the service that should be matched. Using this field can
+  // be a useful way to determine the available versions of a specific service.  If used
+  // in conjunction with the 'provided_interface' field, the 'service_class' field will
+  // be used to filter the results to only those services that match the provided
+  // interface and service class.
+  string service_class = 2;
 }
 
 message EnumerateServicesResponse {
