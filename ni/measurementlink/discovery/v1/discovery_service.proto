@@ -94,6 +94,21 @@ message ServiceDescriptor {
   //   - Expected format: serialized JSON string of an array of strings
   //   - Example: "[\"powerup\", \"current\"]"
   map<string, string> annotations = 5;
+
+  // This field is used differently based on the message in which it is used.
+  //
+  // When used in a RegisterServiceRequest, this field must contain a single
+  // version, and that version must follow the major.minor.patch format.
+  // The version 0.0.1 is reserved for internal use, and cannot be specified.
+  // If no version is specified, the version 0.0.1 will be used internally
+  // for the registered service.
+  //
+  // When returned from EnumerateServicesResponse, this field will contain the
+  // list of versions that are available for the associated service.
+  //
+  // When returned from ResolveServiceWithInformationResponse, this field will
+  // contain the version of the resolved service.
+  repeated string versions = 6;
 }
 
 // Represents the location of a service. The location generally includes the IP address and port number for the service
@@ -170,6 +185,9 @@ message ResolveServiceRequest {
   // local deployment target.  If the service cannot be resolved from the specified deployment
   // target, an error is returned.
   string deployment_target = 3;
+
+  // Optional. The version of the service to resolve. If not specified, the latest version will be resolved.
+  string version = 4;
 }
 
 message ResolveServiceWithInformationRequest {
@@ -187,6 +205,9 @@ message ResolveServiceWithInformationRequest {
   // local deployment target.  If the service cannot be resolved from the specified deployment
   // target, an error is returned.
   string deployment_target = 3;
+
+  // Optional. The version of the service to resolve. If not specified, the latest version will be resolved.
+  string version = 4;
 }
 
 message ResolveServiceWithInformationResponse {
