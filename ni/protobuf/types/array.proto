@@ -1,0 +1,47 @@
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+syntax = "proto3";
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+package ni.protobuf.types;
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+option csharp_namespace = "NationalInstruments.Protobuf.Types";
+option go_package = "types";
+option java_multiple_files = true;
+option java_outer_classname = "ArrayProto";
+option java_package = "com.ni.protobuf.types";
+option objc_class_prefix = "NIPT";
+option php_namespace = "NI\\PROTOBUF\\TYPES";
+option ruby_package = "NI::Protobuf::Types";
+
+//---------------------------------------------------------------------
+// Defines a 2D array of double values. The 2D array is stored as
+// a repeated double, a 1D array. It is stored in row major order.
+//
+// Example:
+// Repeated Double: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+// rows: 2
+// columns: 5
+//
+// 2D Representation:
+//  1  2  3  4  5
+//  6  7  8  9 10
+//
+// Indices:
+// (0,0) (0,1) (0,2) (0,3) (0,4)
+// (1,0) (1,1) (1,2) (1,3) (1,4)
+//
+// Remarks:
+//  The length of the 'data' field must be equal to rows * columns.
+//  If it is not, implementations should treat this state as invalid
+//  and return INVALID_ARGUMENT status code if appropriate.
+//---------------------------------------------------------------------
+message Double2DArray
+{
+  int32 rows = 1;
+  int32 columns = 2;
+  repeated double data = 3;
+}
