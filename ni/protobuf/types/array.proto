@@ -18,11 +18,12 @@ option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
 //---------------------------------------------------------------------
-// Defines a 2D array of double values. The 2D array is stored as
-// a repeated double, a 1D array. It is stored in row major order.
+// Defines a 2D array of double or string values. The 2D array is stored as
+// a repeated double or string, a 1D array. It is stored in row major order.
 //
 // Example:
 // Repeated Double: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+// Repeated String: ["AB", "CD", "EF", "GH", "IJ", "KL", "MN", "OP", "QR", "ST"]
 // rows: 2
 // columns: 5
 //
@@ -44,4 +45,11 @@ message Double2DArray
   int32 rows = 1;
   int32 columns = 2;
   repeated double data = 3;
+}
+
+message String2DArray
+{
+  int32 rows = 1;
+  int32 columns = 2;
+  repeated string data = 3;
 }
