@@ -8,7 +8,7 @@ repository = "https://github.com/ni/ni-apis/"
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.9"
 
 [tool.poetry.group.dev.dependencies]
 grpcio-tools = ">=1.59.0"
