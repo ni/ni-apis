@@ -5,8 +5,8 @@ on:
   workflow_dispatch:
 
 env:
-  POETRY_VERSION: 1.2.2
-  PYTHON_VERSION: 3.9
+  POETRY_VERSION: 1.8.2
+  PYTHON_VERSION: 3.11.9
 
 jobs:
   check_protos:
