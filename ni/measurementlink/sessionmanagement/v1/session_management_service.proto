@@ -4,7 +4,6 @@ package ni.measurementlink.sessionmanagement.v1;
 
 import "ni/measurementlink/pin_map_context.proto";
 import "google/api/annotations.proto";
-import "google/api/http.proto";
 import "google/protobuf/empty.proto";
 import "session.proto";
 
