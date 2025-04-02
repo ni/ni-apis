@@ -1,0 +1,62 @@
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+syntax = "proto3";
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+package ni.protobuf.types;
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+option csharp_namespace = "NationalInstruments.Protobuf.Types";
+option go_package = "types";
+option java_multiple_files = true;
+option java_outer_classname = "ParametricDataProto";
+option java_package = "com.ni.protobuf.types";
+option objc_class_prefix = "NIPT";
+option php_namespace = "NI\\PROTOBUF\\TYPES";
+option ruby_package = "NI::Protobuf::Types";
+
+message ParametricDataValue {
+  oneof value {
+    double double_value = 1;
+    bool bool_value = 2;
+    string string_value = 3;
+    int32 int_value = 4;
+  }
+  string label = 5;
+  string unit = 6;
+}
+
+message ParametricDataValueArray {
+    message DoubleArray {
+        repeated double values = 1;
+    }
+    message BoolArray {
+        repeated bool values = 1;
+    }
+    message StringArray {
+        repeated string values = 1;
+    }
+    message IntArray {
+        repeated int32 values = 1;
+    }
+    oneof value {
+        DoubleArray double_array = 1;
+        BoolArray bool_array = 2;
+        StringArray string_array = 3;
+        IntArray int_array = 4;
+    }
+    string label = 5;
+    string unit = 6;
+}
+
+message ParametricData {
+    ParametricDataValue value = 1;
+    repeated ParametricDataValue parameters = 2;
+}
+
+message ParametricDataArray {
+    ParametricDataValueArray values = 1;
+    repeated ParametricDataValueArray parameters = 2;
+}
