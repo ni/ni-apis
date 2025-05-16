@@ -73,6 +73,9 @@ service SessionManagementService {
 
   // Gets all multiplexer sessions currently registered with this service.
   rpc GetAllRegisteredMultiplexerSessions(GetAllRegisteredMultiplexerSessionsRequest) returns (GetAllRegisteredMultiplexerSessionsResponse);
+
+  // Gets all the reserved, registered instrument sessions and registered multiplexer sessions.
+  rpc GetSessions(GetSessionsRequest) returns (GetSessionsResponse);
 }
 
 message SessionInformation{
@@ -105,6 +108,10 @@ message SessionInformation{
   // Indicates whether the session exists in the Session Manager. This indicates whether the session has been created.
   // This field is readonly.
   bool session_exists = 5;
+
+  // Indicates whether the session is reserved in the Session Manager.
+  // This field is readonly.
+  bool session_reserved = 7;
 
   // List of site and I/O resource mappings with optional multiplexer information for each channel in the channel_list.
   // Each item represents a channel-to-I/O-resource connection for this instrument resource. In the case of shared pins, there is a separate item for each connection.
@@ -275,4 +282,20 @@ message GetAllRegisteredMultiplexerSessionsResponse{
 message ResolvedPinsOrRelays {
   // List of pin or relay names in the pin or relay group.
   repeated string pin_or_relay_names = 1;
+}
+
+message GetSessionsRequest {
+  // Optional. Instrument type ID of the instruments.
+  string instrument_type_id = 1;
+
+  // Optional. User-defined identifier for the multiplexers.
+  string multiplexer_type_id = 2; 
+}
+
+message GetSessionsResponse {
+  // List of reserved, registered instrument sessions.
+  repeated SessionInformation sessions = 1;
+
+  // List of registered multiplexer sessions.
+  repeated MultiplexerSessionInformation multiplexer_sessions = 2; 
 }
