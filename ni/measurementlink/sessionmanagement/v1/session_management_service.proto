@@ -74,7 +74,7 @@ service SessionManagementService {
   // Gets all multiplexer sessions currently registered with this service.
   rpc GetAllRegisteredMultiplexerSessions(GetAllRegisteredMultiplexerSessionsRequest) returns (GetAllRegisteredMultiplexerSessionsResponse);
 
-  // Gets all the reserved, registered instrument sessions and registered multiplexer sessions.
+  // Gets all reserved or registered sessions for the specified instrument and multiplexer types.
   rpc GetSessions(GetSessionsRequest) returns (GetSessionsResponse);
 }
 
@@ -105,11 +105,11 @@ message SessionInformation{
   // This field is readonly.
   string instrument_type_id = 4;
 
-  // Indicates whether the session exists in the Session Manager. This indicates whether the session has been created.
+  // Indicates whether the session has been created and registered with the Session Manager.
   // This field is readonly.
   bool session_exists = 5;
 
-  // Indicates whether the session is reserved in the Session Manager.
+  // Indicates whether the session has been reserved with the Session Manager.
   // This field is readonly.
   bool session_reserved = 7;
 
@@ -286,14 +286,16 @@ message ResolvedPinsOrRelays {
 
 message GetSessionsRequest {
   // Optional. Instrument type ID of the instruments.
+  // If unspecified, information for all instrument types is returned.
   string instrument_type_id = 1;
 
   // Optional. User-defined identifier for the multiplexers.
+  // If unspecified, information for all registered multiplexer types is returned.
   string multiplexer_type_id = 2; 
 }
 
 message GetSessionsResponse {
-  // List of reserved, registered instrument sessions.
+  // List of reserved or registered instrument sessions.
   repeated SessionInformation sessions = 1;
 
   // List of registered multiplexer sessions.
