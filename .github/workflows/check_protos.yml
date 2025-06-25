@@ -12,10 +12,10 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v4
       - name: Set up Python
-        uses: ni/python-actions/setup-python@v0.3.1
+        uses: ni/python-actions/setup-python@v0.4.0
         id: setup-python
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@v0.3.1
+        uses: ni/python-actions/setup-poetry@v0.4.0
       - name: Cache virtualenv
         uses: actions/cache@v4
         with:
