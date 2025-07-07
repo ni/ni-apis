@@ -43,6 +43,38 @@ message DoubleAnalogWaveform
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
+message I16AnalogWaveform {
+  PrecisionTimestamp t0 = 1;
+  double dt = 2;
+  repeated sint32 y_data = 3;
+  map<string, WaveformAttributeValue> attributes = 4;
+  ScaleMode scale_mode = 5;
+}
+
+message DoubleComplexWaveform {
+  PrecisionTimestamp t0 = 1;
+  double dt = 2;
+  // Real and imaginary parts interleaved.  Example: [1.0+2.0j, 3.0+4.0j] is represented as [1.0, 2.0, 3.0, 4.0].
+  repeated double y_data = 3;
+  map<string, WaveformAttributeValue> attributes = 4;
+}
+
+message I16ComplexWaveform {
+  PrecisionTimestamp t0 = 1;
+  double dt = 2;
+  // Real and imaginary parts interleaved. Example: [1+2j, 3+4j] is represented as [1, 2, 3, 4].
+  repeated sint32 y_data = 3;
+  map<string, WaveformAttributeValue> attributes = 4;
+  ScaleMode scale_mode = 5;
+}
+
+message DoubleSpectrum {
+  double start_frequency = 1;
+  double frequency_increment = 2;
+  repeated double data = 3;
+  map<string, WaveformAttributeValue> attributes = 4;
+}
+
 // Waveform Attribute Value
 message WaveformAttributeValue
 {
@@ -61,4 +93,15 @@ message WaveformAttributeValue
     // Represents a string attribute.
     string string_value = 4;
   }
+}
+
+message ScaleMode {
+  oneof mode {
+    LinearScale linear_scale = 1;
+  }
+}
+
+message LinearScale {
+  double gain = 1;
+  double offset = 2;
 }
