@@ -43,6 +43,7 @@ message DoubleAnalogWaveform
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
+// I16AnalogWaveform datatype.
 message I16AnalogWaveform {
   // The trigger time of the waveform.
   PrecisionTimestamp t0 = 1;
@@ -68,6 +69,7 @@ message I16AnalogWaveform {
   ScaleMode scale_mode = 5;
 }
 
+// DoubleComplexWaveform datatype.
 message DoubleComplexWaveform {
   // The trigger time of the waveform.
   PrecisionTimestamp t0 = 1;
@@ -91,6 +93,7 @@ message DoubleComplexWaveform {
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
+// I16ComplexWaveform datatype.
 message I16ComplexWaveform {
   // The trigger time of the waveform.
   PrecisionTimestamp t0 = 1;
@@ -117,6 +120,7 @@ message I16ComplexWaveform {
   ScaleMode scale_mode = 5;
 }
 
+// DoubleSpectrum datatype.
 message DoubleSpectrum {
   // The start frequency of the spectrum.
   double start_frequency = 1;
@@ -159,12 +163,14 @@ message WaveformAttributeValue
   }
 }
 
+// ScaleMode datatype.
 message ScaleMode {
   oneof mode {
     LinearScale linear_scale = 1;
   }
 }
 
+// LinearScale datatype.
 message LinearScale {
   // The gain of the linear scale
   double gain = 1;
