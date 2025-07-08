@@ -19,10 +19,20 @@ option objc_class_prefix = "NIPT";
 option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
-// DoubleAnalogWaveform datatype.
+// Detailed documentation for waveform attributes:
+// A waveform attribute is metadata attached to a waveform.
+// It is represented in this message as a map associating the name of the attribute with the value described by WaveformAttributeValue.
+// The NI-DAQmx driver sets the following string attributes:
+// NI_ChannelName: the name of the virtual channel producing the waveform.
+// NI_LineNames: the name of the digital line in the waveform.
+// NI_UnitDescription: the units of measure for the waveform.
+// NI_dBReference: the reference value to use when converting measurement levels to decibel.
+// For additional information on waveform attributes, please visit https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-waveform-attribute.html
+
+// An analog waveform, which encapsulates analog data as doubles and timing information.
 message DoubleAnalogWaveform
 {
-  // The trigger time of the waveform.
+  // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
 
   // The time interval in seconds between data points in the waveform.
@@ -32,20 +42,13 @@ message DoubleAnalogWaveform
   repeated double y_data = 3;
 
   // The names and values of all waveform attributes.
-  // A waveform attribute is metadata attached to a waveform.
-  // It is represented in this message as a map associating the name of the attribute with the value described by WaveformAttributeValue.
-  // The NI-DAQmx driver sets the following string attributes:
-  // NI_ChannelName: the name of the virtual channel producing the waveform.
-  // NI_LineNames: the name of the digital line in the waveform.
-  // NI_UnitDescription: the units of measure for the waveform.
-  // NI_dBReference: the reference value to use when converting measurement levels to decibel.
-  // For additional information on waveform attributes, please visit https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-waveform-attribute.html
+  // See the comment at near the top of this file for more details.
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
-// I16AnalogWaveform datatype.
+// An analog waveform, which encapsulates analog data as 16 bit integers and timing information.
 message I16AnalogWaveform {
-  // The trigger time of the waveform.
+  // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
 
   // The time interval in seconds between data points in the waveform.
@@ -55,23 +58,16 @@ message I16AnalogWaveform {
   repeated sint32 y_data = 3;
 
   // The names and values of all waveform attributes.
-  // A waveform attribute is metadata attached to a waveform.
-  // It is represented in this message as a map associating the name of the attribute with the value described by WaveformAttributeValue.
-  // The NI-DAQmx driver sets the following string attributes:
-  // NI_ChannelName: the name of the virtual channel producing the waveform.
-  // NI_LineNames: the name of the digital line in the waveform.
-  // NI_UnitDescription: the units of measure for the waveform.
-  // NI_dBReference: the reference value to use when converting measurement levels to decibel.
-  // For additional information on waveform attributes, please visit https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-waveform-attribute.html
+  // See the comment at near the top of this file for more details.
   map<string, WaveformAttributeValue> attributes = 4;
 
-  // The scale mode of the waveform.
-  ScaleMode scale_mode = 5;
+  // Optional scaling information which can be used to convert unscaled data represented by this waveform to scaled data.
+  Scale scale = 5;
 }
 
-// DoubleComplexWaveform datatype.
+// A complex waveform, which encapsulates complex data as doubles and timing information.
 message DoubleComplexWaveform {
-  // The trigger time of the waveform.
+  // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
 
   // The time interval in seconds between data points in the waveform.
@@ -82,20 +78,13 @@ message DoubleComplexWaveform {
   repeated double y_data = 3;
 
   // The names and values of all waveform attributes.
-  // A waveform attribute is metadata attached to a waveform.
-  // It is represented in this message as a map associating the name of the attribute with the value described by WaveformAttributeValue.
-  // The NI-DAQmx driver sets the following string attributes:
-  // NI_ChannelName: the name of the virtual channel producing the waveform.
-  // NI_LineNames: the name of the digital line in the waveform.
-  // NI_UnitDescription: the units of measure for the waveform.
-  // NI_dBReference: the reference value to use when converting measurement levels to decibel.
-  // For additional information on waveform attributes, please visit https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-waveform-attribute.html
+  // See the comment at near the top of this file for more details.
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
-// I16ComplexWaveform datatype.
+// A complex waveform, which encapsulates complex data as 16 bit integers and timing information.
 message I16ComplexWaveform {
-  // The trigger time of the waveform.
+  // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
 
   // The time interval in seconds between data points in the waveform.
@@ -106,21 +95,14 @@ message I16ComplexWaveform {
   repeated sint32 y_data = 3;
 
   // The names and values of all waveform attributes.
-  // A waveform attribute is metadata attached to a waveform.
-  // It is represented in this message as a map associating the name of the attribute with the value described by WaveformAttributeValue.
-  // The NI-DAQmx driver sets the following string attributes:
-  // NI_ChannelName: the name of the virtual channel producing the waveform.
-  // NI_LineNames: the name of the digital line in the waveform.
-  // NI_UnitDescription: the units of measure for the waveform.
-  // NI_dBReference: the reference value to use when converting measurement levels to decibel.
-  // For additional information on waveform attributes, please visit https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-waveform-attribute.html
+  // See the comment at near the top of this file for more details.
   map<string, WaveformAttributeValue> attributes = 4;
 
-  // The scale mode of the waveform.
-  ScaleMode scale_mode = 5;
+  // Optional scaling information which can be used to convert unscaled data represented by this waveform to scaled data.
+  Scale scale = 5;
 }
 
-// DoubleSpectrum datatype.
+// A frequency spectrum, which encapsulates analog data and frequency information.
 message DoubleSpectrum {
   // The start frequency of the spectrum.
   double start_frequency = 1;
@@ -132,14 +114,7 @@ message DoubleSpectrum {
   repeated double data = 3;
 
   // The names and values of all waveform attributes.
-  // A waveform attribute is metadata attached to a waveform.
-  // It is represented in this message as a map associating the name of the attribute with the value described by WaveformAttributeValue.
-  // The NI-DAQmx driver sets the following string attributes:
-  // NI_ChannelName: the name of the virtual channel producing the waveform.
-  // NI_LineNames: the name of the digital line in the waveform.
-  // NI_UnitDescription: the units of measure for the waveform.
-  // NI_dBReference: the reference value to use when converting measurement levels to decibel.
-  // For additional information on waveform attributes, please visit https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-waveform-attribute.html
+  // See the comment at near the top of this file for more details.
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
@@ -163,8 +138,8 @@ message WaveformAttributeValue
   }
 }
 
-// ScaleMode datatype.
-message ScaleMode {
+// Scaling information which can be used to convert unscaled data represented by this waveform to scaled data.
+message Scale {
   oneof mode {
     LinearScale linear_scale = 1;
   }

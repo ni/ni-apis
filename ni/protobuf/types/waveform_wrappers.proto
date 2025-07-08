@@ -19,24 +19,26 @@ option objc_class_prefix = "NIPT";
 option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
-// These shall only be used with oneof fields and when packing into an Any message
+// Wrappers for common waveform message types. These types are useful
+// for embedding in the google.protobuf.Any type or in oneof fields.
+// Their use outside of these scenarios is discouraged.
 
 message DoubleAnalogWaveformArrayValue {
-   repeated DoubleAnalogWaveform values = 1;
+   repeated DoubleAnalogWaveform waveforms = 1;
 }
 
 message I16AnalogWaveformArrayValue {
-   repeated I16AnalogWaveform values = 1;
+   repeated I16AnalogWaveform waveforms = 1;
 }
 
 message DoubleComplexWaveformArrayValue {
-   repeated DoubleComplexWaveform values = 1;
+   repeated DoubleComplexWaveform waveforms = 1;
 }
 
 message I16ComplexWaveformArrayValue {
-   repeated I16ComplexWaveform values = 1;
+   repeated I16ComplexWaveform waveforms = 1;
 }
 
 message DoubleSpectrumArrayValue {
-   repeated DoubleSpectrum values = 1;
+   repeated DoubleSpectrum waveforms = 1;
 }
