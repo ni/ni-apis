@@ -44,34 +44,98 @@ message DoubleAnalogWaveform
 }
 
 message I16AnalogWaveform {
+  // The trigger time of the waveform.
   PrecisionTimestamp t0 = 1;
+
+  // The time interval in seconds between data points in the waveform.
   double dt = 2;
+
+  // The data values of the waveform.
   repeated sint32 y_data = 3;
+
+  // The names and values of all waveform attributes.
+  // A waveform attribute is metadata attached to a waveform.
+  // It is represented in this message as a map associating the name of the attribute with the value described by WaveformAttributeValue.
+  // The NI-DAQmx driver sets the following string attributes:
+  // NI_ChannelName: the name of the virtual channel producing the waveform.
+  // NI_LineNames: the name of the digital line in the waveform.
+  // NI_UnitDescription: the units of measure for the waveform.
+  // NI_dBReference: the reference value to use when converting measurement levels to decibel.
+  // For additional information on waveform attributes, please visit https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-waveform-attribute.html
   map<string, WaveformAttributeValue> attributes = 4;
+
+  // The scale mode of the waveform.
   ScaleMode scale_mode = 5;
 }
 
 message DoubleComplexWaveform {
+  // The trigger time of the waveform.
   PrecisionTimestamp t0 = 1;
+
+  // The time interval in seconds between data points in the waveform.
   double dt = 2;
+
+  // The data values of the waveform.
   // Real and imaginary parts interleaved.  Example: [1.0+2.0j, 3.0+4.0j] is represented as [1.0, 2.0, 3.0, 4.0].
   repeated double y_data = 3;
+
+  // The names and values of all waveform attributes.
+  // A waveform attribute is metadata attached to a waveform.
+  // It is represented in this message as a map associating the name of the attribute with the value described by WaveformAttributeValue.
+  // The NI-DAQmx driver sets the following string attributes:
+  // NI_ChannelName: the name of the virtual channel producing the waveform.
+  // NI_LineNames: the name of the digital line in the waveform.
+  // NI_UnitDescription: the units of measure for the waveform.
+  // NI_dBReference: the reference value to use when converting measurement levels to decibel.
+  // For additional information on waveform attributes, please visit https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-waveform-attribute.html
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
 message I16ComplexWaveform {
+  // The trigger time of the waveform.
   PrecisionTimestamp t0 = 1;
+
+  // The time interval in seconds between data points in the waveform.
   double dt = 2;
+
+  // The data values of the waveform.
   // Real and imaginary parts interleaved. Example: [1+2j, 3+4j] is represented as [1, 2, 3, 4].
   repeated sint32 y_data = 3;
+
+  // The names and values of all waveform attributes.
+  // A waveform attribute is metadata attached to a waveform.
+  // It is represented in this message as a map associating the name of the attribute with the value described by WaveformAttributeValue.
+  // The NI-DAQmx driver sets the following string attributes:
+  // NI_ChannelName: the name of the virtual channel producing the waveform.
+  // NI_LineNames: the name of the digital line in the waveform.
+  // NI_UnitDescription: the units of measure for the waveform.
+  // NI_dBReference: the reference value to use when converting measurement levels to decibel.
+  // For additional information on waveform attributes, please visit https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-waveform-attribute.html
   map<string, WaveformAttributeValue> attributes = 4;
+
+  // The scale mode of the waveform.
   ScaleMode scale_mode = 5;
 }
 
 message DoubleSpectrum {
+  // The start frequency of the spectrum.
   double start_frequency = 1;
+
+  // The frequency increment of the spectrum.
   double frequency_increment = 2;
+
+  // The data values of the spectrum.
   repeated double data = 3;
+
+  // The names and values of all waveform attributes.
+  // A waveform attribute is metadata attached to a waveform.
+  // It is represented in this message as a map associating the name of the attribute with the value described by WaveformAttributeValue.
+  // The NI-DAQmx driver sets the following string attributes:
+  // NI_ChannelName: the name of the virtual channel producing the waveform.
+  // NI_LineNames: the name of the digital line in the waveform.
+  // NI_UnitDescription: the units of measure for the waveform.
+  // NI_dBReference: the reference value to use when converting measurement levels to decibel.
+  // For additional information on waveform attributes, please visit https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-waveform-attribute.html
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
@@ -102,6 +166,9 @@ message ScaleMode {
 }
 
 message LinearScale {
+  // The gain of the linear scale
   double gain = 1;
+
+  // The offset of the linear scale
   double offset = 2;
 }
