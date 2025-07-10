@@ -11,13 +11,32 @@ option objc_class_prefix = "NIPT";
 option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
-message ScalarData {
-  string units = 1;
+message Scalar {
+  map<string, ScalarAttributeValue> attributes = 1;
 
   oneof value {
     double double_value = 2;
     int32 int32_value = 3;
     bool bool_value = 4;
     string string_value = 5;
+  }
+}
+
+message ScalarAttributeValue
+{
+  // The kind of attribute value.
+  oneof attribute
+  {
+    // Represents a bool attribute.
+    bool bool_value = 1;
+
+    // Represents an integer attribute.
+    int32 integer_value = 2;
+
+    // Represents a double attribute.
+    double double_value = 3;
+
+    // Represents a string attribute.
+    string string_value = 4;
   }
 }
