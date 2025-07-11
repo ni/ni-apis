@@ -13,9 +13,17 @@ option objc_class_prefix = "NIPT";
 option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
-message Scalar {
+// A scalar data class, which encapsulates a scalar value and associated
+// attributes, including units.
+message Scalar
+{
+  // The names and values of all scalar attributes.
+  // A scalar attribute is metadata attached to a scalar.
+  // It is represented in this message as a map associating the name of
+  // the attribute with the value described by AttributeValue.
   map<string, AttributeValue> attributes = 1;
 
+  // The scalar value. It can be one of these types: double, int32, bool, string.
   oneof value {
     double double_value = 2;
     int32 int32_value = 3;
