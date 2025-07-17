@@ -147,19 +147,16 @@ message DigitalWaveform
   // The time interval in seconds between data points in the waveform.
   double dt = 2;
 
-  // The data values of the waveform.
-  repeated DigitalSample y_data = 3;
+  // The number of signals in each sample of data.
+  int32 signal_count = 3;
+
+  // The data values of the waveform. This data is a flattened array of bytes
+  // that are ordered such that each signal_count bytes represents a sample.
+  bytes y_data = 4;
 
   // The names and values of all waveform attributes.
   // See the comment at near the top of this file for more details.
-  map<string, WaveformAttributeValue> attributes = 4;
-}
-
-// A digital sample, which consists of one or more digital signals.
-// We only need 8 bits to represent a digital state, but grpc doesn't define anything smaller than int32.
-// However, when serialized, these int32s will be optimized into a single byte each.
-message DigitalSample {
-   repeated int32 signals = 1;
+  map<string, WaveformAttributeValue> attributes = 5;
 }
 
 // Scaling information which can be used to convert unscaled data represented by this waveform to scaled data.
