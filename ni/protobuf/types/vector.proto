@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package ni.protobuf.types;
+
+import "ni/protobuf/types/attribute_value.proto";
+
+option csharp_namespace = "NationalInstruments.Protobuf.Types";
+option go_package = "types";
+option java_multiple_files = true;
+option java_outer_classname = "VectorProto";
+option java_package = "com.ni.protobuf.types";
+option objc_class_prefix = "NIPT";
+option php_namespace = "NI\\PROTOBUF\\TYPES";
+option ruby_package = "NI::Protobuf::Types";
+
+// A vector data class, which encapsulates an array of values and associated
+// attributes, including units.
+message Vector {
+  message DoubleArray {
+    repeated double values = 1;
+  }
+  message Int32Array {
+    repeated int32 values = 1;
+  }
+  message BoolArray {
+    repeated bool values = 1;
+  }
+  message StringArray {
+    repeated string values = 1;
+  }
+
+  // The names and values of all vector attributes.
+  // A vector attribute is metadata attached to a vector.
+  // It is represented in this message as a map associating the name of
+  // the attribute with the value described by AttributeValue.
+  map<string, AttributeValue> attributes = 1;
+
+  // Required: The value of the vector data array.
+  oneof value {
+    DoubleArray double_array = 2;
+    Int32Array int32_array = 3;
+    BoolArray bool_array = 4;
+    StringArray string_array = 5;
+  }
+}
