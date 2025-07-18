@@ -1,0 +1,339 @@
+syntax = "proto3";
+
+package ni.measurements.data.v1;
+
+import "google/protobuf/timestamp.proto";
+import "ni/measurements/data/v1/data_store.proto";
+import "ni/measurements/metadata/v1/metadata_store.proto";
+
+option csharp_namespace = "NationalInstruments.Measurements.Data.V1";
+option go_package = "datav1";
+option java_multiple_files = true;
+option java_outer_classname = "DataStoreServiceProto";
+option java_package = "com.ni.measurements.data.v1";
+option objc_class_prefix = "NIMD";
+option php_namespace = "NI\\Measurements\\Data\\V1";
+option ruby_package = "NI::Measurements::Data::V1";
+
+service DataStoreService {
+  rpc EvaluateDataQuery (EvaluateDataQueryRequest) returns (EvaluateDataQueryResponse);
+  rpc ProvideEvaluationFeedback (ProvideEvaluationFeedbackRequest) returns (ProvideEvaluationFeedbackResponse);
+
+  rpc EnumerateData (EnumerateDataRequest) returns (EnumerateDataResponse);
+  rpc QueryConditionSets (QueryConditionSetsRequest) returns (QueryConditionSetsResponse);
+  rpc QueryData (QueryDataRequest) returns (QueryDataResponse);
+
+  rpc PublishConditionSet (PublishConditionSetRequest) returns (PublishConditionSetResponse);
+  rpc PublishConditionSetBatch (PublishConditionSetBatchRequest) returns (PublishConditionSetBatchResponse);
+  rpc PublishData (PublishDataRequest) returns (PublishDataResponse);
+  rpc PublishDataBatch (PublishDataBatchRequest) returns (PublishDataBatchResponse);
+
+  rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse);
+  rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
+
+  // Gets the measurement associated with the identifier given in the request.
+  rpc GetMeasurement(GetMeasurementRequest) returns (GetMeasurementResponse);
+  // Perform an OData query
+  rpc QueryMeasurements(QueryMeasurementsRequest) returns (QueryMeasurementsResponse);
+  // Creates a new measurement in the metadata store.
+  rpc CreateMeasurement(CreateMeasurementRequest) returns (CreateMeasurementResponse);
+}
+
+message EvaluateDataQueryRequest {
+  UnevaluatedQuery query = 1;
+}
+
+message EvaluateDataQueryResponse {
+  repeated EvaluatedQuery evaluated_queries = 1;
+}
+
+message ProvideEvaluationFeedbackRequest {
+  string query = 1;
+  string sql = 2;
+  bool valid = 3;
+}
+
+message ProvideEvaluationFeedbackResponse {
+  bool handled = 1;
+}
+
+message EnumerateDataRequest {
+  oneof query {
+    UnevaluatedQuery unevaluated_query = 1;
+    EvaluatedQueryList evaluated_query_list = 2;
+  }
+
+  // How many results to include in the paginated response.
+  // Uses the default page size if not provided.
+  int32 page_size = 3;
+
+  // The starting token for the next page to request.
+  // Omit this field for the first page.
+  // Use EnumerateDataResponse.next_page_token for subsequent requests.
+  string page_token = 4;
+}
+
+message EnumerateDataResponse {
+  repeated StoredDataValue stored_data_values = 1;
+  string next_page_token = 2;
+  bool has_next_page = 3;
+}
+
+message QueryConditionSetsRequest {
+  // an OData query string.  example "$filter=name eq 'Value'"
+  // $expand is not supported
+  string odata_query = 1;
+}
+
+message QueryConditionSetsResponse {
+  // The moniker of the condition set and its metadata.
+  repeated StoredConditionSetValue stored_condition_set_values = 1;
+}
+
+message QueryDataRequest {
+  // an OData query string.  example "$filter=name eq 'Value'"
+  // $expand is not supported
+  string odata_query = 1;
+}
+
+message QueryDataResponse {
+  repeated StoredDataValue stored_data_values = 1;
+}
+
+message PublishConditionSetRequest {
+  // Required. The set of conditions present for one published data (output) of a measurement
+  repeated Condition condition_set = 1;
+
+  // The location to which the condition set should be published.
+  PublishDataLocation publish_location = 2;
+
+  // Required.
+  // Either the id of the measurement associated with this condition set,
+  // or the metadata of the measurement itself.  
+  oneof measurement {
+    // The metadata of the measurement associated with this condition set.
+    MeasurementMetadata measurement_metadata = 11;
+    // The id of the measurement associated with this condition set.
+    // This value is expected to be a parsable GUID.
+    string measurement_id = 12;
+  }
+}
+
+message PublishConditionSetResponse {
+  // A shared data value for *all* condition data present for the specified measurement.
+  // Note: This data value's Metadata contains a reference to the measurement ID associated with this set of condition set.
+  StoredConditionSetValue stored_condition_set_value = 1;
+}
+
+message PublishConditionSetBatchRequest {
+  // Required. The set of conditions for N iterations of published data of a measurement
+  repeated ConditionArray condition_set = 1;
+
+  // The location to which the condition set should be published.
+  PublishDataLocation publish_location = 2;
+
+  // Required.
+  // Either the id of the measurement associated with this condition set,
+  // or the metadata of the measurement itself.  
+  oneof measurement {
+    // The metadata of the measurement associated with this condition set.
+    MeasurementMetadata measurement_metadata = 11;
+    // The id of the measurement associated with this condition set.
+    // This value is expected to be a parsable GUID.
+    string measurement_id = 12;
+  }
+}
+
+message PublishConditionSetBatchResponse {
+  // A shared  value for *all* condition data present for the specified measurement.
+  StoredConditionSetValue stored_condition_set_value = 1;
+}
+
+message PublishDataRequest {
+  // Required. The data to be published.
+  PublishableData data = 1;
+  // Optional. Any notes to be associated with the captured data.
+  string notes = 2;
+  // Required. The location to which the data should be published.
+  PublishDataLocation publish_location = 3;
+  // Required. The timestamp of the measurement.
+  google.protobuf.Timestamp timestamp = 4;
+  // Optional. The pass fail status of the measurement.
+  PassFailStatus pass_fail_status = 5;
+  // Optional. The error state of the measurement.
+  ErrorState error_state = 6;
+  // Optional. The error message of the measurement.
+  ErrorMessage error_message = 7;
+
+  // Required.
+  // Either the id of the measurement associated with this data,
+  // or the metadata of the measurement itself.
+  oneof measurement {
+    // The metadata of the measurement associated with this data.
+    MeasurementMetadata measurement_metadata = 8;
+    // The id of the measurement associated with this data.
+    // This value is expected to be a parsable GUID.
+    string measurement_id = 9;
+  }
+
+  // Optional.
+  // Either the list of ids of the hardware associated with this data,
+  // or the informationa about the hardware itself.  If neither is specified,
+  // the hardware specified in the session will be associated with this data.
+  oneof hardware {
+    // The list of hardware associated with this data.
+    HardwareMetadataList hardware_list = 10;
+    // The ids of the hardware associated with this data.
+    IdentifierList hardware_identifier_list = 11;
+  }
+
+  // Optional.
+  // Either the list of ids of the software associated with this data,
+  // or the information about the software itself.  If neither is specified,
+  // the software specified in the session will be associated with this data.
+  oneof software {
+    // The list of software associated with this data.
+    SoftwareMetadataList software_list = 12;
+    // The ids of the software associated with this data.
+    IdentifierList software_identifier_list = 13;
+  }
+}
+
+message PublishDataResponse {
+  // The moniker of the published data and its metadata.  
+  StoredDataValue stored_data_value = 1;
+}
+
+message PublishDataBatchRequest {
+  // Required. The batch of N data values to be published.
+  PublishableDataBatch data = 1;
+  // Required. The location to which the data should be published.
+  PublishDataLocation publish_location = 2;
+  // Optional. The timestamps corresponding to the N iterations of batched data being published.
+  // This field must meet one of the following requirements:
+  //   1. The field may be empty. (No timestamp information is recorded for the data.)
+  //   2. The field may contain a single value. This value will be associated with each value of the batched data.
+  //   3. The field may contain N values, where N is the number of individual batched data values being published.
+  //      In this case, each timestamp aligns with the data value at the corresponding index within the PublishableDataBatch.
+  repeated google.protobuf.Timestamp timestamp = 3;
+  // Optional. The pass/fail statuses corresponding to the N iterations of batched data being published.
+  // This field must meet one of the following requirements:
+  //   1. The field may be empty. (No pass/fail status information is recorded for the data.)
+  //   2. The field may contain a single value. This value will be associated with each value of the batched data.
+  //   3. The field may contain N values, where N is the number of individual batched data values being published.
+  //      In this case, each pass/fail status aligns with the data value at the corresponding index within the PublishableDataBatch.
+  repeated PassFailStatus pass_fail_status = 4;
+  // Optional. The error states corresponding to the N iterations of batched data being published.
+  // This field must meet one of the following requirements:
+  //   1. The field may be empty. (No error state information is recorded for the data.)
+  //   2. The field may contain a single value. This value will be associated with each value of the batched data.
+  //   3. The field may contain N values, where N is the number of individual batched data values being published.
+  //      In this case, each error state aligns with the data value at the corresponding index within the PublishableDataBatch.
+  repeated ErrorState error_state = 5;
+  // Optional. The error messages corresponding to the N iterations of batched data being published.
+  // This field must meet one of the following requirements:
+  //   1. The field may be empty. (No error message information is recorded for the data.)
+  //   2. The field may contain a single value. This value will be associated with each value of the batched data.
+  //   3. The field may contain N values, where N is the number of individual batched data values being published.
+  //      In this case, each error message aligns with the data value at the corresponding index within the PublishableDataBatch.
+  repeated ErrorMessage error_message = 6;
+
+  // Required.
+  // Either the id of the measurement associated with this data,
+  // or the metadata of the measurement itself.
+  oneof measurement {
+    // The metadata of the measurement associated with this data.
+    MeasurementMetadata measurement_metadata = 9;
+    // The id of the measurement associated with this data.
+    // This value is expected to be a parsable GUID.
+    string measurement_id = 10;
+  }
+
+  // Optional.
+  // Either the list of ids of the hardware associated with this data,
+  // or the informationa about the hardware itself.  If neither is specified,
+  // the hardware specified in the session will be associated with this data.
+  oneof hardware {
+    // The list of hardware associated with this data.
+    HardwareMetadataList hardware_list = 11;
+    // The ids of the hardware associated with this data.
+    IdentifierList hardware_identifier_list = 12;
+  }
+
+  // Optional.
+  // Either the list of ids of the software associated with this data,
+  // or the information about the software itself.  If neither is specified,
+  // the software specified in the session will be associated with this data.
+  oneof software {
+    // The list of software associated with this data.
+    SoftwareMetadataList software_list = 13;
+    // The ids of the software associated with this data.
+    IdentifierList software_identifier_list = 14;
+  }
+}
+
+message PublishDataBatchResponse {
+  // The monikers of the published data and their corresponding metadata.  
+  repeated StoredDataValue stored_data_values = 1;
+}
+
+message CreateSessionRequest {
+  // The metadata of the session to be created.
+  SessionMetadata session_metadata = 1;
+}
+
+message CreateSessionResponse {
+  // If a session id was specified in the request, this will be the same value.
+  // If a session id was not specified in the request, this will be the generated id.
+  string session_id = 1;
+}
+
+message GetSessionRequest {
+  // The id of the desired session.
+  // This value is expected to be a parsable GUID.
+  string session_id = 1;
+  // If true, the SessionMetadata will include the actual metadata values
+  // for each of the metadata fields. If false, only the ids of the metadata
+  // fields will be included in the response.
+  bool include_values = 2;
+}
+
+message GetSessionResponse {
+  // The SessionMetadata object that corresponds to the requested id.
+  SessionMetadata session_metadata = 1;
+}
+
+// Message sent to get the measurement associated with the given identifier.
+message GetMeasurementRequest {
+  // Required. The identifier of the desired measurement.
+  string id = 1;
+}
+
+// Message returned when getting a measurement associated with the given identifier.
+message GetMeasurementResponse {
+  // The metadata of the requested measurement.
+  MeasurementMetadata measurement = 1;
+}
+
+message QueryMeasurementsRequest {
+  // an OData query string.  example "$filter=name eq 'Value'"
+  // $expand is not supported
+  string odata_query = 1;
+}
+
+message QueryMeasurementsResponse {
+  repeated MeasurementMetadata measurements = 1;
+}
+
+
+// Message sent to create a new measurement in the metadata store.
+message CreateMeasurementRequest {
+  // Required. The metadata of the measurement to be created.
+  MeasurementMetadata measurement = 1;
+}
+
+// Message returned when creating a new measurement in the metadata store.
+message CreateMeasurementResponse {
+  // The identifier of the created measurement.
+  string id = 1;
+}
