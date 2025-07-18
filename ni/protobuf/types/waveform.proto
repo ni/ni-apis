@@ -30,8 +30,7 @@ option ruby_package = "NI::Protobuf::Types";
 // For additional information on waveform attributes, please visit https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-waveform-attribute.html
 
 // An analog waveform, which encapsulates analog data as doubles and timing information.
-message DoubleAnalogWaveform
-{
+message DoubleAnalogWaveform {
   // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
 
@@ -119,8 +118,7 @@ message DoubleSpectrum {
 }
 
 // Waveform Attribute Value
-message WaveformAttributeValue
-{
+message WaveformAttributeValue {
   // The kind of attribute value.
   oneof attribute
   {
@@ -139,8 +137,7 @@ message WaveformAttributeValue
 }
 
 // A digital waveform, which encapsulates digital data as integers, timing information, and extended properties.
-message DigitalWaveform
-{
+message DigitalWaveform {
   // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
 
