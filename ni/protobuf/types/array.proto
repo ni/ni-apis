@@ -17,7 +17,6 @@ option objc_class_prefix = "NIPT";
 option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
-//---------------------------------------------------------------------
 // Defines a 2D array of values. The 2D array is stored as a repeated field of
 // the appropriate element type, a 1D array. It is stored in row major order.
 //
@@ -39,7 +38,6 @@ option ruby_package = "NI::Protobuf::Types";
 //  The length of the 'data' field must be equal to rows * columns.
 //  If it is not, implementations should treat this state as invalid
 //  and return INVALID_ARGUMENT status code if appropriate.
-//---------------------------------------------------------------------
 message Double2DArray
 {
   int32 rows = 1;
