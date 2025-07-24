@@ -11,6 +11,7 @@ option objc_class_prefix = "NIPT";
 option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
+// Metadata that can be attached to a scalar, vector, or similar type.
 message AttributeValue
 {
   // The kind of attribute value.
