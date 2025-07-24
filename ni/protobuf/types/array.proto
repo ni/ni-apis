@@ -17,7 +17,8 @@ option objc_class_prefix = "NIPT";
 option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
-// Defines a 2D array of doubles.
+// A 2D array of doubles.
+//
 // 2D arrays are stored as a repeated field of the appropriate element type,
 // a 1D array. Values are stored in row major order.
 //
@@ -46,7 +47,7 @@ message Double2DArray
   repeated double data = 3;
 }
 
-// Defines a 2D array of strings.
+// A 2D array of strings.
 message String2DArray
 {
   int32 rows = 1;

@@ -13,8 +13,7 @@ option objc_class_prefix = "NIPT";
 option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
-// A vector data class, which encapsulates an array of values.
-// Includes extended properties like units.
+// A vector value and extended properties such as units.
 message Vector {
   // These nested messages are only for use by Vector. They should not be
   // used outside of the Vector context.
@@ -37,8 +36,7 @@ message Vector {
   // the attribute with the value described by AttributeValue.
   map<string, AttributeValue> attributes = 1;
 
-  // The value of the vector data array.
-  // It can be one of these types: double, int32, bool, string.
+  // The vector value (a repeated double, int32, bool, or string).
   oneof value {
     DoubleArray double_array = 2;
     Int32Array int32_array = 3;

@@ -19,8 +19,7 @@ option objc_class_prefix = "NIPT";
 option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
-// An analog waveform with data as doubles.
-// Includes timing information and extended properties.
+// A double-precision analog waveform with timing and extended properties.
 message DoubleAnalogWaveform {
   // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
