@@ -30,13 +30,11 @@ message DoubleAnalogWaveform {
   // The data values of the waveform.
   repeated double y_data = 3;
 
-  // The names and values of all waveform attributes.
-  // See the WaveformAttributeValue type for more details.
+  // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
-// An analog waveform with data as 16 bit integers.
-// Includes timing information and extended properties.
+// An Int16-precision analog waveform with timing and extended properties.
 message I16AnalogWaveform {
   // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
@@ -47,17 +45,14 @@ message I16AnalogWaveform {
   // The data values of the waveform.
   repeated sint32 y_data = 3;
 
-  // The names and values of all waveform attributes.
-  // See the WaveformAttributeValue type for more details.
+  // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 4;
 
-  // Optional scaling information.
-  // Can be used to convert unscaled data represented by this waveform to scaled data.
+  // Optional scaling information used to convert raw data to scaled data.
   Scale scale = 5;
 }
 
-// A complex waveform with data as doubles.
-// Includes timing information and extended properties.
+// A double-precision complex waveform with timing and extended properties.
 message DoubleComplexWaveform {
   // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
@@ -66,17 +61,16 @@ message DoubleComplexWaveform {
   double dt = 2;
 
   // The data values of the waveform.
-  // Real and imaginary parts are interleaved.
+  //
+  // This data consists of interleaved real and imaginary parts.
   // Example: [1.0+2.0j, 3.0+4.0j] is represented as [1.0, 2.0, 3.0, 4.0].
   repeated double y_data = 3;
 
-  // The names and values of all waveform attributes.
-  // See the WaveformAttributeValue type for more details.
+  // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
-// A complex waveform with data as 16 bit integers.
-// Includes timing information and extended properties.
+// An Int16-precision complex waveform with timing and extended properties.
 message I16ComplexWaveform {
   // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
@@ -85,21 +79,19 @@ message I16ComplexWaveform {
   double dt = 2;
 
   // The data values of the waveform.
-  // Real and imaginary parts are interleaved.
+  //
+  // This data consists of interleaved real and imaginary parts.
   // Example: [1+2j, 3+4j] is represented as [1, 2, 3, 4].
   repeated sint32 y_data = 3;
 
-  // The names and values of all waveform attributes.
-  // See the WaveformAttributeValue type for more details.
+  // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 4;
 
-  // Optional scaling information.
-  // Can be used to convert unscaled data represented by this waveform to scaled data.
+  // Optional scaling information used to convert raw data to scaled data.
   Scale scale = 5;
 }
 
-// A frequency spectrum with data as doubles.
-// Encapsulates analog data and frequency information and includes extended properties.
+// A double-precision frequency spectrum with extended properties.
 message DoubleSpectrum {
   // The start frequency of the spectrum.
   double start_frequency = 1;
@@ -110,12 +102,12 @@ message DoubleSpectrum {
   // The data values of the spectrum.
   repeated double data = 3;
 
-  // The names and values of all waveform attributes.
-  // See the WaveformAttributeValue type for more details.
+  // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
 // Metadata attached to a waveform.
+//
 // The NI-DAQmx driver sets the following string attributes:
 // NI_ChannelName: the name of the virtual channel producing the waveform.
 // NI_LineNames: the name of the digital line in the waveform.
@@ -141,8 +133,7 @@ message WaveformAttributeValue {
   }
 }
 
-// A digital waveform with data as bytes.
-// Includes timing information, and extended properties.
+// A digital waveform as bytes with timing and extended properties.
 message DigitalWaveform {
   // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
@@ -154,17 +145,16 @@ message DigitalWaveform {
   int32 signal_count = 3;
 
   // The data values of the waveform.
+  //
   // This data is a flattened array of bytes that are ordered such that each
   // signal_count bytes represents a sample.
   bytes y_data = 4;
 
-  // The names and values of all waveform attributes.
-  // See the comment at near the top of this file for more details.
+  // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 5;
 }
 
-// Scaling information for a waveform.
-// Can be used to convert unscaled data represented by a waveform to scaled data.
+// Scaling information for converting unscaled waveform data to scaled data.
 message Scale {
   oneof mode {
     LinearScale linear_scale = 1;

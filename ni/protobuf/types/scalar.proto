@@ -17,6 +17,7 @@ option ruby_package = "NI::Protobuf::Types";
 message Scalar
 {
   // The names and values of all scalar attributes.
+  //
   // A scalar attribute is metadata attached to a scalar.
   // It is represented in this message as a map associating the name of
   // the attribute with the value described by AttributeValue.
