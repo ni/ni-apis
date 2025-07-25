@@ -4,7 +4,6 @@ package ni.measurements.data.v1;
 
 import "google/protobuf/timestamp.proto";
 import "ni/measurements/data/v1/data_store.proto";
-import "ni/measurements/metadata/v1/metadata_store.proto";
 
 option csharp_namespace = "NationalInstruments.Measurements.Data.V1";
 option go_package = "datav1";
@@ -15,56 +14,126 @@ option objc_class_prefix = "NIMD";
 option php_namespace = "NI\\Measurements\\Data\\V1";
 option ruby_package = "NI::Measurements::Data::V1";
 
+// This service provides endpoints for the publishing of measurement data.
+// This includes associating data with the conditions associated with the data,
+// querying for the published data with OData queries, and querying for the
+// data with natural language.
 service DataStoreService {
-  rpc EvaluateDataQuery (EvaluateDataQueryRequest) returns (EvaluateDataQueryResponse);
-  rpc ProvideEvaluationFeedback (ProvideEvaluationFeedbackRequest) returns (ProvideEvaluationFeedbackResponse);
 
-  rpc EnumerateData (EnumerateDataRequest) returns (EnumerateDataResponse);
-  rpc QueryConditionSets (QueryConditionSetsRequest) returns (QueryConditionSetsResponse);
-  rpc QueryData (QueryDataRequest) returns (QueryDataResponse);
-
-  rpc PublishConditionSet (PublishConditionSetRequest) returns (PublishConditionSetResponse);
-  rpc PublishConditionSetBatch (PublishConditionSetBatchRequest) returns (PublishConditionSetBatchResponse);
-  rpc PublishData (PublishDataRequest) returns (PublishDataResponse);
-  rpc PublishDataBatch (PublishDataBatchRequest) returns (PublishDataBatchResponse);
-
+  // Creates a session object for publishing measurement data.  Once a session is created,
+  // you can publish an arbitrary number of data values to the session.  The data values
+  // with be associated with each of the metadata type specified in the session.  For instance,
+  // if you specify an operator when creating a session, all data values published to the session
+  // will be associated with that operator.  The response will include the session id,
+  // which can be used to reference the session in subsequent requests, and to get the session
+  // metadata via the GetSession method.
   rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse);
+  // Gets the session associated with the identifier given in the request.
   rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
 
+  // Creates a new measurement in the metadata store.  A measurement is owned by a session,
+  // and is a logical grouping of published data.  All published data must be associated
+  // with a measurement.  If you publish data without specifying a measurement, a new
+  // measurement will be created for you, and the data will be associated with that measurement.
+  rpc CreateMeasurement(CreateMeasurementRequest) returns (CreateMeasurementResponse);
   // Gets the measurement associated with the identifier given in the request.
   rpc GetMeasurement(GetMeasurementRequest) returns (GetMeasurementResponse);
-  // Perform an OData query
+  // Query for measurement matching the given OData query.  For information about the OData query syntax,
+  // see https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview.
   rpc QueryMeasurements(QueryMeasurementsRequest) returns (QueryMeasurementsResponse);
-  // Creates a new measurement in the metadata store.
-  rpc CreateMeasurement(CreateMeasurementRequest) returns (CreateMeasurementResponse);
+
+  // Publishes a single condition set for a measurement.  A condition set is a set of conditions
+  // that are present when publishing data.  For instance, if you are measuring the temperature
+  // of a device, you might publish a condition set indicating the input voltage, the ambient
+  // temperature, and the humidity at the time of the measurement.  This allows you to associate
+  // the conditions with the data, and to query for data based on the conditions.  With this method,
+  // you publish a single set of conditions for a single set of measurement data. If the total set
+  // of conditions for all your measurements is a "frame" of data, this method allows you to publish
+  // a single "row" of that frame. If you want to publish the entire frame of data, you can use the
+  // PublishConditionSetBatch method instead.
+  rpc PublishConditionSet (PublishConditionSetRequest) returns (PublishConditionSetResponse);
+  // Publishes the complete set of conditions for a measurement. It is expected that all sets of condition
+  // values will be the same length, creating a "frame" of condition data.  If you only want to publish a "row"
+  // of conditions for a single set of measurement data, you can use the PublishConditionSet method instead.
+  rpc PublishConditionSetBatch (PublishConditionSetBatchRequest) returns (PublishConditionSetBatchResponse);
+  // Publishes a single data value.  The type of this data can be a scalar value, an array of scalar values,
+  // a waveform, or a set of x/y pairs. The data value will be associated with the measurement specified. The
+  // conditions associated with the data can be found on the associated measurement.
+  rpc PublishData (PublishDataRequest) returns (PublishDataResponse);
+  // Allows you to publish a batch of scalar data values.  The use case for this method is to publish all the
+  // the results of a parametric sweep at once, rather than publishing each value individually using the PublishData
+  // endpoint instead.
+  rpc PublishDataBatch (PublishDataBatchRequest) returns (PublishDataBatchResponse);
+
+  // Evaluates a natural language query and returns a representation of the query
+  // that can be used to directly query the data store.  This method only translates
+  // the query.  It does not execute the query or return any data.
+  rpc EvaluateDataQuery (EvaluateDataQueryRequest) returns (EvaluateDataQueryResponse);
+  // Provides feedback on the evaluation of a natural language query.
+  // This feedback is used to improve the evaluation of future queries.
+  rpc ProvideEvaluationFeedback (ProvideEvaluationFeedbackRequest) returns (ProvideEvaluationFeedbackResponse);
+
+  // Enumerates the data in the data store, based on a natural language query.  You can either
+  // provide the raw natural language query, or the result of the EvaluateDataQuery method.
+  // By pairing this method with EvaluateDataQuery, you can examine the result of the natural language
+  // query translation prior to executing the query.
+  // The results are paginated, so you can specify how many results to return in each page,
+  // and the token to use for the next page.
+  rpc EnumerateData (EnumerateDataRequest) returns (EnumerateDataResponse);
+  // Queries the condition sets in the data store, based on an OData query.
+  // The OData query can be used to filter the condition sets based on their metadata.
+  // For information about the OData query syntax,
+  // see https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview.
+  rpc QueryConditionSets (QueryConditionSetsRequest) returns (QueryConditionSetsResponse);
+  // Queries the data in the data store, based on an OData query.
+  // The OData query can be used to filter the data based on its metadata.
+  // For information about the OData query syntax,
+  // see https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview.
+  rpc QueryData (QueryDataRequest) returns (QueryDataResponse);
 }
 
 message EvaluateDataQueryRequest {
+  // The natural language query to evaluate. Contains which sources should be
+  // queried, as well as a filter for specific data types.
   UnevaluatedQuery query = 1;
 }
 
 message EvaluateDataQueryResponse {
+  // Returns the list of evaluated queries. This contains the transformed query,
+  // a description of what the transformed query does, and the source of the data.
   repeated EvaluatedQuery evaluated_queries = 1;
 }
 
 message ProvideEvaluationFeedbackRequest {
+  // The natural language query that was evaluated
   string query = 1;
+  // The result of the natural language query evaluation
   string sql = 2;
+  // Instructs the model as to whether the evaluation of the natural
+  // language query was valid or not. If true, the evaluation was correct.
   bool valid = 3;
 }
 
 message ProvideEvaluationFeedbackResponse {
+  // Indicates whether the feedback was handled successfully.
   bool handled = 1;
 }
 
 message EnumerateDataRequest {
+  // The query to use to filter the data. This can be either an unevaluated query
+  // or an evaluated query list. If an unevaluated query is provided, the service
+  // will evaluate the query and return the results.
   oneof query {
+    // An unevaluated query that will be evaluated by the service.
+    // This is the raw natural language query that the user provided.
     UnevaluatedQuery unevaluated_query = 1;
+    // An evaluated query list that contains the results of the evaluation.
+    // This is the result of the EvaluateDataQuery method.
     EvaluatedQueryList evaluated_query_list = 2;
   }
 
   // How many results to include in the paginated response.
-  // Uses the default page size if not provided.
+  // Uses the default page size of 20 if not provided.
   int32 page_size = 3;
 
   // The starting token for the next page to request.
@@ -74,34 +143,52 @@ message EnumerateDataRequest {
 }
 
 message EnumerateDataResponse {
+  // The list of data values that match the query. This will include the metadata
+  // for each data value, such as the measurement ID, as well as the moniker that
+  // can be used to retrieve the data itself.
   repeated StoredDataValue stored_data_values = 1;
+  // If there are more results to return, this will contain the token to use for
+  // the next page of results. If there are no more results, this will be an empty string.
   string next_page_token = 2;
+  // Indicates whether there are more results to return.
   bool has_next_page = 3;
 }
 
 message QueryConditionSetsRequest {
   // an OData query string.  example "$filter=name eq 'Value'"
-  // $expand is not supported
+  // An empty string will return all condition sets.
+  // $expand, $count, and $select are not supported. For more information,
+  // see https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview.
   string odata_query = 1;
 }
 
 message QueryConditionSetsResponse {
-  // The moniker of the condition set and its metadata.
+  // The list of matching condition sets. Each item contains a moniker for
+  // retrieving the condition set data, as well as the metadata associated
+  // with the condition set.
   repeated StoredConditionSetValue stored_condition_set_values = 1;
 }
 
 message QueryDataRequest {
   // an OData query string.  example "$filter=name eq 'Value'"
-  // $expand is not supported
+  // An empty string will return all data values.
+  // $expand, $count, and $select are not supported. For more information,
+  // see https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview.
   string odata_query = 1;
 }
 
 message QueryDataResponse {
+  // The list of matching data values. Each item contains a moniker for
+  // retrieving the data, as well as the metadata associated with the data.
   repeated StoredDataValue stored_data_values = 1;
 }
 
 message PublishConditionSetRequest {
   // Required. The set of conditions present for one published data (output) of a measurement
+  // Each item in the list corresponds to a cell in a column in the overall frame of the
+  // condition set.  The entire list of condition values makes up a single row of the
+  // condition set.  If you want to publish the entire frame of condition data, you can
+  // use the PublishConditionSetBatch method instead.
   repeated Condition condition_set = 1;
 
   // The location to which the condition set should be published.
@@ -109,7 +196,7 @@ message PublishConditionSetRequest {
 
   // Required.
   // Either the id of the measurement associated with this condition set,
-  // or the metadata of the measurement itself.  
+  // or the metadata of the measurement itself.
   oneof measurement {
     // The metadata of the measurement associated with this condition set.
     MeasurementMetadata measurement_metadata = 11;
@@ -121,12 +208,15 @@ message PublishConditionSetRequest {
 
 message PublishConditionSetResponse {
   // A shared data value for *all* condition data present for the specified measurement.
-  // Note: This data value's Metadata contains a reference to the measurement ID associated with this set of condition set.
+  // This value's Metadata contains a reference to the measurement ID associated with this set of condition set.
   StoredConditionSetValue stored_condition_set_value = 1;
 }
 
 message PublishConditionSetBatchRequest {
-  // Required. The set of conditions for N iterations of published data of a measurement
+  // Required. The set of conditions for N iterations of published data of a measurement.
+  // Each item in the list corresponds to an entire column in the overall frame of the
+  // condition set.  The entire list of condition values makes up the entire frame of the
+  // condition set.
   repeated ConditionArray condition_set = 1;
 
   // The location to which the condition set should be published.
@@ -134,7 +224,7 @@ message PublishConditionSetBatchRequest {
 
   // Required.
   // Either the id of the measurement associated with this condition set,
-  // or the metadata of the measurement itself.  
+  // or the metadata of the measurement itself.
   oneof measurement {
     // The metadata of the measurement associated with this condition set.
     MeasurementMetadata measurement_metadata = 11;
@@ -146,6 +236,7 @@ message PublishConditionSetBatchRequest {
 
 message PublishConditionSetBatchResponse {
   // A shared  value for *all* condition data present for the specified measurement.
+  // This value's Metadata contains a reference to the measurement ID associated with this set of condition set.
   StoredConditionSetValue stored_condition_set_value = 1;
 }
 
@@ -178,12 +269,13 @@ message PublishDataRequest {
 
   // Optional.
   // Either the list of ids of the hardware associated with this data,
-  // or the informationa about the hardware itself.  If neither is specified,
+  // or the information about the hardware itself.  If neither is specified,
   // the hardware specified in the session will be associated with this data.
   oneof hardware {
     // The list of hardware associated with this data.
     HardwareMetadataList hardware_list = 10;
-    // The ids of the hardware associated with this data.
+    // The ids of the hardware associated with this data. These values are expected
+    // to be parsable GUIDs or aliases.
     IdentifierList hardware_identifier_list = 11;
   }
 
@@ -194,13 +286,14 @@ message PublishDataRequest {
   oneof software {
     // The list of software associated with this data.
     SoftwareMetadataList software_list = 12;
-    // The ids of the software associated with this data.
+    // The ids of the software associated with this data. These values are expected
+    // to be parsable GUIDs or aliases.
     IdentifierList software_identifier_list = 13;
   }
 }
 
 message PublishDataResponse {
-  // The moniker of the published data and its metadata.  
+  // The moniker of the published data and its metadata.
   StoredDataValue stored_data_value = 1;
 }
 
@@ -251,12 +344,13 @@ message PublishDataBatchRequest {
 
   // Optional.
   // Either the list of ids of the hardware associated with this data,
-  // or the informationa about the hardware itself.  If neither is specified,
+  // or the information about the hardware itself.  If neither is specified,
   // the hardware specified in the session will be associated with this data.
   oneof hardware {
     // The list of hardware associated with this data.
     HardwareMetadataList hardware_list = 11;
-    // The ids of the hardware associated with this data.
+    // The ids of the hardware associated with this data. These values are expected
+    // to be parsable GUIDs or aliases.
     IdentifierList hardware_identifier_list = 12;
   }
 
@@ -267,13 +361,14 @@ message PublishDataBatchRequest {
   oneof software {
     // The list of software associated with this data.
     SoftwareMetadataList software_list = 13;
-    // The ids of the software associated with this data.
+    // The ids of the software associated with this data. These values are expected
+    // to be parsable GUIDs or aliases.
     IdentifierList software_identifier_list = 14;
   }
 }
 
 message PublishDataBatchResponse {
-  // The monikers of the published data and their corresponding metadata.  
+  // The monikers of the published data and their corresponding metadata.
   repeated StoredDataValue stored_data_values = 1;
 }
 
@@ -317,22 +412,23 @@ message GetMeasurementResponse {
 
 message QueryMeasurementsRequest {
   // an OData query string.  example "$filter=name eq 'Value'"
-  // $expand is not supported
+  // An empty string will return all measurements.
+  // $expand, $count, and $select are not supported. For more information,
+  // see https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview.
   string odata_query = 1;
 }
 
 message QueryMeasurementsResponse {
+  // The list of measurements that match the query.
   repeated MeasurementMetadata measurements = 1;
 }
 
 
-// Message sent to create a new measurement in the metadata store.
 message CreateMeasurementRequest {
   // Required. The metadata of the measurement to be created.
   MeasurementMetadata measurement = 1;
 }
 
-// Message returned when creating a new measurement in the metadata store.
 message CreateMeasurementResponse {
   // The identifier of the created measurement.
   string id = 1;

@@ -19,7 +19,8 @@ message DUTMetadata
     // The product associated with this device under test.
     ni.measurements.metadata.v1.ProductMetadata product_metadata = 1;
     // The id of the product associated with this device under test.
-    // This value is expected to be a parsable GUID.
+    // This value is expected to be a parsable GUID or an alias. It will always
+    // be returned from the service as a GUID.
     // See ni.measurements.metadata.MetadataStoreService for more information.
     string product_id = 2;
   }
@@ -202,4 +203,28 @@ message MetadataSchema {
   string schema_id = 1;
   // The schema itself.
   string schema = 2;
+}
+
+message Alias {
+  // The registered alias name for the aliased metadata instance.
+  string name = 1;
+
+  // The type of the aliased metadata instance.
+  AliasTargetType target_type = 2;
+
+  // The unique identifier for the aliased metadata instance.
+  string target_id = 3;
+}
+
+enum AliasTargetType
+{
+  ALIAS_TARGET_TYPE_UNSPECIFIED = 0;
+  ALIAS_TARGET_TYPE_DUT = 1;
+  ALIAS_TARGET_TYPE_PRODUCT = 2;
+  ALIAS_TARGET_TYPE_HARDWARE = 3;
+  ALIAS_TARGET_TYPE_SOFTWARE = 4;
+  ALIAS_TARGET_TYPE_OPERATOR = 5;
+  ALIAS_TARGET_TYPE_TEST_PLAN = 6;
+  ALIAS_TARGET_TYPE_TEST = 7;
+  ALIAS_TARGET_TYPE_TEST_STATION = 8;
 }
