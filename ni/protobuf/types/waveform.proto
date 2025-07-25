@@ -19,17 +19,7 @@ option objc_class_prefix = "NIPT";
 option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
-// Detailed documentation for waveform attributes:
-// A waveform attribute is metadata attached to a waveform.
-// It is represented in this message as a map associating the name of the attribute with the value described by WaveformAttributeValue.
-// The NI-DAQmx driver sets the following string attributes:
-// NI_ChannelName: the name of the virtual channel producing the waveform.
-// NI_LineNames: the name of the digital line in the waveform.
-// NI_UnitDescription: the units of measure for the waveform.
-// NI_dBReference: the reference value to use when converting measurement levels to decibel.
-// For additional information on waveform attributes, please visit https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-waveform-attribute.html
-
-// An analog waveform, which encapsulates analog data as doubles and timing information.
+// A double-precision analog waveform with timing and extended properties.
 message DoubleAnalogWaveform {
   // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
@@ -40,12 +30,11 @@ message DoubleAnalogWaveform {
   // The data values of the waveform.
   repeated double y_data = 3;
 
-  // The names and values of all waveform attributes.
-  // See the comment at near the top of this file for more details.
+  // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
-// An analog waveform, which encapsulates analog data as 16 bit integers and timing information.
+// A 16-bit integer analog waveform with timing and extended properties.
 message I16AnalogWaveform {
   // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
@@ -56,15 +45,14 @@ message I16AnalogWaveform {
   // The data values of the waveform.
   repeated sint32 y_data = 3;
 
-  // The names and values of all waveform attributes.
-  // See the comment at near the top of this file for more details.
+  // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 4;
 
-  // Optional scaling information which can be used to convert unscaled data represented by this waveform to scaled data.
+  // Optional scaling information used to convert raw data to scaled data.
   Scale scale = 5;
 }
 
-// A complex waveform, which encapsulates complex data as doubles and timing information.
+// A double-precision complex waveform with timing and extended properties.
 message DoubleComplexWaveform {
   // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
@@ -73,15 +61,16 @@ message DoubleComplexWaveform {
   double dt = 2;
 
   // The data values of the waveform.
-  // Real and imaginary parts interleaved.  Example: [1.0+2.0j, 3.0+4.0j] is represented as [1.0, 2.0, 3.0, 4.0].
+  //
+  // This data consists of interleaved real and imaginary parts.
+  // Example: [1.0+2.0j, 3.0+4.0j] is represented as [1.0, 2.0, 3.0, 4.0].
   repeated double y_data = 3;
 
-  // The names and values of all waveform attributes.
-  // See the comment at near the top of this file for more details.
+  // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
-// A complex waveform, which encapsulates complex data as 16 bit integers and timing information.
+// A 16-bit integer complex waveform with timing and extended properties.
 message I16ComplexWaveform {
   // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
@@ -90,18 +79,19 @@ message I16ComplexWaveform {
   double dt = 2;
 
   // The data values of the waveform.
-  // Real and imaginary parts interleaved. Example: [1+2j, 3+4j] is represented as [1, 2, 3, 4].
+  //
+  // This data consists of interleaved real and imaginary parts.
+  // Example: [1+2j, 3+4j] is represented as [1, 2, 3, 4].
   repeated sint32 y_data = 3;
 
-  // The names and values of all waveform attributes.
-  // See the comment at near the top of this file for more details.
+  // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 4;
 
-  // Optional scaling information which can be used to convert unscaled data represented by this waveform to scaled data.
+  // Optional scaling information used to convert raw data to scaled data.
   Scale scale = 5;
 }
 
-// A frequency spectrum, which encapsulates analog data and frequency information.
+// A double-precision frequency spectrum with extended properties.
 message DoubleSpectrum {
   // The start frequency of the spectrum.
   double start_frequency = 1;
@@ -112,12 +102,21 @@ message DoubleSpectrum {
   // The data values of the spectrum.
   repeated double data = 3;
 
-  // The names and values of all waveform attributes.
-  // See the comment at near the top of this file for more details.
+  // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
-// Waveform Attribute Value
+// Metadata attached to a waveform.
+//
+// The NI-DAQmx driver sets the following string attributes:
+// 
+// - NI_ChannelName: the name of the virtual channel producing the waveform.
+// - NI_LineNames: the name of the digital line in the waveform.
+// - NI_UnitDescription: the units of measure for the waveform.
+// - NI_dBReference: the reference value to use when converting measurement levels to decibel.
+//
+// For additional information on waveform attributes, please visit
+// https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-waveform-attribute.html
 message WaveformAttributeValue {
   // The kind of attribute value.
   oneof attribute
@@ -136,7 +135,7 @@ message WaveformAttributeValue {
   }
 }
 
-// A digital waveform, which encapsulates digital data as integers, timing information, and extended properties.
+// A digital waveform as bytes with timing and extended properties.
 message DigitalWaveform {
   // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
@@ -147,23 +146,24 @@ message DigitalWaveform {
   // The number of signals in each sample of data.
   int32 signal_count = 3;
 
-  // The data values of the waveform. This data is a flattened array of bytes
-  // that are ordered such that each signal_count bytes represents a sample.
+  // The data values of the waveform.
+  //
+  // This data is a flattened array of bytes that are ordered such that each
+  // signal_count bytes represents a sample.
   bytes y_data = 4;
 
-  // The names and values of all waveform attributes.
-  // See the comment at near the top of this file for more details.
+  // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 5;
 }
 
-// Scaling information which can be used to convert unscaled data represented by this waveform to scaled data.
+// Scaling information for converting unscaled waveform data to scaled data.
 message Scale {
   oneof mode {
     LinearScale linear_scale = 1;
   }
 }
 
-// LinearScale datatype.
+// A linear scale consisting of a gain and an offset.
 message LinearScale {
   // The gain of the linear scale
   double gain = 1;
