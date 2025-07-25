@@ -23,27 +23,27 @@ option objc_class_prefix = "NIPT";
 option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
-// An array of double analog waveforms.
+// An array of double-precision analog waveforms.
 message DoubleAnalogWaveformArrayValue {
    repeated DoubleAnalogWaveform waveforms = 1;
 }
 
-// An array of 16 bit integer waveforms.
+// An array of 16-bit integer waveforms.
 message I16AnalogWaveformArrayValue {
    repeated I16AnalogWaveform waveforms = 1;
 }
 
-// An array of double complex waveforms.
+// An array of double-precision complex waveforms.
 message DoubleComplexWaveformArrayValue {
    repeated DoubleComplexWaveform waveforms = 1;
 }
 
-// An array of 16 bit integer complex waveforms.
+// An array of 16-bit integer complex waveforms.
 message I16ComplexWaveformArrayValue {
    repeated I16ComplexWaveform waveforms = 1;
 }
 
-// An array of double spectrums.
+// An array of double-precision spectrums.
 message DoubleSpectrumArrayValue {
    repeated DoubleSpectrum waveforms = 1;
 }

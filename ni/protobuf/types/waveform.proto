@@ -34,7 +34,7 @@ message DoubleAnalogWaveform {
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
-// An int16 analog waveform with timing and extended properties.
+// A 16-bit integer analog waveform with timing and extended properties.
 message I16AnalogWaveform {
   // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
@@ -70,7 +70,7 @@ message DoubleComplexWaveform {
   map<string, WaveformAttributeValue> attributes = 4;
 }
 
-// An int16 complex waveform with timing and extended properties.
+// A 16-bit integer complex waveform with timing and extended properties.
 message I16ComplexWaveform {
   // The time of the first sample in y_data.
   PrecisionTimestamp t0 = 1;
@@ -109,10 +109,12 @@ message DoubleSpectrum {
 // Metadata attached to a waveform.
 //
 // The NI-DAQmx driver sets the following string attributes:
-// NI_ChannelName: the name of the virtual channel producing the waveform.
-// NI_LineNames: the name of the digital line in the waveform.
-// NI_UnitDescription: the units of measure for the waveform.
-// NI_dBReference: the reference value to use when converting measurement levels to decibel.
+// 
+// - NI_ChannelName: the name of the virtual channel producing the waveform.
+// - NI_LineNames: the name of the digital line in the waveform.
+// - NI_UnitDescription: the units of measure for the waveform.
+// - NI_dBReference: the reference value to use when converting measurement levels to decibel.
+//
 // For additional information on waveform attributes, please visit
 // https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-waveform-attribute.html
 message WaveformAttributeValue {
