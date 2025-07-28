@@ -15,7 +15,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Trigger Main CI 
-      uses: Azure/pipelines@v1.2
+      uses: Azure/pipelines@fac73367a779c3bd02c073d6c41bc81d18b2c0ad # v1.2
       if: ${{ github.repository == 'ni/ni-apis' }}
       with:
         azure-devops-project-url: 'https://dev.azure.com/ni/DevCentral'
