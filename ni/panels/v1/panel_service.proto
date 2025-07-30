@@ -63,7 +63,7 @@ message StartPanelRequest {
   // Unique ID of the panel. Only alphanumeric characters and underscores are allowed.
   string panel_id = 1;
 
-  // Configuration for the panel, packed as Any
+  // Configuration for the panel, packed as a google.protobuf.Any
   google.protobuf.Any panel_configuration = 2;
 }
 
