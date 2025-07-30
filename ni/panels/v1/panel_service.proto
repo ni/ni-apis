@@ -111,7 +111,8 @@ message GetValueRequest {
 }
 
 message GetValueResponse {
-  // The value
+  // The value, packed as a google.protobuf.Any.
+  // Only types from google/protobuf/wrappers.proto and the ni.protobuf.types package are allowed.
   google.protobuf.Any value = 1;
 }
 
@@ -124,7 +125,8 @@ message TryGetValueRequest {
 }
 
 message TryGetValueResponse {
-  // The value, if it was found
+  // The value (if it was found), packed as a google.protobuf.Any.
+  // Only types from google/protobuf/wrappers.proto and the ni.protobuf.types package are allowed.
   optional google.protobuf.Any value = 1;
 }
 
@@ -135,7 +137,8 @@ message SetValueRequest {
   // Unique ID of the value. Only alphanumeric characters and underscores are allowed.
   string value_id = 2;
 
-  // The value
+  // The value, packed as a google.protobuf.Any.
+  // Only types from google/protobuf/wrappers.proto and the ni.protobuf.types package are allowed.
   google.protobuf.Any value = 3;
 
   // Notify other clients of this new value
