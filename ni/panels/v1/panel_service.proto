@@ -127,7 +127,7 @@ message TryGetValueRequest {
 message TryGetValueResponse {
   // The value (if it was found), packed as a google.protobuf.Any.
   // Only types from google/protobuf/wrappers.proto and the ni.protobuf.types package are allowed.
-  optional google.protobuf.Any value = 1;
+  google.protobuf.Any value = 1;
 }
 
 message SetValueRequest {
