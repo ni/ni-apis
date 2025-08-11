@@ -27,6 +27,11 @@ message Int32Array {
   repeated int32 values = 1;
 }
 
+// An array of 64-bit integers
+message Int64Array {
+  repeated sint64 values = 1;
+}
+
 // An array of booleans
 message BoolArray {
   repeated bool values = 1;
