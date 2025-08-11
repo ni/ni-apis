@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package ni.protobuf.types;
 
+import "ni/protobuf/types/array.proto";
 import "ni/protobuf/types/attribute_value.proto";
 
 option csharp_namespace = "NationalInstruments.Protobuf.Types";
@@ -15,21 +16,6 @@ option ruby_package = "NI::Protobuf::Types";
 
 // A vector value with associated attributes, such as units.
 message Vector {
-  // These nested messages are only for use by Vector. They should not be
-  // used outside of the Vector context.
-  message DoubleArray {
-    repeated double values = 1;
-  }
-  message Int32Array {
-    repeated int32 values = 1;
-  }
-  message BoolArray {
-    repeated bool values = 1;
-  }
-  message StringArray {
-    repeated string values = 1;
-  }
-
   // The names and values of all vector attributes.
   //
   // A vector attribute is metadata attached to a vector.
