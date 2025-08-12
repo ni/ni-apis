@@ -17,6 +17,36 @@ option objc_class_prefix = "NIPT";
 option php_namespace = "NI\\PROTOBUF\\TYPES";
 option ruby_package = "NI::Protobuf::Types";
 
+// An array of booleans
+message BoolArray {
+  repeated bool values = 1;
+}
+
+// An array of bytes collections
+message BytesArray {
+  repeated bytes values = 1;
+}
+
+// An array of doubles
+message DoubleArray {
+  repeated double values = 1;
+}
+
+// An array of 32-bit integers
+message SInt32Array {
+  repeated sint32 values = 1;
+}
+
+// An array of 64-bit integers
+message SInt64Array {
+  repeated sint64 values = 1;
+}
+
+// An array of strings
+message StringArray {
+  repeated string values = 1;
+}
+
 // A 2D array of doubles.
 //
 // 2D arrays are stored as a repeated field of the appropriate element type,
