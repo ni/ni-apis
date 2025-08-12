@@ -23,10 +23,10 @@ message Scalar
   // the attribute with the value described by AttributeValue.
   map<string, AttributeValue> attributes = 1;
 
-  // The scalar value (a double, int32, bool, or string).
-oneof value {
+  // The scalar value (a double, sint32, bool, or string).
+  oneof value {
     double double_value = 2;
-    int32 int32_value = 3;
+    sint32 sint32_value = 3;
     bool bool_value = 4;
     string string_value = 5;
   }

@@ -23,10 +23,10 @@ message Vector {
   // the attribute with the value described by AttributeValue.
   map<string, AttributeValue> attributes = 1;
 
-  // The vector value (a repeated double, int32, bool, or string).
+  // The vector value (a repeated double, sint32, bool, or string).
   oneof value {
     DoubleArray double_array = 2;
-    Int32Array int32_array = 3;
+    SInt32Array sint32_array = 3;
     BoolArray bool_array = 4;
     StringArray string_array = 5;
   }
