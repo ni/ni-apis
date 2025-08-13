@@ -8,6 +8,9 @@ package ni.protobuf.types;
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+
+import "ni/protobuf/types/attribute_value.proto";
+
 option csharp_namespace = "NationalInstruments.Protobuf.Types";
 option go_package = "types";
 option java_multiple_files = true;
@@ -26,4 +29,11 @@ message DoubleXYData
 {
   repeated double x_data = 1;
   repeated double y_data = 2;
+  
+  // The names and values of all xy data attributes.
+  //
+  // An attribute is metadata attached to a xy data.
+  // It is represented in this message as a map associating the name of
+  // the attribute with the value described by AttributeValue.
+  map<string, AttributeValue> attributes = 3;
 }
