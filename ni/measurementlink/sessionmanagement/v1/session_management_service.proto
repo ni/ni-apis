@@ -118,33 +118,9 @@ message SessionInformation{
   // This field is empty for any SessionInformation returned from ReserveAllRegisteredSessions.
   // This field is readonly.
   repeated ChannelMapping channel_mappings = 6;
-  
-  // Optional. Represents a set of annotations related to client machine details for session reservation or registration.
-  // Well-known annotations:
-  // - Reserved Hostname
-  //   - Key: "ni/reserved.hostname"
-  //   - Expected format: string
-  //   - Example: "remotehost"
-  // - Reserved Username
-  //   - Key: "ni/reserved.username"
-  //   - Expected format: string
-  //   - Example: "user-1"
-  // - Reserved IP Address
-  //   - Key: "ni/reserved.ipaddress"
-  //   - Expected format: string
-  //   - Example: "10.100.10.100"
-  // - Registered Hostname
-  //   - Key: "ni/registered.hostname"
-  //   - Expected format: string
-  //   - Example: "remotehost"
-  // - Registered Username
-  //   - Key: "ni/registered.username"
-  //   - Expected format: string
-  //   - Example: "user-1"
-  // - Registered IP Address
-  //   - Key: "ni/registered.ipaddress"
-  //   - Expected format: string
-  //   - Example: "10.100.10.100"
+
+  // Optional. A set of annotations attached to the session. 
+  // For example, the annotations can provide a description of the session or identify who reserved a session.
   map<string, string> annotations = 8;
 }
 
@@ -183,32 +159,8 @@ message MultiplexerSessionInformation {
   // This field is readonly.
   bool session_exists = 4;
 
-  // Optional. Represents a set of annotations related to client machine details for session reservation or registration.
-  // Well-known annotations:
-  // - Reserved Hostname
-  //   - Key: "ni/reserved.hostname"
-  //   - Expected format: string
-  //   - Example: "remotehost"
-  // - Reserved Username
-  //   - Key: "ni/reserved.username"
-  //   - Expected format: string
-  //   - Example: "user-1"
-  // - Reserved IP Address
-  //   - Key: "ni/reserved.ipaddress"
-  //   - Expected format: string
-  //   - Example: "10.100.10.100"
-  // - Registered Hostname
-  //   - Key: "ni/registered.hostname"
-  //   - Expected format: string
-  //   - Example: "remotehost"
-  // - Registered Username
-  //   - Key: "ni/registered.username"
-  //   - Expected format: string
-  //   - Example: "user-1"
-  // - Registered IP Address
-  //   - Key: "ni/registered.ipaddress"
-  //   - Expected format: string
-  //   - Example: "10.100.10.100"
+  // Optional. A set of annotations attached to the session. 
+  // For example, the annotations can provide a description of the session or identify who reserved a session.
   map<string, string> annotations = 5;
 }
 
@@ -235,32 +187,8 @@ message ReserveSessionsRequest {
   // Allowed values: 0 (non-blocking, fails immediately if resources cannot be reserved), -1 (infinite timeout), or any other positive numeric value (wait for that number of milliseconds)
   int32 timeout_in_milliseconds = 4;
 
-  // Optional. Represents a set of annotations related to client machine details for session reservation or registration.
-  // Well-known annotations:
-  // - Reserved Hostname
-  //   - Key: "ni/reserved.hostname"
-  //   - Expected format: string
-  //   - Example: "remotehost"
-  // - Reserved Username
-  //   - Key: "ni/reserved.username"
-  //   - Expected format: string
-  //   - Example: "user-1"
-  // - Reserved IP Address
-  //   - Key: "ni/reserved.ipaddress"
-  //   - Expected format: string
-  //   - Example: "10.100.10.100"
-  // - Registered Hostname
-  //   - Key: "ni/registered.hostname"
-  //   - Expected format: string
-  //   - Example: "remotehost"
-  // - Registered Username
-  //   - Key: "ni/registered.username"
-  //   - Expected format: string
-  //   - Example: "user-1"
-  // - Registered IP Address
-  //   - Key: "ni/registered.ipaddress"
-  //   - Expected format: string
-  //   - Example: "10.100.10.100"
+  // Optional. A set of annotations to add to the session for the duration of the reservation. 
+  // These annotations will automatically be cleared when the session is unreserved.
   map<string, string> annotations = 5;
 }
 
@@ -316,32 +244,8 @@ message ReserveAllRegisteredSessionsRequest {
   // For custom instruments the user defined instrument type id is defined in the pin map file or custom session management plugin service.
   string instrument_type_id = 2;
 
-  // Optional. Represents a set of annotations related to client machine details for session reservation or registration.
-  // Well-known annotations:
-  // - Reserved Hostname
-  //   - Key: "ni/reserved.hostname"
-  //   - Expected format: string
-  //   - Example: "remotehost"
-  // - Reserved Username
-  //   - Key: "ni/reserved.username"
-  //   - Expected format: string
-  //   - Example: "user-1"
-  // - Reserved IP Address
-  //   - Key: "ni/reserved.ipaddress"
-  //   - Expected format: string
-  //   - Example: "10.100.10.100"
-  // - Registered Hostname
-  //   - Key: "ni/registered.hostname"
-  //   - Expected format: string
-  //   - Example: "remotehost"
-  // - Registered Username
-  //   - Key: "ni/registered.username"
-  //   - Expected format: string
-  //   - Example: "user-1"
-  // - Registered IP Address
-  //   - Key: "ni/registered.ipaddress"
-  //   - Expected format: string
-  //   - Example: "10.100.10.100"
+  // Optional. A set of annotations to add to the session for the duration of the reservation. 
+  // These annotations will automatically be cleared when the session is unreserved.
   map<string, string> annotations = 3;
 }
 
