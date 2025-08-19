@@ -20,7 +20,6 @@ option ruby_package = "NI::Protobuf::Types";
 // Represents a duration of time expressed in NI Binary Time Format (NI-BTF).
 //
 // https://www.ni.com/docs/en-US/bundle/labwindows-cvi/page/cvi/libref/ni-btf.htm
-// NI-BTF stores time values in Coordinated Universal Time (UTC) format.
 // A PrecisionDuration is encoded as a count of seconds and fractions of seconds at
 // 2^-64 resolution.
 message PrecisionDuration
