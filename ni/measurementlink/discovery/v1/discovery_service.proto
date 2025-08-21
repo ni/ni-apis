@@ -22,7 +22,9 @@ option ruby_package = "NI::MeasurementLink::Discovery::V1";
 service DiscoveryService {
   // Registers a service instance with the discovery service.
   // Status Codes for errors:
+  //
   // - INVALID_ARGUMENT:
+  //
   //   - ServiceDescriptor.display_name is empty
   //   - ServiceDescriptor.provided_interfaces is empty
   //   - ServiceDescriptor.service_class is empty
@@ -45,6 +47,7 @@ service DiscoveryService {
   // call RegisterService when their service is started or this call will never complete successfully when
   // the discovery service attempts to start it.
   // Status Codes for errors:
+  //
   // - INVALID_ARGUMENT: provided_interfaces is empty
   // - NOT_FOUND: No service matching the resolve request was found
   // - FAILED_PRECONDITION: More than one service matching the resolve request was found
@@ -81,15 +84,21 @@ message ServiceDescriptor {
 
   // Optional. Represents a set of annotations on the service.
   // Well-known annotations:
+  //
   // - Description
+  //
   //   - Key: "ni/service.description"
   //   - Expected format: string
   //   - Example: "Measure inrush current with a shorted load and validate results against configured limits."
+  //
   // - Collection
+  //
   //   - Key: "ni/service.collection"
   //   - Expected format: "." delimited namespace/hierarchy case-insensitive string
   //   - Example: "CurrentTests.Inrush"
+  //
   // - Tags
+  //
   //   - Key: "ni/service.tags"
   //   - Expected format: serialized JSON string of an array of strings
   //   - Example: "[\"powerup\", \"current\"]"

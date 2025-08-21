@@ -83,16 +83,16 @@ message QueryPinsRequest {
   string pin_map_id = 1;
 
   // Optional. Filter pins by instrument type.
-
+  //
   // Pin maps have built in instrument definitions using the following NI driver based instrument type ids:
-
+  //
   // - "niDCPower"
   // - "niDigitalPattern"
   // - "niScope"
   // - "niDMM"
   // - "niDAQmx"
   // - "niFGen"
-
+  //
   // For custom instruments the user defined instrument type id is defined in the pin map file.
   string instrument_type_id = 2;
 }
