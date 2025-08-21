@@ -93,9 +93,9 @@ message SessionInformation{
   string channel_list = 3;
 
   // Instrument type ID to identify which type of instrument the session represents.
-
+  //
   // The session management service has built in instrument definitions using the following NI driver based instrument type ids:
-
+  //
   // - "niDCPower"
   // - "niDigitalPattern"
   // - "niScope"
@@ -103,7 +103,7 @@ message SessionInformation{
   // - "niDAQmx"
   // - "niFGen"
   // - "niRelayDriver"
-
+  //
   // For custom instruments the user defined instrument type id is defined in the pin map file or custom session management plugin service.
   // This field is readonly.
   string instrument_type_id = 4;
