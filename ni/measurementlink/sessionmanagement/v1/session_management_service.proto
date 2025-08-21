@@ -18,14 +18,21 @@ option ruby_package = "NI::MeasurementLink::SessionManagement::V1";
 service SessionManagementService {
   // Reserve session(s) for the given I/O resources (pins, relays, channels), sites, and instrument type ID and returns the information needed to create or access the session.
   // Also reserves the session so other processes cannot access it with a ReserveSessions() call.
-  // Status Codes for errors:
+  //
+  // Status codes for errors:
+  //
   // - INVALID_ARGUMENT:
+  //
   //     - Pin Map Context references a site number that is not defined in the pin map
   //     - Pin or relay name does not match any pin, pin group, relay, or relay group names in the pin map
   //     - Timeout specified is less than -1.
+  //
   // - NOT_FOUND:
+  //
   //     - Pin Map Context has a pin map ID that does not match any pin maps registered with the Pin Map Service.
+  //
   // - UNAVAILABLE:
+  //
   //     - Session(s) were already reserved and didn't become available before the specified timeout expired.
   rpc ReserveSessions(ReserveSessionsRequest) returns (ReserveSessionsResponse);
 
@@ -35,10 +42,15 @@ service SessionManagementService {
   rpc UnreserveSessions(UnreserveSessionsRequest) returns (UnreserveSessionsResponse);
 
   // Registers the sessions with this service. Indicates that the sessions are open and will need to be closed later.
-  // Status Codes for errors:
+  //
+  // Status codes for errors:
+  //
   // - ALREADY_EXISTS:
+  //
   //     - Session by the same name is already registered.
+  //
   // - INVALID_ARGUMENT:
+  //
   //     - Session names list has an empty string.
   rpc RegisterSessions(RegisterSessionsRequest) returns (RegisterSessionsResponse);
 
@@ -53,10 +65,15 @@ service SessionManagementService {
   rpc ReserveAllRegisteredSessions(ReserveAllRegisteredSessionsRequest) returns (ReserveAllRegisteredSessionsResponse);
 
   // Registers the multiplexer sessions with this service. Indicates that the sessions are open and will need to be closed later.
-  // Status Codes for errors:
+  //
+  // Status codes for errors:
+  //
   // - ALREADY_EXISTS:
+  //
   //     - Session by the same name is already registered.
+  //
   // - INVALID_ARGUMENT:
+  //
   //     - Session names list has an empty string.
   rpc RegisterMultiplexerSessions(RegisterMultiplexerSessionsRequest) returns (RegisterMultiplexerSessionsResponse);
 
@@ -64,10 +81,15 @@ service SessionManagementService {
   rpc UnregisterMultiplexerSessions(UnregisterMultiplexerSessionsRequest) returns (UnregisterMultiplexerSessionsResponse);
 
   // Gets all the connected multiplexer session(s) for the given pin map context and returns information needed to create or access the session.
-  // Status Codes for errors:
+  //
+  // Status codes for errors:
+  //
   // - INVALID_ARGUMENT:
+  //
   //     - Pin Map Context references a site number that is not defined in the pin map.
+  //
   // - NOT_FOUND:
+  //
   //     - Pin Map Context has a pin map ID that does not match any pin maps registered with the Pin Map Service.
   rpc GetMultiplexerSessions(GetMultiplexerSessionsRequest) returns (GetMultiplexerSessionsResponse);
 
@@ -175,14 +197,17 @@ message ReserveSessionsRequest {
   repeated string pin_or_relay_names = 2;
 
   // Optional. Instrument type ID for the measurement. If unspecified, reserve sessions for all instrument types connected in the registered pin map resource.
+  //
   // The session management service has built in instrument definitions using the following NI driver based instrument type ids:
-  //      "niDCPower"
-  //      "niDigitalPattern"
-  //      "niScope"
-  //      "niDMM"
-  //      "niDAQmx"
-  //      "niFGen"
-  //      "niRelayDriver"
+  //
+  // - "niDCPower"
+  // - "niDigitalPattern"
+  // - "niScope"
+  // - "niDMM"
+  // - "niDAQmx"
+  // - "niFGen"
+  // - "niRelayDriver"
+  //
   // For custom instruments the user defined instrument type id is defined in the pin map file or custom session management plugin service.
   string instrument_type_id = 3;
 
@@ -236,14 +261,17 @@ message ReserveAllRegisteredSessionsRequest {
   int32 timeout_in_milliseconds = 1;
 
   // Optional. Instrument type ID of the registered sessions to reserve. If unspecified, reserve sessions for all instrument types connected in the registered pin map resource.
+  //
   // The session management service has built in instrument definitions using the following NI driver based instrument type ids:
-  //      "niDCPower"
-  //      "niDigitalPattern"
-  //      "niScope"
-  //      "niDMM"
-  //      "niDAQmx"
-  //      "niFGen"
-  //      "niRelayDriver"
+  //
+  // - "niDCPower"
+  // - "niDigitalPattern"
+  // - "niScope"
+  // - "niDMM"
+  // - "niDAQmx"
+  // - "niFGen"
+  // - "niRelayDriver"
+  //
   // For custom instruments the user defined instrument type id is defined in the pin map file or custom session management plugin service.
   string instrument_type_id = 2;
 

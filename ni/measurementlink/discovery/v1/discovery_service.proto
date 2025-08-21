@@ -21,7 +21,8 @@ option ruby_package = "NI::MeasurementLink::Discovery::V1";
 // and activate other services present in the system.
 service DiscoveryService {
   // Registers a service instance with the discovery service.
-  // Status Codes for errors:
+  //
+  // Status codes for errors:
   //
   // - INVALID_ARGUMENT:
   //
@@ -46,7 +47,8 @@ service DiscoveryService {
   // which includes information describing the service. Services that register a .serviceconfig file must
   // call RegisterService when their service is started or this call will never complete successfully when
   // the discovery service attempts to start it.
-  // Status Codes for errors:
+  //
+  // Status codes for errors:
   //
   // - INVALID_ARGUMENT: provided_interfaces is empty
   // - NOT_FOUND: No service matching the resolve request was found
@@ -83,6 +85,7 @@ message ServiceDescriptor {
   string service_class = 4;
 
   // Optional. Represents a set of annotations on the service.
+  //
   // Well-known annotations:
   //
   // - Description

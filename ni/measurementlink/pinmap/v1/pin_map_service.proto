@@ -14,38 +14,52 @@ option ruby_package = "NI::MeasurementLink::PinMap::V1";
 // Service to keep track of pin map resources.
 service PinMapService {
   // Registers pin map with the PinMapService and returns a pin map resource.
-  // Status Codes for errors:
+  //
+  // Status codes for errors:
+  //
   // - INVALID_ARGUMENT: Pin map id is empty or has whitespace, or pin map xml string is not valid
   // - ALREADY_EXISTS: Pin map resource with the specified pin map id already exists
   rpc CreatePinMapFromXml(CreatePinMapFromXmlRequest) returns(PinMap);
 
   // Updates registered pin map contents and returns it.
   // Creates and registers a pin map if a pin map resource for the specified pin map id is not found.
-  // Status Codes for errors:
+  //
+  // Status codes for errors:
+  //
   // - INVALID_ARGUMENT: Pin map xml string is not valid
   rpc UpdatePinMapFromXml(UpdatePinMapFromXmlRequest) returns (PinMap);
 
   // Get registered pin map resource.
-  // Status Codes for errors:
+  //
+  // Status codes for errors:
+  //
   // - NOT_FOUND: Pin map resource for the specified pin map id is not found
   rpc GetPinMap(GetPinMapRequest) returns(PinMap);
 
   // Returns list of pins from the registered pin map resource.
-  // Status Codes for errors:
+  //
+  // Status codes for errors:
+  //
   // - NOT_FOUND: Pin map resource for the specified pin map id is not found
   rpc QueryPins(QueryPinsRequest) returns (QueryPinsResponse);
 
   // Returns list of relays from the registered pin map resource.
-  // Status Codes for errors:
+  //
+  // Status codes for errors:
+  //
   // - NOT_FOUND: Pin map resource for the specified pin map id is not found
   rpc QueryRelays(QueryRelaysRequest) returns (QueryRelaysResponse);
 
   // Get instrument resource names, channels, and instrument type for the specified sites, pins or pin groups, relays or relay groups, instrument type in the registered pin map resource.
-  // Status Codes for errors:
+  // Status codes for errors:
+  //
   // - NOT_FOUND:
+  //
   //   - Pin map resource for the specified pin map id is not found.
   //   - Specified site number is not in the valid range for the registered pin map.
+  //
   // - INVALID_ARGUMENT:
+  //
   //   - Specified pin or relay is not present in the registered pin map resource.
   //   - Empty string specified for a pin or relay name.
   rpc QueryResourceAccessInformation(QueryResourceAccessInformationRequest) returns (QueryResourceAccessInformationResponse);
