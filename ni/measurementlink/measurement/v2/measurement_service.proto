@@ -121,6 +121,7 @@ message ConfigurationParameter {
   bool repeated = 4;
 
   // Optional. Represents a set of annotations on the type.
+  //
   // Well-known annotations:
   //
   // - Type specialization. The keys to other annotations will be read based on the value of `ni/type_specialization` annotation.

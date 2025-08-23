@@ -70,6 +70,7 @@ service SessionManagementService {
   rpc ReserveAllRegisteredSessions(ReserveAllRegisteredSessionsRequest) returns (ReserveAllRegisteredSessionsResponse);
 
   // Registers the multiplexer sessions with this service. Indicates that the sessions are open and will need to be closed later.
+  //
   // Status codes for errors:
   //
   // - ALREADY_EXISTS:
@@ -85,6 +86,7 @@ service SessionManagementService {
   rpc UnregisterMultiplexerSessions(UnregisterMultiplexerSessionsRequest) returns (UnregisterMultiplexerSessionsResponse);
 
   // Gets all the connected multiplexer session(s) for the given pin map context and returns information needed to create or access the session.
+  //
   // Status codes for errors:
   //
   // - INVALID_ARGUMENT:
