@@ -121,16 +121,23 @@ message ConfigurationParameter {
   bool repeated = 4;
 
   // Optional. Represents a set of annotations on the type.
+  //
   // Well-known annotations:
+  //
   // - Type specialization. The keys to other annotations will be read based on the value of `ni/type_specialization` annotation.
+  //
   //   - Key: "ni/type_specialization"
   //   - Common Values: "ioresource", "path", "enum"...
   //   - "ioresource" and "path" parameters require the type field to be TYPE_STRING.
   //   - "enum" parameters requires the type field to be TYPE_ENUM.
+  //
   // - For string parameter with ni/type_specialization annotation equals "ioresource", the "ni/ioresource.instrument_type" annotation will be used by UIs to limit selection of I/O to the specified instrument type.
+  //
   //   - Key: "ni/ioresource.instrument_type"
   //   - Common Values: "niDCPower", "niScope"...
+  //
   // - For enum parameter with ni/type_specialization annotation equals "enum"
+  //
   //   - Key: "ni/enum.values"
   //   - Expected format: JSON dictionary string"
   //   - Example: "{\"RED\":0, \"GREEN\":25, \"BLUE\":5}"
