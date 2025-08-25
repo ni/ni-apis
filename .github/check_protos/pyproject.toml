@@ -3,9 +3,9 @@ name = "check_protos"
 version = "0.1"
 description = "Check .proto files in the repo"
 authors = ["NI <opensource@ni.com>"]
-readme = "README.md" # apply the repo readme to the package as well
 repository = "https://github.com/ni/ni-apis/"
 license = "MIT"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.9"
