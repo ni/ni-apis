@@ -82,6 +82,7 @@ service MetadataStoreService {
   rpc QueryAliases(QueryAliasesRequest) returns (QueryAliasesResponse);
   // Registers an alias of the specified metadata for use/reference when creating other metadata or publishing.
   // Notes:
+  //
   // - The specified metadata must have already been created prior to the alias registration.
   // - This method may be called with an already registered alias name in order to update the target mapped for that existing alias.
   rpc RegisterAlias(RegisterAliasRequest) returns (RegisterAliasResponse);
