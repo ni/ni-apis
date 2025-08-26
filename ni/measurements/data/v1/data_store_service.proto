@@ -304,31 +304,39 @@ message PublishDataBatchRequest {
   PublishableDataBatch data = 1;
   // Optional. The timestamps corresponding to the N iterations of batched data being published.
   // This field must meet one of the following requirements:
+  //
   //   1. The field may be empty. (No timestamp information is recorded for the data.)
   //   2. The field may contain a single value. This value will be associated with each value of the batched data.
   //   3. The field may contain N values, where N is the number of individual batched data values being published.
   //      In this case, each timestamp aligns with the data value at the corresponding index within the PublishableDataBatch.
+  //
   repeated google.protobuf.Timestamp timestamp = 2;
   // Optional. The pass/fail statuses corresponding to the N iterations of batched data being published.
   // This field must meet one of the following requirements:
+  //
   //   1. The field may be empty. (No pass/fail status information is recorded for the data.)
   //   2. The field may contain a single value. This value will be associated with each value of the batched data.
   //   3. The field may contain N values, where N is the number of individual batched data values being published.
   //      In this case, each pass/fail status aligns with the data value at the corresponding index within the PublishableDataBatch.
+  //
   repeated PassFailStatus pass_fail_status = 3;
   // Optional. The error states corresponding to the N iterations of batched data being published.
   // This field must meet one of the following requirements:
+  //
   //   1. The field may be empty. (No error state information is recorded for the data.)
   //   2. The field may contain a single value. This value will be associated with each value of the batched data.
   //   3. The field may contain N values, where N is the number of individual batched data values being published.
   //      In this case, each error state aligns with the data value at the corresponding index within the PublishableDataBatch.
+  //
   repeated ErrorState error_state = 4;
   // Optional. The error messages corresponding to the N iterations of batched data being published.
   // This field must meet one of the following requirements:
+  //
   //   1. The field may be empty. (No error message information is recorded for the data.)
   //   2. The field may contain a single value. This value will be associated with each value of the batched data.
   //   3. The field may contain N values, where N is the number of individual batched data values being published.
   //      In this case, each error message aligns with the data value at the corresponding index within the PublishableDataBatch.
+  //
   repeated ErrorMessage error_message = 5;
 
   // Required.
