@@ -1,0 +1,434 @@
+syntax = "proto3";
+
+package ni.measurements.metadata.v1;
+
+import "ni/measurements/metadata/v1/metadata_store.proto";
+
+option csharp_namespace = "NationalInstruments.Measurements.Metadata.V1";
+option go_package = "metadatav1";
+option java_multiple_files = true;
+option java_outer_classname = "MetadataStoreServiceProto";
+option java_package = "com.ni.measurements.metadata.v1";
+option objc_class_prefix = "NIMM";
+option php_namespace = "NI\\Measurements\\Metadata\\V1";
+option ruby_package = "NI::Measurements::Metadata::V1";
+
+// This service is responsible for storing and retrieving metadata associated with measurement data.
+service MetadataStoreService {
+  // Gets the device under test associated with the identifier given in the request.
+  rpc GetDut(GetDutRequest) returns (GetDutResponse);
+  // Perform an OData query
+  rpc QueryDuts(QueryDutsRequest) returns (QueryDutsResponse);
+  // Creates a new device under test in the metadata store.
+  rpc CreateDut(CreateDutRequest) returns (CreateDutResponse);
+  
+  // Gets the product associated with the identifier given in the request.
+  rpc GetProduct(GetProductRequest) returns (GetProductResponse);
+  // Perform an OData query
+  rpc QueryProducts(QueryProductsRequest) returns (QueryProductsResponse);
+  // Creates a new product in the metadata store.
+  rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
+
+  // Gets the operator associated with the identifier given in the request.
+  rpc GetOperator(GetOperatorRequest) returns (GetOperatorResponse);
+  // Perform an OData query
+  rpc QueryOperators(QueryOperatorsRequest) returns (QueryOperatorsResponse);
+  // Creates a new operator in the metadata store.
+  rpc CreateOperator(CreateOperatorRequest) returns (CreateOperatorResponse);
+
+  // Gets the test plan associated with the identifier given in the request.
+  rpc GetTestPlan(GetTestPlanRequest) returns (GetTestPlanResponse);
+  // Perform an OData query
+  rpc QueryTestPlans(QueryTestPlansRequest) returns (QueryTestPlansResponse);
+  // Creates a new test plan in the metadata store.
+  rpc CreateTestPlan(CreateTestPlanRequest) returns (CreateTestPlanResponse);
+
+  // Gets the test associated with the identifier given in the request.
+  rpc GetTest(GetTestRequest) returns (GetTestResponse);
+  // Perform an OData query
+  rpc QueryTests(QueryTestsRequest) returns (QueryTestsResponse);
+  // Creates a new test in the metadata store.
+  rpc CreateTest(CreateTestRequest) returns (CreateTestResponse);
+
+  // Gets the test station associated with the identifier given in the request.
+  rpc GetTestStation(GetTestStationRequest) returns (GetTestStationResponse);
+  // Perform an OData query
+  rpc QueryTestStations(QueryTestStationsRequest) returns (QueryTestStationsResponse);
+  // Creates a new test station in the metadata store.
+  rpc CreateTestStation(CreateTestStationRequest) returns (CreateTestStationResponse);
+
+  // Gets the hardware associated with the identifier given in the request.
+  rpc GetHardware(GetHardwareRequest) returns (GetHardwareResponse);
+  // Perform an OData query
+  rpc QueryHardware(QueryHardwareRequest) returns (QueryHardwareResponse);
+  // Creates a new hardware in the metadata store.
+  rpc CreateHardware(CreateHardwareRequest) returns (CreateHardwareResponse);
+
+  // Gets the software associated with the identifier given in the request.
+  rpc GetSoftware(GetSoftwareRequest) returns (GetSoftwareResponse);
+  // Perform an OData query
+  rpc QuerySoftware(QuerySoftwareRequest) returns (QuerySoftwareResponse);
+  // Creates a new software in the metadata store.
+  rpc CreateSoftware(CreateSoftwareRequest) returns (CreateSoftwareResponse);
+
+  // Registers a schema. Once a schema has been published, it cannot be modified or removed.
+  rpc RegisterMetadataSchema(RegisterMetadataSchemaRequest) returns (RegisterMetadataSchemaResponse);
+  // Enumerate the metadata schemas that have been previously registered
+  rpc EnumerateMetadataSchemas(EnumerateMetadataSchemasRequest) returns (EnumerateMetadataSchemasResponse);
+
+  // Resolves a given alias to its target (i.e., the underlying metadata that it represents)
+  rpc ResolveAlias(ResolveAliasRequest) returns (ResolveAliasResponse);
+  // Perform an OData query on the registered aliases
+  rpc QueryAliases(QueryAliasesRequest) returns (QueryAliasesResponse);
+  // Registers an alias of the specified metadata for use/reference when creating other metadata or publishing.
+  // Notes:
+  //
+  // - The specified metadata must have already been created prior to the alias registration.
+  // - This method may be called with an already registered alias name in order to update the target mapped for that existing alias.
+  //
+  rpc RegisterAlias(RegisterAliasRequest) returns (RegisterAliasResponse);
+  // Removes a registered alias
+  rpc UnregisterAlias(UnregisterAliasRequest) returns (UnregisterAliasResponse);
+}
+
+// Message sent to get the device under test associated with the given identifier.
+message GetDutRequest {
+  // Required. The identifier of the desired device under test.
+  string id = 1;
+}
+
+// Message returned when getting a device under test associated with the given identifier.
+message GetDutResponse {
+  // The metadata of the requested device under test.
+  DUTMetadata dut = 1;
+}
+
+message QueryDutsRequest {
+  // an OData query string.  example "$filter=name eq 'Value'"
+  // $expand is not supported
+  string odata_query = 1;
+}
+
+message QueryDutsResponse {
+  repeated DUTMetadata duts = 1;
+}
+
+// Message sent to create a new device under test in the metadata store.
+message CreateDutRequest {
+  // Required. The metadata of the device under test to be created.
+  DUTMetadata dut = 1;
+}
+
+// Message returned when creating a new device under test in the metadata store.
+message CreateDutResponse {
+  // The identifier of the created device under test.
+  string id = 1;
+}
+
+// Message sent to get the product associated with the given identifier.
+message GetProductRequest {
+  // Required. The identifier of the desired product.
+  string id = 1;
+}
+
+// Message returned when getting a product associated with the given identifier.
+message GetProductResponse {
+  // The metadata of the requested product.
+  ProductMetadata product = 1;
+}
+
+message QueryProductsRequest {
+  // an OData query string.  example "$filter=name eq 'Value'"
+  // $expand is not supported
+  string odata_query = 1;
+}
+
+message QueryProductsResponse {
+  repeated ProductMetadata products = 1;
+}
+
+// Message sent to create a new product in the metadata store.
+message CreateProductRequest {
+  // Required. The metadata of the product to be created.
+  ProductMetadata product = 1;
+}
+
+// Message returned when creating a new product in the metadata store.
+message CreateProductResponse {
+  // The identifier of the created product.
+  string id = 1;
+}
+
+// Message sent to get the operator associated with the given identifier.
+message GetOperatorRequest {
+  // Required. The identifier of the desired operator.
+  string id = 1;
+}
+
+// Message returned when getting an operator associated with the given identifier.
+message GetOperatorResponse {
+  // The metadata of the requested operator.
+  OperatorMetadata operator = 1;
+}
+
+message QueryOperatorsRequest {
+  // an OData query string.  example "$filter=name eq 'Value'"
+  // $expand is not supported
+  string odata_query = 1;
+}
+
+message QueryOperatorsResponse {
+  repeated OperatorMetadata operators = 1;
+}
+
+// Message sent to create a new operator in the metadata store.
+message CreateOperatorRequest {
+  // Required. The metadata of the operator to be created.
+  OperatorMetadata operator = 1;
+}
+
+// Message returned when creating a new operator in the metadata store.
+message CreateOperatorResponse {
+  // The identifier of the created operator.
+  string id = 1;
+}
+
+// Message sent to get the test plan associated with the given identifier.
+message GetTestPlanRequest {
+  // Required. The identifier of the desired test plan.
+  string id = 1;
+}
+
+// Message returned when getting a test plan associated with the given identifier.
+message GetTestPlanResponse {
+  // The metadata of the requested test plan.
+  TestPlanMetadata test_plan = 1;
+}
+
+message QueryTestPlansRequest {
+  // an OData query string.  example "$filter=name eq 'Value'"
+  // $expand is not supported
+  string odata_query = 1;
+}
+
+message QueryTestPlansResponse {
+  repeated TestPlanMetadata test_plans = 1;
+}
+
+// Message sent to create a new test plan in the metadata store.
+message CreateTestPlanRequest {
+  // Required. The metadata of the test plan to be created.
+  TestPlanMetadata test_plan = 1;
+}
+
+// Message returned when creating a new test plan in the metadata store.
+message CreateTestPlanResponse {
+  // The identifier of the created test plan.
+  string id = 1;
+}
+
+// Message sent to get the test associated with the given identifier.
+message GetTestRequest {
+  // Required. The identifier of the desired test.
+  string id = 1;
+}
+
+// Message returned when getting a test associated with the given identifier.
+message GetTestResponse {
+  // The metadata of the requested test.
+  TestMetadata test = 1;
+}
+
+message QueryTestsRequest {
+  // an OData query string.  example "$filter=name eq 'Value'"
+  // $expand is not supported
+  string odata_query = 1;
+}
+
+message QueryTestsResponse {
+  repeated TestMetadata tests = 1;
+}
+
+// Message sent to create a new test in the metadata store.
+message CreateTestRequest {
+  // Required. The metadata of the test to be created.
+  TestMetadata test = 1;
+}
+
+// Message returned when creating a new test in the metadata store.
+message CreateTestResponse {
+  // The identifier of the created test.
+  string id = 1;
+}
+
+// Message sent to get the test station associated with the given identifier.
+message GetTestStationRequest {
+  // Required. The identifier of the desired test station.
+  string id = 1;
+}
+
+// Message returned when getting a test station associated with the given identifier.
+message GetTestStationResponse {
+  // The metadata of the requested test station.
+  TestStationMetadata test_station = 1;
+}
+
+message QueryTestStationsRequest {
+  // an OData query string.  example "$filter=name eq 'Value'"
+  // $expand is not supported
+  string odata_query = 1;
+}
+
+message QueryTestStationsResponse {
+  repeated TestStationMetadata test_stations = 1;
+}
+
+// Message sent to create a new test station in the metadata store.
+message CreateTestStationRequest {
+  // Required. The metadata of the test station to be created.
+  TestStationMetadata test_station = 1;
+}
+
+// Message returned when creating a new test station in the metadata store.
+message CreateTestStationResponse {
+  // The identifier of the created test station.
+  string id = 1;
+}
+
+// Message sent to get the hardware associated with the given identifier.
+message GetHardwareRequest {
+  // Required. The identifier of the desired hardware.
+  string id = 1;
+}
+
+// Message returned when getting the hardware associated with the given identifier.
+message GetHardwareResponse {
+  // The metadata of the requested hardware.
+  HardwareMetadata hardware = 1;
+}
+
+message QueryHardwareRequest {
+  // an OData query string.  example "$filter=name eq 'Value'"
+  // $expand is not supported
+  string odata_query = 1;
+}
+
+message QueryHardwareResponse {
+  repeated HardwareMetadata hardware = 1;
+}
+
+// Message sent to create new hardware in the metadata store.
+message CreateHardwareRequest {
+  // Required. The metadata of the hardware to be created.
+  HardwareMetadata hardware = 1;
+}
+
+// Message returned when creating new hardware in the metadata store.
+message CreateHardwareResponse {
+  // The identifier of the created hardware.
+  string id = 1;
+}
+
+// Message sent to get the software associated with the given identifier.
+message GetSoftwareRequest {
+  // Required. The identifier of the desired software.
+  string id = 1;
+}
+
+// Message returned when getting the software associated with the given identifier.
+message GetSoftwareResponse {
+  // The metadata of the requested software.
+  SoftwareMetadata software = 1;
+}
+
+message QuerySoftwareRequest {
+  // an OData query string.  example "$filter=name eq 'Value'"
+  // $expand is not supported
+  string odata_query = 1;
+}
+
+message QuerySoftwareResponse {
+  repeated SoftwareMetadata software = 1;
+}
+
+// Message sent to create new software in the metadata store.
+message CreateSoftwareRequest {
+  // Required. The metadata of the software to be created.
+  SoftwareMetadata software = 1;
+}
+
+// Message returned when creating new software in the metadata store.
+message CreateSoftwareResponse {
+  // The identifier of the created software.
+  string id = 1;
+}
+
+message RegisterMetadataSchemaRequest {
+  // The contents of the JSON or TOML schema. This should be a
+  // well-formed JSON or TOML schema.  Validation will be performed, and
+  // an error will be returned if the schema is not valid.
+  string schema = 1;
+}
+
+message RegisterMetadataSchemaResponse {
+  // The id of the schema
+  string schema_id = 1;
+}
+
+message EnumerateMetadataSchemasRequest {
+}
+
+message EnumerateMetadataSchemasResponse {
+  repeated MetadataSchema schemas = 1;
+}
+
+message ResolveAliasRequest {
+  string alias_name = 1;
+}
+
+message ResolveAliasResponse {
+  Alias alias = 1;
+}
+
+message QueryAliasesRequest {
+  // an OData query string.  example "$filter=name eq 'Value'"
+  // $expand is not supported
+  string odata_query = 1;
+}
+
+message QueryAliasesResponse {
+  repeated Alias aliases = 1;
+}
+
+message RegisterAliasRequest {
+  // The alias name to register.
+  string alias_name = 1;
+
+  // The metadata instance to alias.
+  // NOTE: The metadata instance to alias must have already been created
+  // in the metadata store in order to register an alias for it.
+  oneof alias_target {
+    DUTMetadata dut = 2;
+    ProductMetadata product = 3;
+    HardwareMetadata hardware = 4;
+    SoftwareMetadata software = 5;
+    OperatorMetadata operator = 6;
+    TestPlanMetadata test_plan = 7;
+    TestMetadata test = 8;
+    TestStationMetadata test_station = 9;
+  }
+}
+
+message RegisterAliasResponse {
+  Alias alias = 1;
+} 
+
+message UnregisterAliasRequest {
+  // The name of the alias to unregister
+  string alias_name = 1;
+}
+
+message UnregisterAliasResponse {
+  // Whether the action resulted in the specified alias becoming unregistered. (False if the alias does not exist.)
+  bool unregistered = 1;
+}
