@@ -183,14 +183,17 @@ message QueryResourceAccessInformationRequest {
   repeated string pin_or_relay_names = 3;
 
   // Optional. The instrument type for which to get instrument resource access information. If unspecified, get instrument resource information for all instrument types connected in the registered pin map resource.
+  //
   // Pin maps have built in instrument definitions using the following NI driver based instrument type ids:
-  //      "niDCPower"
-  //      "niDigitalPattern"
-  //      "niScope"
-  //      "niDMM"
-  //      "niDAQmx"
-  //      "niFGen"
-  //      "niRelayDriver"
+  //
+  // - "niDCPower"
+  // - "niDigitalPattern"
+  // - "niScope"
+  // - "niDMM"
+  // - "niDAQmx"
+  // - "niFGen"
+  // - "niRelayDriver"
+  //
   // For custom instruments the user defined instrument type id is defined in the pin map file.
   string instrument_type_id = 4;
 }
@@ -217,14 +220,17 @@ message ResourceAccessInformation {
   string channel_list = 2;
 
   // The instrument type of the instrument resource.
+  //
   // Pin maps have built in instrument definitions using the following NI driver based instrument type ids:
-  //      "niDCPower"
-  //      "niDigitalPattern"
-  //      "niScope"
-  //      "niDMM"
-  //      "niDAQmx"
-  //      "niFGen"
-  //      "niRelayDriver"
+  //
+  // - "niDCPower"
+  // - "niDigitalPattern"
+  // - "niScope"
+  // - "niDMM"
+  // - "niDAQmx"
+  // - "niFGen"
+  // - "niRelayDriver"
+  //
   // For custom instruments the user defined instrument type id is defined in the pin map file.
   string instrument_type_id = 3;
 
