@@ -14,8 +14,7 @@ package ni.datamonikers.v1;
 //---------------------------------------------------------------------
 option csharp_namespace = "NationalInstruments.DataMonikers";
 
-//---------------------------------------------------------------------
-//---------------------------------------------------------------------
+// Service for reading and writing data using monikers
 service MonikerService {
   rpc BeginSidebandStream(BeginMonikerSidebandStreamRequest) returns (BeginMonikerSidebandStreamResponse) {};
   rpc StreamRead(MonikerList) returns (stream MonikerReadResult) {};
