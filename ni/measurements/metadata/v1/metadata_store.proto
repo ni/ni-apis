@@ -11,84 +11,89 @@ option objc_class_prefix = "NIMM";
 option php_namespace = "NI\\Measurements\\Metadata\\V1";
 option ruby_package = "NI::Measurements::Metadata::V1";
 
-// Represents the metadata of a device under test
-message DUTMetadata
+// Represents the metadata of a UUT instance
+message UutInstance
 {
-  // Optional. Represents the product associated with this device under test.
-  oneof product {
-    // The product associated with this device under test.
-    ni.measurements.metadata.v1.ProductMetadata product_metadata = 1;
-    // The id of the product associated with this device under test.
-    // This value is expected to be a parsable GUID or an alias. It will always
-    // be returned from the service as a GUID.
-    // See ni.measurements.metadata.MetadataStoreService for more information.
-    string product_id = 2;
-  }
-  // The serial number of the device under test
+  // The id of the UUT associated with this UUT instance.
+  // This value is expected to be a parsable GUID or an alias. It will always
+  // be returned from the service as a GUID.
+  // See ni.measurements.metadata.MetadataStoreService for more information.
+  string uut_id = 2;
+  // The serial number of the UUT instance
   string serial_number = 3;
-  // The date the device under test was manufactured
+  // The date the UUT instance was manufactured
   string manufacture_date = 4;
-  // A link to a resource that describes the device under test.
+  // Version of the firmware on the UUT instance
+  string firmware_version = 5;
+  // Hardware version of the UUT instance
+  string hardware_version = 6;
+  // A link to a resource that describes the UUT instance.
+  // This value is expected to be a valid URI.
+  string link = 7;
+  // Any extension to be associated with the UUT instance
+  map<string, ExtensionValue> extension = 8;
+  // The unique identifier of the extension schema that applies to
+  // this instance's extension.  If any extension is associated
+  // with this instance, an extension_schema_id must be provided, unless
+  // the UUT instance is created within the context of a test result, in which case
+  // the test result must have an extension_schema_id.
+  string extension_schema_id = 9;
+}
+
+// Represents the metadata of a UUT
+message Uut
+{
+  // The name of the UUT model
+  string model_name = 1;
+  // The UUT family
+  string family = 2;
+  // List of manufacturers of the UUT
+  repeated string manufacturers = 3;
+  // The part number of the UUT
+  string part_number = 4;
+  // A link to a resource that describes the UUT.
   // This value is expected to be a valid URI.
   string link = 5;
-  // Any custom metadata to be associated with the device under test
-  map<string, CustomMetadataValue> custom_metadata = 6;
-  // The unique identifier of the custom metadata schema that applies to
-  // this instance's custom metadata.  If any custom_metadata is associated
-  // with this instance, a custom_metadata_schema_id must be provided, unless
-  // the dut is created within the context of a session, in which case
-  // the session must have a custom_metadata_schema_id.
-  string custom_metadata_schema_id = 7;
+  // Any extension to be associated with the UUT
+  map<string, ExtensionValue> extension = 6;
+  // The unique identifier of the extension schema that applies to
+  // this instance's extension.  If any extension is associated
+  // with this instance, an extension_schema_id must be provided, unless
+  // the UUT is created within the context of a test result, in which case
+  // the test result must have an extension_schema_id.
+  string extension_schema_id = 7;
 }
 
-// Represents the metadata of a product
-message ProductMetadata
+// Represents the metadata of the hardware item used to take given measurements.
+message HardwareItem
 {
-  // The name of the product
-  string name = 1;
-  // The part number of the product
-  string part_number = 2;
-  // A link to a resource that describes the product.
-  // This value is expected to be a valid URI.
-  string link = 3;
-  // Any custom metadata to be associated with the product
-  map<string, CustomMetadataValue> custom_metadata = 4;
-  // The unique identifier of the custom metadata schema that applies to
-  // this instance's custom metadata.  If any custom_metadata is associated
-  // with this instance, a custom_metadata_schema_id must be provided, unless
-  // the product is created within the context of a session, in which case
-  // the session must have a custom_metadata_schema_id.
-  string custom_metadata_schema_id = 5;
-}
-
-// Represents the metadata of hardware used to take a given measurement.
-message HardwareMetadata
-{
-  // The vendor of the hardware
-  string vendor = 1;
-  // The name of the hardware
+  // The manufacturer or vendor of the hardware item
+  string manufacturer = 1;
+  // The name of the hardware item
   string model = 2;
-  // The part number of the hardware
-  string part_number = 3;
-  // The serial number of the hardware
-  string serial_number = 4;
-  // The date the calibration was performed on the hardware
-  string calibration_date = 5;
-  // A link to a resource that describes the hardware.
+  // The serial number of the hardware item
+  string serial_number = 3;
+  // The part number of the hardware item
+  string part_number = 4;
+  // The asset identifier for tracking and inventory purposes
+  string asset_identifier = 5;
+  // The date when calibration is due for the hardware item
+  string calibration_due_date = 6;
+  // A link to a resource that describes the hardware item.
   // This value is expected to be a valid URI.
-  string link = 6;
-  // Any custom metadata to be associated with the hardware
-  map<string, CustomMetadataValue> custom_metadata = 7;
-  // The unique identifier of the custom metadata schema that applies to
-  // this instance's custom metadata.  If any custom_metadata is associated
-  // with this instance, a custom_metadata_schema_id must be provided, unless
-  // the hardware is created within the context of a session, in which case
-  // the session must have a custom_metadata_schema_id.
-  string custom_metadata_schema_id = 8;
+  string link = 7;
+  // Any extension to be associated with the hardware item
+  map<string, ExtensionValue> extension = 8;
+  // The unique identifier of the extension schema that applies to
+  // this instance's extension.  If any extension is associated
+  // with this instance, an extension_schema_id must be provided, unless
+  // the hardware item is created within the context of a test result, in which case
+  // the test result must have an extension_schema_id.
+  string extension_schema_id = 9;
 }
 
-// Represents the metadata of the software that was used to take a measurement.
-message SoftwareMetadata
+// Represents the metadata of the software item that was used to take measurements.
+message SoftwareItem
 {
   // This value should only contain letters, numbers, spaces, hyphens,
   // underscores, parentheses, periods and spaces. It must begin and
@@ -96,109 +101,145 @@ message SoftwareMetadata
   // Expected format: ^[\w\(\)-]([\w.\(\) -]*[\w\(\)-])?$
   // An empty value is also permitted.
   string product = 1;
-  // The version of the software
+  // The version of the software item
   string version = 2;
-  // A link to a resource that describes the software.
+  // A link to a resource that describes the software item.
   // This value is expected to be a valid URI.
   string link = 3;
-  // Any custom metadata to be associated with the software
-  map<string, CustomMetadataValue> custom_metadata = 4;
-  // The unique identifier of the custom metadata schema that applies to
-  // this instance's custom metadata.  If any custom_metadata is associated
-  // with this instance, a custom_metadata_schema_id must be provided, unless
-  // the software is created within the context of a session, in which case
-  // the session must have a custom_metadata_schema_id.
-  string custom_metadata_schema_id = 5;
+  // Any extension to be associated with the software item
+  map<string, ExtensionValue> extension = 4;
+  // The unique identifier of the extension schema that applies to
+  // this instance's extension.  If any extension is associated
+  // with this instance, an extension_schema_id must be provided, unless
+  // the software item is created within the context of a test result, in which case
+  // the test result must have an extension_schema_id.
+  string extension_schema_id = 5;
 }
 
-// Represents the metadata of the operator that took the measurement.
-message OperatorMetadata
+// Represents the metadata of the operator that took the test step.
+message Operator
 {
   // The name of the operator
-  string name = 1;
+  string operator_name = 1;
   // The role of the operator
   string role = 2;
   // A link to a resource that describes the operator.
   // This value is expected to be a valid URI.
   string link = 3;
-  // Any custom metadata to be associated with the operator
-  map<string, CustomMetadataValue> custom_metadata = 4;
-  // The unique identifier of the custom metadata schema that applies to 
-  // this instance's custom metadata.  If any custom_metadata is associated
-  // with this instance, a custom_metadata_schema_id must be provided, unless
-  // the operator is created within the context of a session, in which case
-  // the session must have a custom_metadata_schema_id.
-  string custom_metadata_schema_id = 5;
+  // Any extension to be associated with the operator
+  map<string, ExtensionValue> extension = 4;
+  // The unique identifier of the extension schema that applies to 
+  // this instance's extension.  If any extension is associated
+  // with this instance, an extension_schema_id must be provided, unless
+  // the operator is created within the context of a test result, in which case
+  // the test result must have an extension_schema_id.
+  string extension_schema_id = 5;
 }
 
-// Represents the metadata of a test plan
-message TestPlanMetadata
+// Represents the metadata of a test description
+message TestDescription
 {
-  // The name of the test plan
-  string name = 1;
-  // A link to a resource that describes the test plan.
+  // The id of the UUT this test is designed for
+  string uut_id = 1;
+  // The name of the test description
+  string test_description_name = 2;
+  // A link to a resource that describes the test description.
   // This value is expected to be a valid URI.
-  string link = 2;
-  // Any custom metadata to be associated with the test plan
-  map<string, CustomMetadataValue> custom_metadata = 3;
-  // The unique identifier of the custom metadata schema that applies to 
-  // this instance's custom metadata.  If any custom_metadata is associated
-  // with this instance, a custom_metadata_schema_id must be provided, unless
-  // the test plan is created within the context of a session, in which case
-  // the session must have a custom_metadata_schema_id.
-  string custom_metadata_schema_id = 4;
+  string link = 3;
+  // Any extension to be associated with the test description
+  map<string, ExtensionValue> extension = 4;
+  // The unique identifier of the extension schema that applies to 
+  // this instance's extension.  If any extension is associated
+  // with this instance, an extension_schema_id must be provided, unless
+  // the test description is created within the context of a test result, in which case
+  // the test result must have an extension_schema_id.
+  string extension_schema_id = 5;
 }
 
 // Represents the metadata of a test
-message TestMetadata
+message Test
 {
   // The name of the test
-  string name = 1;
+  string test_name = 1;
+  // Explanation of what the test does
+  string description = 2;
   // A link to a resource that describes the test.
   // This value is expected to be a valid URI.
-  string link = 2;
-  // Any custom metadata to be associated with the test
-  map<string, CustomMetadataValue> custom_metadata = 3;
-  // The unique identifier of the custom metadata schema that applies to 
-  // this instance's custom metadata.  If any custom_metadata is associated
-  // with this instance, a custom_metadata_schema_id must be provided, unless
-  // the test is created within the context of a session, in which case
-  // the session must have a custom_metadata_schema_id.
-  string custom_metadata_schema_id = 4;
+  string link = 3;
+  // Any extension to be associated with the test
+  map<string, ExtensionValue> extension = 4;
+  // The unique identifier of the extension schema that applies to 
+  // this instance's extension.  If any extension is associated
+  // with this instance, an extension_schema_id must be provided, unless
+  // the test is created within the context of a test result, in which case
+  // the test result must have an extension_schema_id.
+  string extension_schema_id = 5;
 }
 
 // Represents the metadata of a test station
-message TestStationMetadata
+message TestStation
 {
   // The name of the test station
-  string name = 1;
+  string test_station_name = 1;
+  // The asset identifier for tracking and inventory purposes
+  string asset_identifier = 2;
   // A link to a resource that describes the test station.
   // This value is expected to be a valid URI.
-  string link = 2;
-  // Any custom metadata to be associated with the test station
-  map<string, CustomMetadataValue> custom_metadata = 3;
-  // The unique identifier of the custom metadata schema that applies to 
-  // this instance's custom metadata.  If any custom_metadata is associated
-  // with this instance, a custom_metadata_schema_id must be provided, unless
-  // the test station is created within the context of a session, in which case
-  // the session must have a custom_metadata_schema_id.
-  string custom_metadata_schema_id = 4;
+  string link = 3;
+  // Any extension to be associated with the test station
+  map<string, ExtensionValue> extension = 4;
+  // The unique identifier of the extension schema that applies to 
+  // this instance's extension.  If any extension is associated
+  // with this instance, an extension_schema_id must be provided, unless
+  // the test station is created within the context of a test result, in which case
+  // the test result must have an extension_schema_id.
+  string extension_schema_id = 5;
 }
 
-// Represents the value of a custom metadata field.
-// Currently, only string values are supported.
-message CustomMetadataValue
+// Represents a test adapter or mechanical setup used to hold, connect, or interface the UUT with the test system.
+message TestAdapter
 {
-  // The kind of the metadata value
+  // The name or label for the adapter
+  string test_adapter_name = 1;
+  // The manufacturer or vendor of the adapter
+  string manufacturer = 2;
+  // The model number or name of the adapter
+  string model = 3;
+  // The serial number of the adapter
+  string serial_number = 4;
+  // The part number of the adapter
+  string part_number = 5;
+  // The asset identifier for tracking and inventory purposes
+  string asset_identifier = 6;
+  // The date when calibration is due for the adapter
+  string calibration_due_date = 7;
+  // A link to a resource that describes the test adapter.
+  // This value is expected to be a valid URI.
+  string link = 8;
+  // Any extension to be associated with the test adapter
+  map<string, ExtensionValue> extension = 9;
+  // The unique identifier of the extension schema that applies to 
+  // this instance's extension.  If any extension is associated
+  // with this instance, an extension_schema_id must be provided, unless
+  // the test adapter is created within the context of a test result, in which case
+  // the test result must have an extension_schema_id.
+  string extension_schema_id = 10;
+}
+
+// Represents the value of an extension field.
+// Currently, only string values are supported.
+message ExtensionValue
+{
+  // The kind of the extension value
   oneof metadata
   {
-    // The string value of the metadata field.
+    // The string value of the extension field.
     string string_value = 1;
   }
 }
 
-// A message that represents a metadata schema stored on this system.
-message MetadataSchema {
+// A message that represents an extension schema stored on this system.
+message ExtensionSchema {
   // The id of the schema.
   string schema_id = 1;
   // The schema itself.
@@ -207,7 +248,7 @@ message MetadataSchema {
 
 message Alias {
   // The registered alias name for the aliased metadata instance.
-  string name = 1;
+  string alias_name = 1;
 
   // The type of the aliased metadata instance.
   AliasTargetType target_type = 2;
@@ -220,12 +261,13 @@ message Alias {
 enum AliasTargetType
 {
   ALIAS_TARGET_TYPE_UNSPECIFIED = 0;
-  ALIAS_TARGET_TYPE_DUT = 1;
-  ALIAS_TARGET_TYPE_PRODUCT = 2;
-  ALIAS_TARGET_TYPE_HARDWARE = 3;
-  ALIAS_TARGET_TYPE_SOFTWARE = 4;
+  ALIAS_TARGET_TYPE_UUT_INSTANCE = 1;
+  ALIAS_TARGET_TYPE_UUT = 2;
+  ALIAS_TARGET_TYPE_HARDWARE_ITEM = 3;
+  ALIAS_TARGET_TYPE_SOFTWARE_ITEM = 4;
   ALIAS_TARGET_TYPE_OPERATOR = 5;
-  ALIAS_TARGET_TYPE_TEST_PLAN = 6;
+  ALIAS_TARGET_TYPE_TEST_DESCRIPTION = 6;
   ALIAS_TARGET_TYPE_TEST = 7;
   ALIAS_TARGET_TYPE_TEST_STATION = 8;
+  ALIAS_TARGET_TYPE_TEST_ADAPTER = 9;
 }
