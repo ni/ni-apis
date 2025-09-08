@@ -4,7 +4,8 @@ package ni.measurements.data.v1;
 
 import "ni/protobuf/types/precision_timestamp.proto";
 import "ni/measurements/data/v1/data_store.proto";
-import "ni/protobuf/types/scalar.proto"; // Needed after inlining Condition fields
+import "ni/protobuf/types/scalar.proto";
+import "ni/protobuf/types/vector.proto";
 
 option csharp_namespace = "NationalInstruments.Measurements.Data.V1";
 option go_package = "datav1";
