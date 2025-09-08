@@ -121,7 +121,7 @@ message PublishConditionRequest {
   // Required. The type of this condition. For example, "Upper Limit" or "Environment".
   string type = 2;
   // Required. The single value for this condition for a publish on the test step.
-  oneof values {
+  oneof value {
     ni.protobuf.types.Scalar scalar = 4; // (Field number 4 chosen to avoid reusing existing step_id tag = 3)
   }
 
@@ -138,11 +138,17 @@ message PublishConditionResponse {
 
 
 message PublishConditionBatchRequest {
-  // Required. The batch of conditions for N iterations of published measurements of a test step.
-  ConditionBatch condition = 1;
+  // Required. Identifier describing the condition values. For example, "Voltage".
+  string condition_name = 1;
+  // Required. The type of this condition. For example, "Upper Limit" or "Environment".
+  string type = 2;
+  // Required. The values for this condition across all publishes on the test step.
+  oneof values {
+    ni.protobuf.types.Vector scalar_values = 4;
+  }
 
   // Required.
-  // The id of the step associated with this condition.
+  // The id of the step associated with this batch of condition values.
   // This value is expected to be a parsable GUID.
   string step_id = 3;
 }
