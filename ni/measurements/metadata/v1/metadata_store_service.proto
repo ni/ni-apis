@@ -79,19 +79,19 @@ service MetadataStoreService {
   rpc CreateTestAdapter(CreateTestAdapterRequest) returns (CreateTestAdapterResponse);
 
   // Registers a schema. Once a schema has been published, it cannot be modified or removed.
-  rpc RegisterExtensionSchema(RegisterExtensionSchemaRequest) returns (RegisterExtensionSchemaResponse);
-  // List the extension schemas that have been previously registered
-  rpc ListExtensionSchemas(ListExtensionSchemasRequest) returns (ListExtensionSchemasResponse);
+  rpc RegisterSchema(RegisterSchemaRequest) returns (RegisterSchemaResponse);
+  // Lists the schemas that have been previously registered
+  rpc ListSchemas(ListSchemasRequest) returns (ListSchemasResponse);
 
-  // Resolves a given alias to its target (i.e., the underlying metadata that it represents)
-  rpc ResolveAlias(ResolveAliasRequest) returns (ResolveAliasResponse);
+  // Gets the alias and its target (i.e., the underlying metadata that it represents)
+  rpc GetAlias(GetAliasRequest) returns (GetAliasResponse);
   // Perform an OData query on the registered aliases
   rpc QueryAliases(QueryAliasesRequest) returns (QueryAliasesResponse);
-  // Registers an alias of the specified metadata for use/reference when creating other metadata or publishing.
+  // Creates (registers) an alias of the specified metadata for use/reference when creating other metadata or publishing.
   // Notes:
   // - The specified metadata must have already been created prior to the alias registration.
   // - This method may be called with an already registered alias name in order to update the target mapped for that existing alias.
-  rpc RegisterAlias(RegisterAliasRequest) returns (RegisterAliasResponse);
+  rpc CreateAlias(CreateAliasRequest) returns (CreateAliasResponse);
   // Removes a registered alias
   rpc UnregisterAlias(UnregisterAliasRequest) returns (UnregisterAliasResponse);
 }
@@ -127,7 +127,7 @@ message CreateUutInstanceRequest {
 // Message returned when creating a new UUT instance in the metadata store.
 message CreateUutInstanceResponse {
   // The identifier of the created UUT instance.
-  string created_uut_instance_id = 1;
+  string uut_instance_id = 1;
 }
 
 // Message sent to get the UUT associated with the given identifier.
@@ -161,7 +161,7 @@ message CreateUutRequest {
 // Message returned when creating a new UUT in the metadata store.
 message CreateUutResponse {
   // The identifier of the created UUT.
-  string created_uut_id = 1;
+  string uut_id = 1;
 }
 
 // Message sent to get the operator associated with the given identifier.
@@ -195,7 +195,7 @@ message CreateOperatorRequest {
 // Message returned when creating a new operator in the metadata store.
 message CreateOperatorResponse {
   // The identifier of the created operator.
-  string created_operator_id = 1;
+  string operator_id = 1;
 }
 
 // Message sent to get the test description associated with the given identifier.
@@ -229,7 +229,7 @@ message CreateTestDescriptionRequest {
 // Message returned when creating a new test description in the metadata store.
 message CreateTestDescriptionResponse {
   // The identifier of the created test description.
-  string created_test_description_id = 1;
+  string test_description_id = 1;
 }
 
 // Message sent to get the test associated with the given identifier.
@@ -263,7 +263,7 @@ message CreateTestRequest {
 // Message returned when creating a new test in the metadata store.
 message CreateTestResponse {
   // The identifier of the created test.
-  string created_test_id = 1;
+  string test_id = 1;
 }
 
 // Message sent to get the test station associated with the given identifier.
@@ -297,7 +297,7 @@ message CreateTestStationRequest {
 // Message returned when creating a new test station in the metadata store.
 message CreateTestStationResponse {
   // The identifier of the created test station.
-  string created_test_station_id = 1;
+  string test_station_id = 1;
 }
 
 // Message sent to get the hardware item associated with the given identifier.
@@ -331,7 +331,7 @@ message CreateHardwareItemRequest {
 // Message returned when creating new hardware item in the metadata store.
 message CreateHardwareItemResponse {
   // The identifier of the created hardware item.
-  string created_hardware_item_id = 1;
+  string hardware_item_id = 1;
 }
 
 // Message sent to get the software item associated with the given identifier.
@@ -365,7 +365,7 @@ message CreateSoftwareItemRequest {
 // Message returned when creating new software item in the metadata store.
 message CreateSoftwareItemResponse {
   // The identifier of the created software item.
-  string created_software_item_id = 1;
+  string software_item_id = 1;
 }
 
 // Message sent to get the test adapter associated with the given identifier.
@@ -399,33 +399,33 @@ message CreateTestAdapterRequest {
 // Message returned when creating new test adapter in the metadata store.
 message CreateTestAdapterResponse {
   // The identifier of the created test adapter.
-  string created_test_adapter_id = 1;
+  string test_adapter_id = 1;
 }
 
-message RegisterExtensionSchemaRequest {
+message RegisterSchemaRequest {
   // The contents of the JSON or TOML schema. This should be a
   // well-formed JSON or TOML schema.  Validation will be performed, and
   // an error will be returned if the schema is not valid.
   string schema = 1;
 }
 
-message RegisterExtensionSchemaResponse {
+message RegisterSchemaResponse {
   // The id of the schema
   string schema_id = 1;
 }
 
-message ListExtensionSchemasRequest {
+message ListSchemasRequest {
 }
 
-message ListExtensionSchemasResponse {
+message ListSchemasResponse {
   repeated ExtensionSchema schemas = 1;
 }
 
-message ResolveAliasRequest {
+message GetAliasRequest {
   string alias_name = 1;
 }
 
-message ResolveAliasResponse {
+message GetAliasResponse {
   Alias alias = 1;
 }
 
@@ -439,7 +439,7 @@ message QueryAliasesResponse {
   repeated Alias aliases = 1;
 }
 
-message RegisterAliasRequest {
+message CreateAliasRequest {
   // The alias name to register.
   string alias_name = 1;
 
@@ -459,7 +459,7 @@ message RegisterAliasRequest {
   }
 }
 
-message RegisterAliasResponse {
+message CreateAliasResponse {
   Alias alias = 1;
 } 
 

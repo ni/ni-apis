@@ -32,12 +32,11 @@ message UutInstance
   string link = 7;
   // Any extension to be associated with the UUT instance
   map<string, ExtensionValue> extension = 8;
-  // The unique identifier of the extension schema that applies to
-  // this instance's extension.  If any extension is associated
-  // with this instance, an extension_schema_id must be provided, unless
+  // The unique identifier of the schema that applies to this instance's extension.
+  // If any extension is associated with this instance, a schema_id must be provided, unless
   // the UUT instance is created within the context of a test result, in which case
-  // the test result must have an extension_schema_id.
-  string extension_schema_id = 9;
+  // the test result must have a schema_id.
+  string schema_id = 9;
 }
 
 // Represents the metadata of a UUT
@@ -56,12 +55,11 @@ message Uut
   string link = 5;
   // Any extension to be associated with the UUT
   map<string, ExtensionValue> extension = 6;
-  // The unique identifier of the extension schema that applies to
-  // this instance's extension.  If any extension is associated
-  // with this instance, an extension_schema_id must be provided, unless
+  // The unique identifier of the schema that applies to this instance's extension.
+  // If any extension is associated with this instance, a schema_id must be provided, unless
   // the UUT is created within the context of a test result, in which case
-  // the test result must have an extension_schema_id.
-  string extension_schema_id = 7;
+  // the test result must have a schema_id.
+  string schema_id = 7;
 }
 
 // Represents the metadata of the hardware item used to take given measurements.
@@ -84,12 +82,11 @@ message HardwareItem
   string link = 7;
   // Any extension to be associated with the hardware item
   map<string, ExtensionValue> extension = 8;
-  // The unique identifier of the extension schema that applies to
-  // this instance's extension.  If any extension is associated
-  // with this instance, an extension_schema_id must be provided, unless
+  // The unique identifier of the schema that applies to this instance's extension.
+  // If any extension is associated with this instance, a schema_id must be provided, unless
   // the hardware item is created within the context of a test result, in which case
-  // the test result must have an extension_schema_id.
-  string extension_schema_id = 9;
+  // the test result must have a schema_id.
+  string schema_id = 9;
 }
 
 // Represents the metadata of the software item that was used to take measurements.
@@ -108,12 +105,11 @@ message SoftwareItem
   string link = 3;
   // Any extension to be associated with the software item
   map<string, ExtensionValue> extension = 4;
-  // The unique identifier of the extension schema that applies to
-  // this instance's extension.  If any extension is associated
-  // with this instance, an extension_schema_id must be provided, unless
+  // The unique identifier of the schema that applies to this instance's extension.
+  // If any extension is associated with this instance, a schema_id must be provided, unless
   // the software item is created within the context of a test result, in which case
-  // the test result must have an extension_schema_id.
-  string extension_schema_id = 5;
+  // the test result must have a schema_id.
+  string schema_id = 5;
 }
 
 // Represents the metadata of the operator that took the test step.
@@ -128,12 +124,11 @@ message Operator
   string link = 3;
   // Any extension to be associated with the operator
   map<string, ExtensionValue> extension = 4;
-  // The unique identifier of the extension schema that applies to 
-  // this instance's extension.  If any extension is associated
-  // with this instance, an extension_schema_id must be provided, unless
+  // The unique identifier of the schema that applies to this instance's extension.
+  // If any extension is associated with this instance, a schema_id must be provided, unless
   // the operator is created within the context of a test result, in which case
-  // the test result must have an extension_schema_id.
-  string extension_schema_id = 5;
+  // the test result must have a schema_id.
+  string schema_id = 5;
 }
 
 // Represents the metadata of a test description
@@ -148,12 +143,11 @@ message TestDescription
   string link = 3;
   // Any extension to be associated with the test description
   map<string, ExtensionValue> extension = 4;
-  // The unique identifier of the extension schema that applies to 
-  // this instance's extension.  If any extension is associated
-  // with this instance, an extension_schema_id must be provided, unless
+  // The unique identifier of the schema that applies to this instance's extension.
+  // If any extension is associated with this instance, a schema_id must be provided, unless
   // the test description is created within the context of a test result, in which case
-  // the test result must have an extension_schema_id.
-  string extension_schema_id = 5;
+  // the test result must have a schema_id.
+  string schema_id = 5;
 }
 
 // Represents the metadata of a test
@@ -168,12 +162,11 @@ message Test
   string link = 3;
   // Any extension to be associated with the test
   map<string, ExtensionValue> extension = 4;
-  // The unique identifier of the extension schema that applies to 
-  // this instance's extension.  If any extension is associated
-  // with this instance, an extension_schema_id must be provided, unless
+  // The unique identifier of the schema that applies to this instance's extension.
+  // If any extension is associated with this instance, a schema_id must be provided, unless
   // the test is created within the context of a test result, in which case
-  // the test result must have an extension_schema_id.
-  string extension_schema_id = 5;
+  // the test result must have a schema_id.
+  string schema_id = 5;
 }
 
 // Represents the metadata of a test station
@@ -188,12 +181,11 @@ message TestStation
   string link = 3;
   // Any extension to be associated with the test station
   map<string, ExtensionValue> extension = 4;
-  // The unique identifier of the extension schema that applies to 
-  // this instance's extension.  If any extension is associated
-  // with this instance, an extension_schema_id must be provided, unless
+  // The unique identifier of the schema that applies to this instance's extension.
+  // If any extension is associated with this instance, a schema_id must be provided, unless
   // the test station is created within the context of a test result, in which case
-  // the test result must have an extension_schema_id.
-  string extension_schema_id = 5;
+  // the test result must have a schema_id.
+  string schema_id = 5;
 }
 
 // Represents a test adapter or mechanical setup used to hold, connect, or interface the UUT with the test system.
@@ -218,12 +210,11 @@ message TestAdapter
   string link = 8;
   // Any extension to be associated with the test adapter
   map<string, ExtensionValue> extension = 9;
-  // The unique identifier of the extension schema that applies to 
-  // this instance's extension.  If any extension is associated
-  // with this instance, an extension_schema_id must be provided, unless
+  // The unique identifier of the schema that applies to this instance's extension.
+  // If any extension is associated with this instance, a schema_id must be provided, unless
   // the test adapter is created within the context of a test result, in which case
-  // the test result must have an extension_schema_id.
-  string extension_schema_id = 10;
+  // the test result must have a schema_id.
+  string schema_id = 10;
 }
 
 // Represents the value of an extension field.

@@ -4,6 +4,7 @@ package ni.measurements.data.v1;
 
 import "ni/protobuf/types/precision_timestamp.proto";
 import "ni/measurements/data/v1/data_store.proto";
+import "ni/protobuf/types/scalar.proto"; // Needed after inlining Condition fields
 
 option csharp_namespace = "NationalInstruments.Measurements.Data.V1";
 option go_package = "datav1";
@@ -86,7 +87,7 @@ message CreateStepRequest {
 
 message CreateStepResponse {
   // The identifier of the created step.
-  string created_step_id = 1;
+  string step_id = 1;
 }
 
 // Message sent to get the step associated with the given identifier.
@@ -115,9 +116,14 @@ message QueryStepsResponse {
 }
 
 message PublishConditionRequest {
-  // Required. The single condition present for one published measurement (output) of a test step
-  // This condition corresponds to a single value associated with the test step.
-  Condition condition = 1;
+  // Required. Identifier describing the condition value. For example, "Voltage".
+  string condition_name = 1;
+  // Required. The type of this condition. For example, "Upper Limit" or "Environment".
+  string type = 2;
+  // Required. The single value for this condition for a publish on the test step.
+  oneof values {
+    ni.protobuf.types.Scalar scalar = 4; // (Field number 4 chosen to avoid reusing existing step_id tag = 3)
+  }
 
   // Required.
   // The id of the step associated with this condition.

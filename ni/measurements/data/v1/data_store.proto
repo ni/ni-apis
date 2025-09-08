@@ -123,29 +123,17 @@ message TestResult {
   ni.protobuf.types.PrecisionTimestamp start_date_time = 16;
   // Optional. End date and time of the test execution (timestamp)
   ni.protobuf.types.PrecisionTimestamp end_date_time = 17;
-  // Optional. Overall test result state (e.g., Passed, Failed, Error)
-  string outcome = 18;
+  // Optional. Overall test result outcome (e.g., Passed, Failed, Indeterminate)
+  Outcome outcome = 18;
   // Optional. A link to a resource that describes the test result.
   // This value is expected to be a valid URI.
   string link = 19;
   // Optional. Any extension to be associated with the test result.
-  map<string, ni.measurements.metadata.v1.ExtensionValue> extension = 20;
+  map<string, ni.measurements.metadata.v1.ExtensionValue> extensions = 20;
   // Optional.  If any of your messages contain 'extension', you must register
-  // an extension schema, and specify the extension schema id here.  In that
-  // case, all metadata will be validated against the specified schema.
-  string extension_schema_id = 21;
-}
-
-// This represents a single published condition in a test step.
-message Condition {
-  // The identifier describing the values of this condition. For example, "Voltage".
-  string condition_name = 1;
-  // The type of this condition. For example, "Upper Limit" or "Environment".
-  string type = 2;
-  // The value for this condition for a single publish on the test step.
-  oneof values {
-    ni.protobuf.types.Scalar scalar = 3;
-  }
+  // a schema, and specify the schema id here.  In that case, all metadata will
+  // be validated against the specified schema.
+  string schema_id = 21;
 }
 
 // This represents all published values for a single condition in a test step.
@@ -226,12 +214,11 @@ message Step
   string link = 11;
   // Any extension to be associated with the test step
   map<string, ni.measurements.metadata.v1.ExtensionValue> extension = 12;
-  // The unique identifier of the extension schema that applies to
-  // this instance's extension.  If any extension is associated
-  // with this instance, an extension_schema_id must be provided, unless
+  // The unique identifier of the schema that applies to this instance's extension.
+  // If any extension is associated with this instance, a schema_id must be provided, unless
   // the test step is created within the context of a test result, in which case
-  // the test result must have an extension_schema_id.
-  string extension_schema_id = 13;
+  // the test result must have a schema_id.
+  string schema_id = 13;
 }
 
 // Describes the outcome of a measurement
