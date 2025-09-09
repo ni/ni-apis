@@ -21,7 +21,7 @@ option ruby_package = "NI::Measurements::Data::V1";
 
 message PublishedCondition {
   // The moniker of the condition that this value is associated with.
-  // This moniker returns a ni.measurements.measurement.v1.ScalarArray
+  // This moniker returns a ni.measurements.data.v1.ScalarArray
   ni.datamonikers.v1.Moniker moniker = 1;
   
   // The unique identifier of the condition. This can be used
