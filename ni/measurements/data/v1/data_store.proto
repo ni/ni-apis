@@ -5,10 +5,6 @@ package ni.measurements.data.v1;
 import "ni/protobuf/types/precision_timestamp.proto";
 import "ni/datamonikers/v1/data_moniker.proto";
 import "ni/measurements/metadata/v1/metadata_store.proto";
-import "ni/protobuf/types/scalar.proto";
-import "ni/protobuf/types/vector.proto";
-import "ni/protobuf/types/waveform.proto";
-import "ni/protobuf/types/xydata.proto";
 
 option csharp_namespace = "NationalInstruments.Measurements.Data.V1";
 option go_package = "datav1";
@@ -26,15 +22,15 @@ message PublishedCondition {
   
   // The unique identifier of the condition. This can be used
   // to reference and find the condition in the data store.
-  string published_condition_id = 3;
+  string published_condition_id = 2;
   // The name of the condition.
-  string condition_name = 4;
+  string condition_name = 3;
   // The type of the condition. For example, "Setup" or "Environment".
-  string condition_type = 5;
+  string condition_type = 4;
   // The id of the step with which this condition is associated.
-  string step_id = 6;
+  string step_id = 5;
   // The id of the test result with which this condition is associated.
-  string test_result_id = 7;
+  string test_result_id = 6;
 }
 
 message PublishedMeasurement {
@@ -62,12 +58,12 @@ message PublishedMeasurement {
   string data_type = 10;
   // Any notes about the measurement.
   string measurement_notes = 11;
-  // The time at which the measurement was first published.  If the measurement represents a parametric set,
+  // The date and time at which the measurement was first published. If the measurement represents a parametric set,
   // this is the timestamp of the first measurement published to the parametric set.
-  ni.protobuf.types.PrecisionTimestamp measurement_start_time = 12;
-  // The time at which the measurement was last published.  If the measurement represents a parametric set,
+  ni.protobuf.types.PrecisionTimestamp start_date_time = 12;
+  // The date and time at which the measurement was last published. If the measurement represents a parametric set,
   // this is the timestamp of the last measurement published to the parametric set.
-  ni.protobuf.types.PrecisionTimestamp measurement_end_time = 13;
+  ni.protobuf.types.PrecisionTimestamp end_date_time = 13;
   // The most 'significant' outcome that was observed when publishing to this measurement.
   // Significance hierarchy: Unspecified (default) < Passed < Indeterminate < Failed
   Outcome outcome = 14;
@@ -88,85 +84,52 @@ message TestResult {
   // This value is expected to be a parsable GUID or an alias. It will always
   // be returned from the service as a GUID.
   // See ni.measurements.metadata.MetadataStoreService for more information.
-  string uut_instance_id = 3;
+  string uut_instance_id = 2;
   // Optional. The id of the operator associated with this test result.
   // This value is expected to be a parsable GUID or an alias. It will always
   // be returned from the service as a GUID.
   // See ni.measurements.metadata.MetadataStoreService for more information.
-  string operator_id = 5;
+  string operator_id = 3;
   // Optional. The id of the test station associated with this test result.
   // This value is expected to be a parsable GUID or an alias. It will always
   // be returned from the service as a GUID.
   // See ni.measurements.metadata.MetadataStoreService for more information.
-  string test_station_id = 7;
+  string test_station_id = 4;
   // Optional. The id of the test description associated with this test result.
   // This value is expected to be a parsable GUID or an alias. It will always
   // be returned from the service as a GUID.
   // See ni.measurements.metadata.MetadataStoreService for more information.
-  string test_description_id = 9;
+  string test_description_id = 5;
   // Optional. The ids of the software item associated with this test result. These values are expected
   // to be parsable GUIDs or aliases. They will always be returned from the service as GUIDs.
-  repeated string software_item_ids = 11;
+  repeated string software_item_ids = 6;
   // Optional. The ids of the hardware item associated with this test result. These values are expected
   // to be parsable GUIDs or aliases. They will always be returned from the service as GUIDs.
-  repeated string hardware_item_ids = 13;
+  repeated string hardware_item_ids = 7;
   // Optional. The ids of the test adapters associated with this test result. These values are expected
   // to be parsable GUIDs or aliases. They will always be returned from the service as GUIDs.
-  repeated string test_adapter_ids = 14;
+  repeated string test_adapter_ids = 8;
   // Optional.
   // The name of the test result.  This value should only contain letters,
   // numbers, spaces, hyphens, underscores, parentheses, periods and
   // spaces. It must begin and end with a letter or number.
   // Expected format: ^[\w\(\)-]([\w.\(\) -]*[\w\(\)-])?$
-  string test_result_name = 15;
+  string test_result_name = 9;
   // Optional. Start date and time of the test execution (timestamp)
-  ni.protobuf.types.PrecisionTimestamp start_date_time = 16;
+  ni.protobuf.types.PrecisionTimestamp start_date_time = 10;
   // Optional. End date and time of the test execution (timestamp)
-  ni.protobuf.types.PrecisionTimestamp end_date_time = 17;
+  ni.protobuf.types.PrecisionTimestamp end_date_time = 11;
   // Optional. Overall test result outcome (e.g., Passed, Failed, Indeterminate)
-  Outcome outcome = 18;
+  Outcome outcome = 12;
   // Optional. A link to a resource that describes the test result.
   // This value is expected to be a valid URI.
-  string link = 19;
-  // Optional. Any extension to be associated with the test result.
-  map<string, ni.measurements.metadata.v1.ExtensionValue> extensions = 20;
+  string link = 13;
+  // Optional. Any extensions to be associated with the test result.
+  map<string, ni.measurements.metadata.v1.ExtensionValue> extensions = 14;
   // Optional.  If any of your messages contain 'extension', you must register
   // a schema, and specify the schema id here.  In that case, all metadata will
   // be validated against the specified schema.
-  string schema_id = 21;
-}
-
-message Measurement {
-  // Required for measurement. This name is used for associating/grouping conceptually alike measurements across multiple publish iterations.
-  // For example, a shared name of "Temperature" can be used for associating temperature readings across multiple iterations of publishing.
-  string measurement_name = 1;
-
-  // Required. The value of the measurement being published.
-  oneof value {
-    ni.protobuf.types.Scalar scalar = 2;
-    ni.protobuf.types.Vector vector = 3;
-    ni.protobuf.types.DoubleAnalogWaveform double_analog_waveform = 4;
-    ni.protobuf.types.DoubleXYData x_y_data = 5;
-    ni.protobuf.types.I16AnalogWaveform i16_analog_waveform = 6;
-    ni.protobuf.types.DoubleComplexWaveform double_complex_waveform = 7;
-    ni.protobuf.types.I16ComplexWaveform i16_complex_waveform = 8;
-    ni.protobuf.types.DoubleSpectrum double_spectrum = 9;
-  }
-}
-
-// This message is used to publish a batch of measurements to the data store. It is used to
-// publish an entire batch of measurements at once, rather than publishing them one by one.
-// For instance, in the case of a parametric sweep, this message can be used to publish
-// all the measurements for all of the iterations of the loop in a single message.
-message MeasurementBatch {
-  // Required for measurement. This name is used for associating/grouping conceptually alike measurements across multiple publish iterations.
-  // For example, a shared name of "Temperature" can be used for associating temperature readings across multiple iterations of publishing.
-  string measurement_name = 1;
-
-  // Required. The value of the measurement being published.
-  oneof values {
-    ni.protobuf.types.Vector scalar_values = 2;
-  }
+  string schema_id = 15;
 }
 
 // Represents the metadata of the step that was taken
@@ -186,27 +149,27 @@ message Step
   // This value is expected to be a parsable GUID or an alias. It will always
   // be returned from the service as a GUID.
   // See ni.measurements.metadata.MetadataStoreService for more information.
-  string test_id = 5;
+  string test_id = 4;
   // Required. The name of the step.
-  string step_name = 6;
+  string step_name = 5;
   // Step type (e.g., Setup, Action, Measurement, Cleanup)
-  string step_type = 7;
+  string step_type = 6;
   // Any notes about the step
-  string notes = 8;
+  string notes = 7;
   // Start date and time of the test step (timestamp)
-  ni.protobuf.types.PrecisionTimestamp start_date_time = 9;
+  ni.protobuf.types.PrecisionTimestamp start_date_time = 8;
   // End date and time of the test step (timestamp)
-  ni.protobuf.types.PrecisionTimestamp end_date_time = 10;
+  ni.protobuf.types.PrecisionTimestamp end_date_time = 9;
   // A link to a resource that describes the step.
   // This value is expected to be a valid URI.
-  string link = 11;
-  // Any extension to be associated with the test step
-  map<string, ni.measurements.metadata.v1.ExtensionValue> extension = 12;
+  string link = 10;
+  // Any extensions to be associated with the test step
+  map<string, ni.measurements.metadata.v1.ExtensionValue> extensions = 11;
   // The unique identifier of the schema that applies to this instance's extension.
   // If any extension is associated with this instance, a schema_id must be provided, unless
   // the test step is created within the context of a test result, in which case
   // the test result must have a schema_id.
-  string schema_id = 13;
+  string schema_id = 12;
 }
 
 // Describes the outcome of a measurement

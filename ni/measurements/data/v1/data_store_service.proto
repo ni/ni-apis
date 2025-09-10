@@ -6,6 +6,8 @@ import "ni/protobuf/types/precision_timestamp.proto";
 import "ni/measurements/data/v1/data_store.proto";
 import "ni/protobuf/types/scalar.proto";
 import "ni/protobuf/types/vector.proto";
+import "ni/protobuf/types/waveform.proto";
+import "ni/protobuf/types/xydata.proto";
 
 option csharp_namespace = "NationalInstruments.Measurements.Data.V1";
 option go_package = "datav1";
@@ -123,13 +125,13 @@ message PublishConditionRequest {
   string type = 2;
   // Required. The single value for this condition for a publish on the test step.
   oneof value {
-    ni.protobuf.types.Scalar scalar = 4; // (Field number 4 chosen to avoid reusing existing step_id tag = 3)
+    ni.protobuf.types.Scalar scalar = 3;
   }
 
   // Required.
   // The id of the step associated with this condition.
   // This value is expected to be a parsable GUID.
-  string step_id = 3;
+  string step_id = 4;
 }
 
 message PublishConditionResponse {
@@ -145,13 +147,13 @@ message PublishConditionBatchRequest {
   string type = 2;
   // Required. The values for this condition across all publishes on the test step.
   oneof values {
-    ni.protobuf.types.Vector scalar_values = 4;
+    ni.protobuf.types.Vector scalar_values = 3;
   }
 
   // Required.
   // The id of the step associated with this batch of condition values.
   // This value is expected to be a parsable GUID.
-  string step_id = 3;
+  string step_id = 4;
 }
 
 message PublishConditionBatchResponse {
@@ -160,16 +162,89 @@ message PublishConditionBatchResponse {
 }
 
 message PublishMeasurementRequest {
-  // Required. The measurement to be published.
-  Measurement measurement = 1;
+  // Required for measurement. This name is used for associating/grouping conceptually alike measurements across multiple publish iterations.
+  // For example, a shared name of "Temperature" can be used for associating temperature readings across multiple iterations of publishing.
+  string measurement_name = 1;
+
+  // Required. The value of the measurement being published.
+  oneof value {
+    ni.protobuf.types.Scalar scalar = 2;
+    ni.protobuf.types.Vector vector = 3;
+    ni.protobuf.types.DoubleAnalogWaveform double_analog_waveform = 4;
+    ni.protobuf.types.DoubleXYData x_y_data = 5;
+    ni.protobuf.types.I16AnalogWaveform i16_analog_waveform = 6;
+    ni.protobuf.types.DoubleComplexWaveform double_complex_waveform = 7;
+    ni.protobuf.types.I16ComplexWaveform i16_complex_waveform = 8;
+    ni.protobuf.types.DoubleSpectrum double_spectrum = 9;
+  }
   // Optional. Any notes to be associated with the captured measurement.
-  string notes = 2;
+  string notes = 10;
   // Required. The timestamp of the measurement.
-  ni.protobuf.types.PrecisionTimestamp timestamp = 3;
+  ni.protobuf.types.PrecisionTimestamp timestamp = 11;
   // Optional. The outcome of the measurement.
-  Outcome outcome = 4;
+  Outcome outcome = 12;
   // Optional. Error or exception information in JSON format.
-  ErrorInformation error_information = 5;
+  ErrorInformation error_information = 13;
+
+  // Required.
+  // The id of the step associated with this measurement.
+  // This value is expected to be a parsable GUID.
+  string step_id = 14;
+
+  // Optional. The ids of the hardware items associated with this measurement. These values are expected
+  // to be parsable GUIDs or aliases.
+  repeated string hardware_item_ids = 15;
+
+  // Optional. The ids of the test adapters associated with this measurement. These values are expected
+  // to be parsable GUIDs or aliases.
+  repeated string test_adapter_ids = 16;
+
+  // Optional. The ids of the software items associated with this measurement. These values are expected
+  // to be parsable GUIDs or aliases.
+  repeated string software_item_ids = 17;
+}
+
+message PublishMeasurementResponse {
+  // The moniker of the published measurement and its metadata.
+  PublishedMeasurement published_measurement = 1;
+}
+
+message PublishMeasurementBatchRequest {
+  // Required for measurement. This name is used for associating/grouping conceptually alike measurements across multiple publish iterations.
+  // For example, a shared name of "Temperature" can be used for associating temperature readings across multiple iterations of publishing.
+  string measurement_name = 1;
+
+  // Required. The values of the (scalar) measurement being published across N iterations.
+  oneof values {
+    ni.protobuf.types.Vector scalar_values = 2;
+  }
+  // Optional. The timestamps corresponding to the N iterations of batched measurement being published.
+  // This field must meet one of the following requirements:
+  //
+  //   1. The field may be empty. (No timestamp information is recorded for the measurement.)
+  //   2. The field may contain a single value. This value will be associated with each value of the batched measurement.
+  //   3. The field may contain N values, where N is the number of individual batched measurements being published.
+  //      In this case, each timestamp aligns with the scalar value at the corresponding index within the vector.
+  //
+  repeated ni.protobuf.types.PrecisionTimestamp timestamp = 3;
+  // Optional. The outcomes corresponding to the N iterations of batched measurement being published.
+  // This field must meet one of the following requirements:
+  //
+  //   1. The field may be empty. (No outcome information is recorded for the measurement.)
+  //   2. The field may contain a single value. This value will be associated with each value of the batched measurement.
+  //   3. The field may contain N values, where N is the number of individual batched measurements being published.
+  //      In this case, each outcome aligns with the scalar value at the corresponding index within the vector.
+  //
+  repeated Outcome outcome = 4;
+  // Optional. The error information corresponding to the N iterations of batched measurement being published.
+  // This field must meet one of the following requirements:
+  //
+  //   1. The field may be empty. (No error information is recorded for the measurement.)
+  //   2. The field may contain a single value. This value will be associated with each value of the batched measurement.
+  //   3. The field may contain N values, where N is the number of individual batched measurements being published.
+  //      In this case, each error information aligns with the scalar value at the corresponding index within the vector.
+  //
+  repeated ErrorInformation error_information = 5;
 
   // Required.
   // The id of the step associated with this measurement.
@@ -187,60 +262,6 @@ message PublishMeasurementRequest {
   // Optional. The ids of the software items associated with this measurement. These values are expected
   // to be parsable GUIDs or aliases.
   repeated string software_item_ids = 9;
-}
-
-message PublishMeasurementResponse {
-  // The moniker of the published measurement and its metadata.
-  PublishedMeasurement published_measurement = 1;
-}
-
-message PublishMeasurementBatchRequest {
-  // Required. The batch of N measurements to be published.
-  MeasurementBatch measurement = 1;
-  // Optional. The timestamps corresponding to the N iterations of batched measurement being published.
-  // This field must meet one of the following requirements:
-  //
-  //   1. The field may be empty. (No timestamp information is recorded for the measurement.)
-  //   2. The field may contain a single value. This value will be associated with each value of the batched measurement.
-  //   3. The field may contain N values, where N is the number of individual batched measurements being published.
-  //      In this case, each timestamp aligns with the measurement value at the corresponding index within the MeasurementBatch.
-  //
-  repeated ni.protobuf.types.PrecisionTimestamp timestamp = 2;
-  // Optional. The outcomes corresponding to the N iterations of batched measurement being published.
-  // This field must meet one of the following requirements:
-  //
-  //   1. The field may be empty. (No outcome information is recorded for the measurement.)
-  //   2. The field may contain a single value. This value will be associated with each value of the batched measurement.
-  //   3. The field may contain N values, where N is the number of individual batched measurements being published.
-  //      In this case, each outcome aligns with the measurement value at the corresponding index within the MeasurementBatch.
-  //
-  repeated Outcome outcome = 3;
-  // Optional. The error information corresponding to the N iterations of batched measurement being published.
-  // This field must meet one of the following requirements:
-  //
-  //   1. The field may be empty. (No error information is recorded for the measurement.)
-  //   2. The field may contain a single value. This value will be associated with each value of the batched measurement.
-  //   3. The field may contain N values, where N is the number of individual batched measurements being published.
-  //      In this case, each error information aligns with the measurement value at the corresponding index within the MeasurementBatch.
-  //
-  repeated ErrorInformation error_information = 4;
-
-  // Required.
-  // The id of the step associated with this measurement.
-  // This value is expected to be a parsable GUID.
-  string step_id = 5;
-
-  // Optional. The ids of the hardware items associated with this measurement. These values are expected
-  // to be parsable GUIDs or aliases.
-  repeated string hardware_item_ids = 6;
-
-  // Optional. The ids of the test adapters associated with this measurement. These values are expected
-  // to be parsable GUIDs or aliases.
-  repeated string test_adapter_ids = 7;
-
-  // Optional. The ids of the software items associated with this measurement. These values are expected
-  // to be parsable GUIDs or aliases.
-  repeated string software_item_ids = 8;
 }
 
 message PublishMeasurementBatchResponse {

@@ -93,7 +93,7 @@ service MetadataStoreService {
   // - This method may be called with an already registered alias name in order to update the target mapped for that existing alias.
   rpc CreateAlias(CreateAliasRequest) returns (CreateAliasResponse);
   // Removes a registered alias
-  rpc UnregisterAlias(UnregisterAliasRequest) returns (UnregisterAliasResponse);
+  rpc DeleteAlias(DeleteAliasRequest) returns (DeleteAliasResponse);
 }
 
 // Message sent to get the UUT instance associated with the given identifier.
@@ -455,7 +455,7 @@ message CreateAliasRequest {
     TestDescription test_description = 7;
     Test test = 8;
     TestStation test_station = 9;
-    TestAdapter test_adapter = 11;
+  TestAdapter test_adapter = 10;
   }
 }
 
@@ -463,12 +463,12 @@ message CreateAliasResponse {
   Alias alias = 1;
 } 
 
-message UnregisterAliasRequest {
+message DeleteAliasRequest {
   // The name of the alias to unregister
   string alias_name = 1;
 }
 
-message UnregisterAliasResponse {
+message DeleteAliasResponse {
   // Whether the action resulted in the specified alias becoming unregistered. (False if the alias does not exist.)
   bool unregistered = 1;
 }
