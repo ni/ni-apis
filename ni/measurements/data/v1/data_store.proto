@@ -208,6 +208,7 @@ message PublishableData {
     ni.protobuf.types.DoubleComplexWaveform double_complex_waveform = 7;
     ni.protobuf.types.I16ComplexWaveform i16_complex_waveform = 8;
     ni.protobuf.types.DoubleSpectrum double_spectrum = 9;
+    ni.protobuf.types.DigitalWaveform digital_waveform = 10;
   }
 }
 
