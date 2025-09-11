@@ -176,32 +176,33 @@ message PublishMeasurementRequest {
     ni.protobuf.types.DoubleComplexWaveform double_complex_waveform = 7;
     ni.protobuf.types.I16ComplexWaveform i16_complex_waveform = 8;
     ni.protobuf.types.DoubleSpectrum double_spectrum = 9;
+    ni.protobuf.types.DigitalWaveform digital_waveform = 10;
   }
   // Optional. Any notes to be associated with the captured measurement.
-  string notes = 10;
+  string notes = 11;
   // Required. The timestamp of the measurement.
-  ni.protobuf.types.PrecisionTimestamp timestamp = 11;
+  ni.protobuf.types.PrecisionTimestamp timestamp = 12;
   // Optional. The outcome of the measurement.
-  Outcome outcome = 12;
+  Outcome outcome = 13;
   // Optional. Error or exception information in JSON format.
-  ErrorInformation error_information = 13;
+  ErrorInformation error_information = 14;
 
   // Required.
   // The id of the step associated with this measurement.
   // This value is expected to be a parsable GUID.
-  string step_id = 14;
+  string step_id = 15;
 
   // Optional. The ids of the hardware items associated with this measurement. These values are expected
   // to be parsable GUIDs or aliases.
-  repeated string hardware_item_ids = 15;
+  repeated string hardware_item_ids = 16;
 
   // Optional. The ids of the test adapters associated with this measurement. These values are expected
   // to be parsable GUIDs or aliases.
-  repeated string test_adapter_ids = 16;
+  repeated string test_adapter_ids = 17;
 
   // Optional. The ids of the software items associated with this measurement. These values are expected
   // to be parsable GUIDs or aliases.
-  repeated string software_item_ids = 17;
+  repeated string software_item_ids = 18;
 }
 
 message PublishMeasurementResponse {
