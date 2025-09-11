@@ -2,13 +2,9 @@ syntax = "proto3";
 
 package ni.measurements.data.v1;
 
-import "google/protobuf/timestamp.proto";
+import "ni/protobuf/types/precision_timestamp.proto";
 import "ni/datamonikers/v1/data_moniker.proto";
 import "ni/measurements/metadata/v1/metadata_store.proto";
-import "ni/protobuf/types/scalar.proto";
-import "ni/protobuf/types/vector.proto";
-import "ni/protobuf/types/waveform.proto";
-import "ni/protobuf/types/xydata.proto";
 
 option csharp_namespace = "NationalInstruments.Measurements.Data.V1";
 option go_package = "datav1";
@@ -19,385 +15,182 @@ option objc_class_prefix = "NIMD";
 option php_namespace = "NI\\Measurements\\Data\\V1";
 option ruby_package = "NI::Measurements::Data::V1";
 
-message StoredConditionSetValue {
-  // The moniker of the condition set that this value is associated with.
-  // This moniker returns a ni.measurements.data.v1.ConditionSet
-  ni.datamonikers.v1.Moniker moniker = 1;
-  // The metadata associated with the condition set.
-  PublishedConditionSetMetadata metadata = 2;
-}
-
-message StoredConditionValue {
+message PublishedCondition {
   // The moniker of the condition that this value is associated with.
   // This moniker returns a ni.measurements.data.v1.ScalarArray
   ni.datamonikers.v1.Moniker moniker = 1;
-  // The metadata associated with the condition.
-  PublishedConditionMetadata metadata = 2;
+  
+  // The unique identifier of the condition. This can be used
+  // to reference and find the condition in the data store.
+  string published_condition_id = 2;
+  // The name of the condition.
+  string condition_name = 3;
+  // The type of the condition. For example, "Setup" or "Environment".
+  string condition_type = 4;
+  // The id of the step with which this condition is associated.
+  string step_id = 5;
+  // The id of the test result with which this condition is associated.
+  string test_result_id = 6;
 }
 
-message StoredDataValue {
-  // The moniker of the data that this value is associated with.
-  // In general, this moniker returns the data in the same type as which is was
-  // published in the ni.measurements.data.v1.PublishableData. The exception to
-  // this rule is when the published data is a Scalar, in which case the moniker
-  // returns a Vector.
+message PublishedMeasurement {
+  // The moniker providing access to measurement data.
+  // Scalar measurements are returned as Vectors; other types are returned as published.
   ni.datamonikers.v1.Moniker moniker = 1;
-  // The metadata associated with the data.
-  PublishedMetadata metadata = 2;
-  // The condition information associated with the measurement owning this data.
-  // If no such condition information exists, this field will have its default value (i.e., be 'unset').
-  StoredConditionSetValue stored_condition_set_value = 3;
-  // The condition information associated with the measurement owning this data.
-  // If no such condition information exists, this field will be empty.
-  repeated StoredConditionValue stored_condition_values = 4;
+  // The conditions associated with the test step that owns this measurement.
+  repeated PublishedCondition published_conditions = 2;
+  
+  // The id of the measurement.
+  string published_measurement_id = 3;
+  // The id of the test result with which this measurement is associated.
+  string test_result_id = 4;
+  // The id of the step with which this measurement is associated.
+  string step_id = 5;
+  // The ids of the software items with which this measurement is associated.
+  repeated string software_item_ids = 6;
+  // The ids of the hardware items with which this measurement is associated.
+  repeated string hardware_item_ids = 7;
+  // The ids of the test adapters with which this measurement is associated.
+  repeated string test_adapter_ids = 8;
+  // The name used to group measurements across multiple publishes.
+  string measurement_name = 9;
+  // The type of the measurement. This is used to filter measurements in queries.
+  string data_type = 10;
+  // Any notes about the measurement.
+  string measurement_notes = 11;
+  // The date and time at which the measurement was first published. If the measurement represents a parametric set,
+  // this is the timestamp of the first measurement published to the parametric set.
+  ni.protobuf.types.PrecisionTimestamp start_date_time = 12;
+  // The date and time at which the measurement was last published. If the measurement represents a parametric set,
+  // this is the timestamp of the last measurement published to the parametric set.
+  ni.protobuf.types.PrecisionTimestamp end_date_time = 13;
+  // The most 'significant' outcome that was observed when publishing to this measurement.
+  // Significance hierarchy: Unspecified (default) < Passed < Indeterminate < Failed
+  Outcome outcome = 14;
+  // The index within a parametric set, or -1 if this represents the entire set.
+  int32 parametric_index = 15;
+  // Error or exception information in JSON format
+  ErrorInformation error_information = 16;
 }
 
-// Represents a set of metadata identifiers.
-message IdentifierList {
-  // The list of string identifiers.
-  // Each value should be a string representation of a UUID.
-  repeated string identifiers = 1;
-}
-
-// Represents a list of hardware.
-message HardwareMetadataList {
-  // The list of hardware metadata.
-  repeated ni.measurements.metadata.v1.HardwareMetadata hardware = 1;
-}
-
-// Represents a list of software.
-message SoftwareMetadataList {
-  // The list of software metadata.
-  repeated ni.measurements.metadata.v1.SoftwareMetadata software = 1;
-}
-
-// The information about the session with which a measurement is associated.
-message SessionMetadata {
+// The information about the test result with which a test step is associated.
+message TestResult {
   // Optional.
   // If you specify an id, the value is expected to be a parsable GUID.
   // If you do not specify an id, one will be generated for you, and
   // returned in the response.
-  string id = 1;
+  string test_result_id = 1;
+  // Optional. The id of the UUT instance associated with this test result.
+  // This value is expected to be a parsable GUID or an alias. It will always
+  // be returned from the service as a GUID.
+  // See ni.measurements.metadata.MetadataStoreService for more information.
+  string uut_instance_id = 2;
+  // Optional. The id of the operator associated with this test result.
+  // This value is expected to be a parsable GUID or an alias. It will always
+  // be returned from the service as a GUID.
+  // See ni.measurements.metadata.MetadataStoreService for more information.
+  string operator_id = 3;
+  // Optional. The id of the test station associated with this test result.
+  // This value is expected to be a parsable GUID or an alias. It will always
+  // be returned from the service as a GUID.
+  // See ni.measurements.metadata.MetadataStoreService for more information.
+  string test_station_id = 4;
+  // Optional. The id of the test description associated with this test result.
+  // This value is expected to be a parsable GUID or an alias. It will always
+  // be returned from the service as a GUID.
+  // See ni.measurements.metadata.MetadataStoreService for more information.
+  string test_description_id = 5;
+  // Optional. The ids of the software item associated with this test result. These values are expected
+  // to be parsable GUIDs or aliases. They will always be returned from the service as GUIDs.
+  repeated string software_item_ids = 6;
+  // Optional. The ids of the hardware item associated with this test result. These values are expected
+  // to be parsable GUIDs or aliases. They will always be returned from the service as GUIDs.
+  repeated string hardware_item_ids = 7;
+  // Optional. The ids of the test adapters associated with this test result. These values are expected
+  // to be parsable GUIDs or aliases. They will always be returned from the service as GUIDs.
+  repeated string test_adapter_ids = 8;
   // Optional.
-  // The name of the session.  This value should only contain letters,
+  // The name of the test result.  This value should only contain letters,
   // numbers, spaces, hyphens, underscores, parentheses, periods and
   // spaces. It must begin and end with a letter or number.
   // Expected format: ^[\w\(\)-]([\w.\(\) -]*[\w\(\)-])?$
-  string session_name = 2;
-  // Optional.  If any of your messages contain 'custom_metadata', you must register
-  // a custom metadata schema, and specify the custom metadata schema id here.  In that
-  // case, all metadata will be validated against the specified schema.
-  string custom_metadata_schema_id = 3;
-  // Optional. Any custom metadata to be associated with the session.
-  map<string, ni.measurements.metadata.v1.CustomMetadataValue> custom_metadata = 4;
-  // Optional. Represents the device under test (DUT) associated with this session.
-  oneof dut {
-    // The device under test associated with this session.
-    ni.measurements.metadata.v1.DUTMetadata dut_metadata = 5;
-    // The id of the dut associated with this session.
-    // This value is expected to be a parsable GUID or an alias. It will always
-    // be returned from the service as a GUID.
-    // See ni.measurements.metadata.MetadataStoreService for more information.
-    string dut_id = 6;
-  }
-  // Optional. Represents the test station associated with this session.
-  oneof test_station {
-    // The test station associated with this session.
-    ni.measurements.metadata.v1.TestStationMetadata test_station_metadata = 7;
-    // The id of the test station associated with this session.
-    // This value is expected to be a parsable GUID or an alias. It will always
-    // be returned from the service as a GUID.
-    // See ni.measurements.metadata.MetadataStoreService for more information.
-    string test_station_id = 8;
-  }
-  // Optional. Represents the hardware associated with this session
-  oneof hardware {
-    // The hardware associated with this session.
-    HardwareMetadataList hardware_list = 9;
-    // The ids of the hardware associated with this session. These values are expected
-    // to be parsable GUIDs or aliases. They will always be returned from the service as GUIDs.
-    IdentifierList hardware_identifier_list = 10;
-  }
-  // Optional. Represents the software associated with this session.
-  oneof software {
-    // The software associated with this session.
-    SoftwareMetadataList software_list = 11;
-    // The ids of the software associated with this session. These values are expected
-    // to be parsable GUIDs or aliases. They will always be returned from the service as GUIDs.
-    IdentifierList software_identifier_list = 12;
-  }
-  // Optional. Represents the operator associated with this session.
-  oneof operator {
-    // The operator associated with this session.
-    ni.measurements.metadata.v1.OperatorMetadata operator_metadata = 13;
-    // The id of the operator associated with this session.
-    // This value is expected to be a parsable GUID or an alias. It will always
-    // be returned from the service as a GUID.
-    // See ni.measurements.metadata.MetadataStoreService for more information.
-    string operator_id = 14;
-  }
-  // Optional. Represents the test plan associated with this session.
-  oneof test_plan {
-    // The test plan associated with this session.
-    ni.measurements.metadata.v1.TestPlanMetadata test_plan_metadata = 15;
-    // The id of the test plan associated with this session.
-    // This value is expected to be a parsable GUID or an alias. It will always
-    // be returned from the service as a GUID.
-    // See ni.measurements.metadata.MetadataStoreService for more information.
-    string test_plan_id = 16;
-  }
-  // Optional. Represents the product associated with this session.
-  oneof product {
-    // The product associated with this session.
-    ni.measurements.metadata.v1.ProductMetadata product_metadata = 17;
-    // The id of the product associated with this session.
-    // This value is expected to be a parsable GUID or an alias. It will always
-    // be returned from the service as a GUID.
-    // See ni.measurements.metadata.MetadataStoreService for more information.
-    string product_id = 18;
-  }
-
-  // Optional. A link to a resource that describes the session.
+  string test_result_name = 9;
+  // Optional. Start date and time of the test execution (timestamp)
+  ni.protobuf.types.PrecisionTimestamp start_date_time = 10;
+  // Optional. End date and time of the test execution (timestamp)
+  ni.protobuf.types.PrecisionTimestamp end_date_time = 11;
+  // Optional. Overall test result outcome (e.g., Passed, Failed, Indeterminate)
+  Outcome outcome = 12;
+  // Optional. A link to a resource that describes the test result.
   // This value is expected to be a valid URI.
-  string link = 19;
+  string link = 13;
+  // Optional. Any extensions to be associated with the test result.
+  map<string, ni.measurements.metadata.v1.ExtensionValue> extensions = 14;
+  // Optional.  If any of your messages contain 'extension', you must register
+  // a schema, and specify the schema id here.  In that case, all metadata will
+  // be validated against the specified schema.
+  string schema_id = 15;
 }
 
-// This represents a single published condition in a measurement.
-message Condition {
-  // The identifier describing the values of this condition. For example, "Voltage".
-  string name = 1;
-  // The type of this condition. For example, "Upper Limit" or "Environment".
-  string type = 2;
-  // The value for this condition for a single publish on the measurement.
-  oneof values {
-    ni.protobuf.types.Scalar scalar = 3;
-  }
-}
-
-// This represents all published values for a single condition in a measurement.
-// TODO: Rename to ConditionBatch after condition set is removed
-message ConditionArray {
-  // The identifier describing the values of this condition. For example, "Voltage".
-  string name = 1;
-  // The type of this condition. For example, "Upper Limit" or "Environment".
-  string type = 2;
-  // The values for this condition across for all publishes on the measurement.
-  oneof values {
-    ni.protobuf.types.Vector vector = 3;
-  }
-}
-
-// This represents all published conditions for a single measurement.
-message ConditionSet {
-  // The list of conditions (and all their values) that were published for a single measurement.
-  repeated ConditionArray condition_arrays = 1;
-}
-
-message PublishableData {
-  // Required for data. This name is used for associating/grouping conceptually alike data across multiple publish iterations.
-  // For example, a shared name of "Temperature" can be used for associating temperature readings across multiple iterations of publishing.
-  string name = 1;
-
-  // Required. The value of the data being published.
-  oneof value {
-    ni.protobuf.types.Scalar scalar = 2;
-    ni.protobuf.types.Vector vector = 3;
-    ni.protobuf.types.DoubleAnalogWaveform double_analog_waveform = 4;
-    ni.protobuf.types.DoubleXYData x_y_data = 5;
-    ni.protobuf.types.I16AnalogWaveform i16_analog_waveform = 6;
-    ni.protobuf.types.DoubleComplexWaveform double_complex_waveform = 7;
-    ni.protobuf.types.I16ComplexWaveform i16_complex_waveform = 8;
-    ni.protobuf.types.DoubleSpectrum double_spectrum = 9;
-    ni.protobuf.types.DigitalWaveform digital_waveform = 10;
-  }
-}
-
-// This message is used to publish a batch of data values to the data store. It is used to
-// publish an entire batch of data values at once, rather than publishing them one by one.
-// For instance, in the case of a parametric sweep, this message can be used to publish
-// all the data values for all of the iterations of the loop in a single message.
-message PublishableDataBatch {
-  // Required for data. This name is used for associating/grouping conceptually alike data across multiple publish iterations.
-  // For example, a shared name of "Temperature" can be used for associating temperature readings across multiple iterations of publishing.
-  string name = 1;
-
-  // Required. The value of the data being published.
-  oneof values {
-    ni.protobuf.types.Vector scalar_data_batch = 2;
-  }
-}
-
-message PublishedConditionSetMetadata {
-  // The unique identifier of the condition set. This can be used
-  // to reference and find the condition set in the data store.
-  string id = 1;
-  // The list of names of each condition in the condition set.
-  repeated string condition_names = 2;
-  // The id of the measurement with which this condition set is associated.
-  string measurement_id = 3;
-  // The id of the session with which this condition set is associated.
-  string session_id = 4;
-}
-
-message PublishedConditionMetadata {
-  // The unique identifier of the condition. This can be used
-  // to reference and find the condition in the data store.
-  string id = 1;
-  // The name of the condition.
-  string condition_name = 2;
-  // The type of the condition. For example, "Setup" or "Environment".
-  string condition_type = 3;
-  // The id of the measurement with which this condition is associated.
-  string measurement_id = 4;
-  // The id of the session with which this condition is associated.
-  string session_id = 5;
-}
-
-// Contains all metadata relevant to a piece of published data.
-// If the data published was "raw", this will refer to the single piece
-// of raw data.  If the data published was an appended set of scalars
-// as a part of a parametric loop, this will refer to the entire set
-// of data that was published in the loop.
-message PublishedMetadata {
-  // The id of the data.
-  string id = 1;
-  // The name of the session with which this data is associated.
-  string session_name = 2;
-  // The name of the data. This is used to group data into a parametric set across multiple publishes.
-  string data_name = 3;
-  // The index of the parametric data in the parametric set.
-  // If the data represented by this object is single instance of data in a parametric set,
-  // this value will be the data's index in the parametric set. If this data represents the
-  // entire parametric set, this value will be -1.
-  int32 parametric_index = 4;
-  // Any notes about the data.
-  string data_notes = 5;
-  // The type of the data. This is used to filter data in queries.
-  string data_type = 6;
-  // The time at which the data was first published.  If the data represents a parametric set,
-  // this is the timestamp of the first data published to the parametric set.
-  google.protobuf.Timestamp data_start_time = 7;
-  // The time at which the data was last published.  If the data represents a parametric set,
-  // this is the timestamp of the last data published to the parametric set.
-  google.protobuf.Timestamp data_end_time = 8;
-  // The name of the measurement with which this data is associated.
-  string measurement_name = 9;
-  // Any notes about the measurement with which this data is associated.
-  string measurement_notes = 10;
-  // The time at which the measurement was first created.
-  google.protobuf.Timestamp measurement_start_time = 11;
-  // The time at which the last data was published to the measurement.
-  google.protobuf.Timestamp measurement_end_time = 12;
-
-  // The most 'significant' pass/fail status that was observed when publishing to this data.
-  // Significance hierarchy: Unspecified (default) < Passed < Indeterminate < Failed
-  PassFailStatus pass_fail_status = 13;
-
-  // The most 'significant' error state that was observed when publishing to this data.
-  // Significance hierarchy:  Unspecified (default) < NoError < Indeterminate < Error
-  ErrorState error_state = 14;
-
-  // The error message associated with the first publish that specified the Error State reported above.
-  // Note: If no non-default Error State was ever specified, then this field will contain the first error message
-  // that was published to this data, if such an error message was ever provided.
-  ErrorMessage error_message = 15;
-
-  // The path to the file that contains the measurement data.
-  string filepath = 16;
-
-  // The id of the measurement with which this data is associated.
-  string measurement_id = 17;
-  // The id of the session with which this data is associated.
-  string session_id = 18;
-  // The id of the device under test (DUT) with which this data is associated.
-  string dut_id = 19;
-  // The id of the test station with which this data is associated.
-  string test_station_id = 20;
-  // The ids of the hardware with which this data is associated.
-  repeated string hardware_ids = 21;
-  // The id of the operator with which this data is associated.
-  string operator_id = 22;
-  // The ids of the software with which this data is associated.
-  repeated string software_ids = 23;
-  // The id of the test with which this data is associated.
-  string test_id = 24;
-  // The id of the test plan with which this data is associated.
-  string test_plan_id = 25;
-  // The id of the product with which this data is associated.
-  string product_id = 26;
-}
-
-// Represents the metadata of the measurement that was taken
-message MeasurementMetadata
+// Represents the metadata of the step that was taken
+message Step
 {
-  // The unique identifier of the measurement
+  // The unique identifier of the step
   // This value should be a string representation of a UUID.
-  string id = 1;
-  // Required. The name of the measurement.
-  string name = 2;
-  // Any notes about the measurement
-  string notes = 3;
-  // A link to a resource that describes the measurement.
-  // This value is expected to be a valid URI.
-  string link = 4;
-  // Any custom metadata to be associated with the measurement
-  map<string, ni.measurements.metadata.v1.CustomMetadataValue> custom_metadata = 5;
-  // The unique identifier of the custom metadata schema that applies to
-  // this instance's custom metadata.  If any custom_metadata is associated
-  // with this instance, a custom_metadata_schema_id must be provided, unless
-  // the measurement is created within the context of a session, in which case
-  // the session must have a custom_metadata_schema_id.
-  string custom_metadata_schema_id = 6;
-  // Optional. Represents the test associated with this measurement.
-  oneof test {
-    // The test associated with this measurement.
-    ni.measurements.metadata.v1.TestMetadata test_metadata = 7;
-    // The id of the test associated with this measurement.
-    // This value is expected to be a parsable GUID or an alias. It will always
-    // be returned from the service as a GUID.
-    // See ni.measurements.metadata.MetadataStoreService for more information.
-    string test_id = 8;
-  }
-
+  string step_id = 1;
+  // The parent step identifier
+  string parent_step_id = 2;
   // Optional.
-  // The id of the session associated with this measurement.
-  // If not specified, a session will be created from the
+  // The id of the test result associated with this test step.
+  // If not specified, a test result will be created from the
   // information that can be implicitly obtained.
-  string session_id = 9;
+  string test_result_id = 3;
+  // Optional. The id of the test associated with this test step.
+  // This value is expected to be a parsable GUID or an alias. It will always
+  // be returned from the service as a GUID.
+  // See ni.measurements.metadata.MetadataStoreService for more information.
+  string test_id = 4;
+  // Required. The name of the step.
+  string step_name = 5;
+  // Step type (e.g., Setup, Action, Measurement, Cleanup)
+  string step_type = 6;
+  // Any notes about the step
+  string notes = 7;
+  // Start date and time of the test step (timestamp)
+  ni.protobuf.types.PrecisionTimestamp start_date_time = 8;
+  // End date and time of the test step (timestamp)
+  ni.protobuf.types.PrecisionTimestamp end_date_time = 9;
+  // A link to a resource that describes the step.
+  // This value is expected to be a valid URI.
+  string link = 10;
+  // Any extensions to be associated with the test step
+  map<string, ni.measurements.metadata.v1.ExtensionValue> extensions = 11;
+  // The unique identifier of the schema that applies to this instance's extension.
+  // If any extension is associated with this instance, a schema_id must be provided, unless
+  // the test step is created within the context of a test result, in which case
+  // the test result must have a schema_id.
+  string schema_id = 12;
+}
+
+// Describes the outcome of a measurement
+enum Outcome
+{
+  // No outcome was specified.
+  OUTCOME_UNSPECIFIED = 0;
+  // The measurement passed.
+  OUTCOME_PASSED = 1;
+  // The measurement failed.
+  OUTCOME_FAILED = 2;
+  // The outcome is indeterminate.
+  OUTCOME_INDETERMINATE = 3;
 }
 
 // Represents an error message resulting from a failed operation
-message ErrorMessage {
+message ErrorInformation {
   // The error code associated with the error
   int32 error_code = 1;
   // The error message associated with the error
   string message = 2;
   // Information about the source of the error.
   string source = 3;
-}
-
-// Describes the state of an error for a given operation
-enum ErrorState
-{
-  // No error state was specified.
-  ERROR_STATE_UNSPECIFIED = 0;
-  // The operation was successful.
-  ERROR_STATE_NO_ERROR = 1;
-  // The operation failed.  See the error message for more information.
-  ERROR_STATE_ERROR = 2;
-  // The operation state is indeterminate.
-  ERROR_STATE_INDETERMINATE = 3;
-}
-
-// Describes the pass/fail status of a measurement
-enum PassFailStatus
-{
-  // No pass/fail status was specified.
-  PASS_FAIL_STATUS_UNSPECIFIED = 0;
-  // The measurement passed.
-  PASS_FAIL_STATUS_PASSED = 1;
-  // The measurement failed.
-  PASS_FAIL_STATUS_FAILED = 2;
-  // The pass/fail status is indeterminate.
-  PASS_FAIL_STATUS_INDETERMINATE = 3;
 }
