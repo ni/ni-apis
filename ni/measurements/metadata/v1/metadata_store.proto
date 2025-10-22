@@ -65,40 +65,32 @@ message Uut
 // Represents the metadata of a hardware item used to take given measurements
 message HardwareItem
 {
-  // The 'type' of HardwareItem. This can be an arbitrary string
-  // to define custom kinds of HardwareItem. For example, you may
-  // want to categorize HardwareItems which are Cables by using
-  // 'Cable' consistently for the 'type'. See also TestAdapter
-  // in this file, which is a specific, well-known type of HardwareItem.
-  string type = 1;
-  // The user-visible name or label for the hardware item
-  string name = 2;
   // The manufacturer or vendor of the hardware item
-  string manufacturer = 3;
+  string manufacturer = 1;
   // The name of the hardware item
-  string model = 4;
+  string model = 2;
   // The serial number of the hardware item
-  string serial_number = 5;
+  string serial_number = 3;
   // The part number of the hardware item
-  string part_number = 6;
+  string part_number = 4;
   // The asset identifier for tracking and inventory purposes
-  string asset_identifier = 7;
+  string asset_identifier = 5;
   // The date when calibration is due for the hardware item
-  string calibration_due_date = 8;
+  string calibration_due_date = 6;
   // A link to a resource that describes the hardware item.
   // This value is expected to be a valid URI.
-  string link = 9;
+  string link = 7;
   // Any extensions to be associated with the hardware item
-  map<string, ExtensionValue> extensions = 10;
+  map<string, ExtensionValue> extensions = 8;
   // The unique identifier of the schema that applies to this instance's extension.
   // If any extension is associated with this instance, a schema_id must be provided, unless
   // the hardware item is created within the context of a test result, in which case
   // the test result must have a schema_id.
-  string schema_id = 11;
+  string schema_id = 9;
 }
 
-// Represents a test adapter or mechanical setup. This is a specific, well-known
-// HardwareItem that is used to hold, connect, or interface the UUT with the test system.
+// Represents a test adapter or mechanical setup. This is a board or device
+// that is used to hold, connect, or interface the UUT with the test system.
 // Test adapters may also be referred to as test fixtures, interface boards,
 // breakout boxes, mechanical fixtures, or connection adapters.
 message TestAdapter
