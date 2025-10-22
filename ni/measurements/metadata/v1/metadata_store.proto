@@ -62,31 +62,61 @@ message Uut
   string schema_id = 7;
 }
 
-// Represents the metadata of the hardware item used to take given measurements.
+// Represents the metadata of a hardware item used to take given measurements
 message HardwareItem
 {
-  // The name or label for the hardware item
-  string name = 1;
   // The manufacturer or vendor of the hardware item
-  string manufacturer = 2;
+  string manufacturer = 1;
   // The name of the hardware item
-  string model = 3;
+  string model = 2;
   // The serial number of the hardware item
-  string serial_number = 4;
+  string serial_number = 3;
   // The part number of the hardware item
-  string part_number = 5;
+  string part_number = 4;
   // The asset identifier for tracking and inventory purposes
-  string asset_identifier = 6;
+  string asset_identifier = 5;
   // The date when calibration is due for the hardware item
-  string calibration_due_date = 7;
+  string calibration_due_date = 6;
   // A link to a resource that describes the hardware item.
   // This value is expected to be a valid URI.
-  string link = 8;
+  string link = 7;
   // Any extensions to be associated with the hardware item
-  map<string, ExtensionValue> extensions = 9;
+  map<string, ExtensionValue> extensions = 8;
   // The unique identifier of the schema that applies to this instance's extension.
   // If any extension is associated with this instance, a schema_id must be provided, unless
   // the hardware item is created within the context of a test result, in which case
+  // the test result must have a schema_id.
+  string schema_id = 9;
+}
+
+// Represents a test adapter or mechanical setup. This is a board or device
+// that is used to hold, connect, or interface the UUT with the test system.
+// Test adapters may also be referred to as test fixtures, interface boards,
+// breakout boxes, mechanical fixtures, or connection adapters.
+message TestAdapter
+{
+  // The name or label for the test adapter
+  string name = 1;
+  // The manufacturer or vendor of the test adapter
+  string manufacturer = 2;
+  // The model number or name of the test adapter
+  string model = 3;
+  // The serial number of the test adapter
+  string serial_number = 4;
+  // The part number of the test adapter
+  string part_number = 5;
+  // The asset identifier for tracking and inventory purposes
+  string asset_identifier = 6;
+  // The date when calibration is due for the test adapter
+  string calibration_due_date = 7;
+  // A link to a resource that describes the test adapter.
+  // This value is expected to be a valid URI.
+  string link = 8;
+  // Any extensions to be associated with the test adapter
+  map<string, ExtensionValue> extensions = 9;
+  // The unique identifier of the schema that applies to this instance's extension.
+  // If any extension is associated with this instance, a schema_id must be provided, unless
+  // the test adapter is created within the context of a test result, in which case
   // the test result must have a schema_id.
   string schema_id = 10;
 }
@@ -188,35 +218,6 @@ message TestStation
   // the test station is created within the context of a test result, in which case
   // the test result must have a schema_id.
   string schema_id = 5;
-}
-
-// Represents a test adapter or mechanical setup used to hold, connect, or interface the UUT with the test system.
-message TestAdapter
-{
-  // The name or label for the adapter
-  string name = 1;
-  // The manufacturer or vendor of the adapter
-  string manufacturer = 2;
-  // The model number or name of the adapter
-  string model = 3;
-  // The serial number of the adapter
-  string serial_number = 4;
-  // The part number of the adapter
-  string part_number = 5;
-  // The asset identifier for tracking and inventory purposes
-  string asset_identifier = 6;
-  // The date when calibration is due for the adapter
-  string calibration_due_date = 7;
-  // A link to a resource that describes the test adapter.
-  // This value is expected to be a valid URI.
-  string link = 8;
-  // Any extensions to be associated with the test adapter
-  map<string, ExtensionValue> extensions = 9;
-  // The unique identifier of the schema that applies to this instance's extension.
-  // If any extension is associated with this instance, a schema_id must be provided, unless
-  // the test adapter is created within the context of a test result, in which case
-  // the test result must have a schema_id.
-  string schema_id = 10;
 }
 
 // Represents the value of an extension field.
