@@ -95,19 +95,19 @@ message HardwareItem
 // breakout boxes, mechanical fixtures, or connection adapters.
 message TestAdapter
 {
-  // The name or label for the adapter
+  // The name or label for the test adapter
   string name = 1;
-  // The manufacturer or vendor of the adapter
+  // The manufacturer or vendor of the test adapter
   string manufacturer = 2;
-  // The model number or name of the adapter
+  // The model number or name of the test adapter
   string model = 3;
-  // The serial number of the adapter
+  // The serial number of the test adapter
   string serial_number = 4;
-  // The part number of the adapter
+  // The part number of the test adapter
   string part_number = 5;
   // The asset identifier for tracking and inventory purposes
   string asset_identifier = 6;
-  // The date when calibration is due for the adapter
+  // The date when calibration is due for the test adapter
   string calibration_due_date = 7;
   // A link to a resource that describes the test adapter.
   // This value is expected to be a valid URI.
