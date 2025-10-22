@@ -14,209 +14,236 @@ option ruby_package = "NI::Measurements::Metadata::V1";
 // Represents the metadata of a UUT instance
 message UutInstance
 {
+  // The unique identifier of the UUT instance
+  // This value should be a string representation of a GUID.
+  string id = 1;
   // The id of the UUT associated with this UUT instance.
   // This value is expected to be a parsable GUID or an alias. It will always
   // be returned from the service as a GUID.
   // See ni.measurements.metadata.MetadataStoreService for more information.
-  string uut_id = 1;
+  string uut_id = 2;
   // The serial number of the UUT instance
-  string serial_number = 2;
+  string serial_number = 3;
   // The date the UUT instance was manufactured
-  string manufacture_date = 3;
+  string manufacture_date = 4;
   // Version of the firmware on the UUT instance
-  string firmware_version = 4;
+  string firmware_version = 5;
   // Hardware version of the UUT instance
-  string hardware_version = 5;
+  string hardware_version = 6;
   // A link to a resource that describes the UUT instance.
   // This value is expected to be a valid URI.
-  string link = 6;
+  string link = 7;
   // Any extensions to be associated with the UUT instance
-  map<string, ExtensionValue> extensions = 7;
+  map<string, ExtensionValue> extensions = 8;
   // The unique identifier of the schema that applies to this instance's extension.
   // If any extension is associated with this instance, a schema_id must be provided, unless
   // the UUT instance is created within the context of a test result, in which case
   // the test result must have a schema_id.
-  string schema_id = 8;
+  string schema_id = 9;
 }
 
 // Represents the metadata of a UUT
 message Uut
 {
+  // The unique identifier of the UUT
+  // This value should be a string representation of a GUID.
+  string id = 1;
   // The name of the UUT model
-  string model_name = 1;
+  string model_name = 2;
   // The UUT family
-  string family = 2;
+  string family = 3;
   // List of manufacturers of the UUT
-  repeated string manufacturers = 3;
+  repeated string manufacturers = 4;
   // The part number of the UUT
-  string part_number = 4;
+  string part_number = 5;
   // A link to a resource that describes the UUT.
   // This value is expected to be a valid URI.
-  string link = 5;
+  string link = 6;
   // Any extensions to be associated with the UUT
-  map<string, ExtensionValue> extensions = 6;
+  map<string, ExtensionValue> extensions = 7;
   // The unique identifier of the schema that applies to this instance's extension.
   // If any extension is associated with this instance, a schema_id must be provided, unless
   // the UUT is created within the context of a test result, in which case
   // the test result must have a schema_id.
-  string schema_id = 7;
+  string schema_id = 8;
 }
 
 // Represents the metadata of the hardware item used to take given measurements.
 message HardwareItem
 {
+  // The unique identifier of the hardware item
+  // This value should be a string representation of a GUID.
+  string id = 1;
   // The name or label for the hardware item
-  string name = 1;
+  string name = 2;
   // The manufacturer or vendor of the hardware item
-  string manufacturer = 2;
+  string manufacturer = 3;
   // The name of the hardware item
-  string model = 3;
+  string model = 4;
   // The serial number of the hardware item
-  string serial_number = 4;
+  string serial_number = 5;
   // The part number of the hardware item
-  string part_number = 5;
+  string part_number = 6;
   // The asset identifier for tracking and inventory purposes
-  string asset_identifier = 6;
+  string asset_identifier = 7;
   // The date when calibration is due for the hardware item
-  string calibration_due_date = 7;
+  string calibration_due_date = 8;
   // A link to a resource that describes the hardware item.
   // This value is expected to be a valid URI.
-  string link = 8;
+  string link = 9;
   // Any extensions to be associated with the hardware item
-  map<string, ExtensionValue> extensions = 9;
+  map<string, ExtensionValue> extensions = 10;
   // The unique identifier of the schema that applies to this instance's extension.
   // If any extension is associated with this instance, a schema_id must be provided, unless
   // the hardware item is created within the context of a test result, in which case
   // the test result must have a schema_id.
-  string schema_id = 10;
+  string schema_id = 11;
 }
 
 // Represents the metadata of the software item that was used to take measurements.
 message SoftwareItem
 {
+  // The unique identifier of the software item
+  // This value should be a string representation of a GUID.
+  string id = 1;
   // This value should only contain letters, numbers, spaces, hyphens,
   // underscores, parentheses, periods and spaces. It must begin and
   // end with a letter or number.
   // Expected format: ^[\w\(\)-]([\w.\(\) -]*[\w\(\)-])?$
   // An empty value is also permitted.
-  string product = 1;
+  string product = 2;
   // The version of the software item
-  string version = 2;
+  string version = 3;
   // A link to a resource that describes the software item.
   // This value is expected to be a valid URI.
-  string link = 3;
+  string link = 4;
   // Any extensions to be associated with the software item
-  map<string, ExtensionValue> extensions = 4;
+  map<string, ExtensionValue> extensions = 5;
   // The unique identifier of the schema that applies to this instance's extension.
   // If any extension is associated with this instance, a schema_id must be provided, unless
   // the software item is created within the context of a test result, in which case
   // the test result must have a schema_id.
-  string schema_id = 5;
+  string schema_id = 6;
 }
 
 // Represents the metadata of the operator that took the test step.
 message Operator
 {
+  // The unique identifier of the operator
+  // This value should be a string representation of a GUID.
+  string id = 1;
   // The name of the operator
-  string operator_name = 1;
+  string operator_name = 2;
   // The role of the operator
-  string role = 2;
+  string role = 3;
   // A link to a resource that describes the operator.
   // This value is expected to be a valid URI.
-  string link = 3;
+  string link = 4;
   // Any extensions to be associated with the operator
-  map<string, ExtensionValue> extensions = 4;
+  map<string, ExtensionValue> extensions = 5;
   // The unique identifier of the schema that applies to this instance's extension.
   // If any extension is associated with this instance, a schema_id must be provided, unless
   // the operator is created within the context of a test result, in which case
   // the test result must have a schema_id.
-  string schema_id = 5;
+  string schema_id = 6;
 }
 
 // Represents the metadata of a test description
 message TestDescription
 {
+  // The unique identifier of the test description
+  // This value should be a string representation of a GUID.
+  string id = 1;
   // The id of the UUT this test is designed for
-  string uut_id = 1;
+  string uut_id = 2;
   // The name of the test description
-  string test_description_name = 2;
+  string test_description_name = 3;
   // A link to a resource that describes the test description.
   // This value is expected to be a valid URI.
-  string link = 3;
+  string link = 4;
   // Any extensions to be associated with the test description
-  map<string, ExtensionValue> extensions = 4;
+  map<string, ExtensionValue> extensions = 5;
   // The unique identifier of the schema that applies to this instance's extension.
   // If any extension is associated with this instance, a schema_id must be provided, unless
   // the test description is created within the context of a test result, in which case
   // the test result must have a schema_id.
-  string schema_id = 5;
+  string schema_id = 6;
 }
 
 // Represents the metadata of a test
 message Test
 {
+  // The unique identifier of the test
+  // This value should be a string representation of a GUID.
+  string id = 1;
   // The name of the test
-  string test_name = 1;
+  string test_name = 2;
   // Explanation of what the test does
-  string description = 2;
+  string description = 3;
   // A link to a resource that describes the test.
   // This value is expected to be a valid URI.
-  string link = 3;
+  string link = 4;
   // Any extensions to be associated with the test
-  map<string, ExtensionValue> extensions = 4;
+  map<string, ExtensionValue> extensions = 5;
   // The unique identifier of the schema that applies to this instance's extension.
   // If any extension is associated with this instance, a schema_id must be provided, unless
   // the test is created within the context of a test result, in which case
   // the test result must have a schema_id.
-  string schema_id = 5;
+  string schema_id = 6;
 }
 
 // Represents the metadata of a test station
 message TestStation
 {
+  // The unique identifier of the test station
+  // This value should be a string representation of a GUID.
+  string id = 1;
   // The name of the test station
-  string test_station_name = 1;
+  string test_station_name = 2;
   // The asset identifier for tracking and inventory purposes
-  string asset_identifier = 2;
+  string asset_identifier = 3;
   // A link to a resource that describes the test station.
   // This value is expected to be a valid URI.
-  string link = 3;
+  string link = 4;
   // Any extensions to be associated with the test station
-  map<string, ExtensionValue> extensions = 4;
+  map<string, ExtensionValue> extensions = 5;
   // The unique identifier of the schema that applies to this instance's extension.
   // If any extension is associated with this instance, a schema_id must be provided, unless
   // the test station is created within the context of a test result, in which case
   // the test result must have a schema_id.
-  string schema_id = 5;
+  string schema_id = 6;
 }
 
 // Represents a test adapter or mechanical setup used to hold, connect, or interface the UUT with the test system.
 message TestAdapter
 {
+  // The unique identifier of the test adapter
+  // This value should be a string representation of a GUID.
+  string id = 1;
   // The name or label for the adapter
-  string name = 1;
+  string name = 2;
   // The manufacturer or vendor of the adapter
-  string manufacturer = 2;
+  string manufacturer = 3;
   // The model number or name of the adapter
-  string model = 3;
+  string model = 4;
   // The serial number of the adapter
-  string serial_number = 4;
+  string serial_number = 5;
   // The part number of the adapter
-  string part_number = 5;
+  string part_number = 6;
   // The asset identifier for tracking and inventory purposes
-  string asset_identifier = 6;
+  string asset_identifier = 7;
   // The date when calibration is due for the adapter
-  string calibration_due_date = 7;
+  string calibration_due_date = 8;
   // A link to a resource that describes the test adapter.
   // This value is expected to be a valid URI.
-  string link = 8;
+  string link = 9;
   // Any extensions to be associated with the test adapter
-  map<string, ExtensionValue> extensions = 9;
+  map<string, ExtensionValue> extensions = 10;
   // The unique identifier of the schema that applies to this instance's extension.
   // If any extension is associated with this instance, a schema_id must be provided, unless
   // the test adapter is created within the context of a test result, in which case
   // the test result must have a schema_id.
-  string schema_id = 10;
+  string schema_id = 11;
 }
 
 // Represents the value of an extension field.
