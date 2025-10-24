@@ -22,7 +22,7 @@ message PublishedCondition {
   
   // The unique identifier of the condition. This can be used
   // to reference and find the condition in the data store.
-  string published_condition_id = 2;
+  string id = 2;
   // The name of the condition.
   string condition_name = 3;
   // The type of the condition. For example, "Setup" or "Environment".
@@ -41,7 +41,7 @@ message PublishedMeasurement {
   repeated PublishedCondition published_conditions = 2;
   
   // The id of the measurement.
-  string published_measurement_id = 3;
+  string id = 3;
   // The id of the test result with which this measurement is associated.
   string test_result_id = 4;
   // The id of the step with which this measurement is associated.
@@ -79,7 +79,7 @@ message TestResult {
   // If you specify an id, the value is expected to be a parsable GUID.
   // If you do not specify an id, one will be generated for you, and
   // returned in the response.
-  string test_result_id = 1;
+  string id = 1;
   // Optional. The id of the UUT instance associated with this test result.
   // This value is expected to be a parsable GUID or an alias. It will always
   // be returned from the service as a GUID.
@@ -137,7 +137,7 @@ message Step
 {
   // The unique identifier of the step
   // This value should be a string representation of a UUID.
-  string step_id = 1;
+  string id = 1;
   // The parent step identifier
   string parent_step_id = 2;
   // Optional.
