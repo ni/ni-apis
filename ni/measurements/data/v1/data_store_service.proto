@@ -245,7 +245,7 @@ message PublishMeasurementBatchRequest {
   //   3. The field may contain N values, where N is the number of individual batched measurements being published.
   //      In this case, each timestamp aligns with the scalar value at the corresponding index within the vector.
   //
-  repeated ni.protobuf.types.PrecisionTimestamp timestamp = 4;
+  repeated ni.protobuf.types.PrecisionTimestamp timestamps = 4;
   // Optional. The outcomes corresponding to the N iterations of batched measurement being published.
   // This field must meet one of the following requirements:
   //
@@ -254,7 +254,7 @@ message PublishMeasurementBatchRequest {
   //   3. The field may contain N values, where N is the number of individual batched measurements being published.
   //      In this case, each outcome aligns with the scalar value at the corresponding index within the vector.
   //
-  repeated Outcome outcome = 5;
+  repeated Outcome outcomes = 5;
   // Optional. The error information corresponding to the N iterations of batched measurement being published.
   // This field must meet one of the following requirements:
   //

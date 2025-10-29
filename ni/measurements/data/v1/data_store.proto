@@ -24,9 +24,9 @@ message PublishedCondition {
   // to reference and find the condition in the data store.
   string id = 2;
   // The name of the condition.
-  string condition_name = 3;
+  string name = 3;
   // The type of the condition. For example, "Setup" or "Environment".
-  string condition_type = 4;
+  string type = 4;
   // The id of the step with which this condition is associated.
   string step_id = 5;
   // The id of the test result with which this condition is associated.
@@ -53,11 +53,11 @@ message PublishedMeasurement {
   // The ids of the test adapters with which this measurement is associated.
   repeated string test_adapter_ids = 8;
   // The name used to group measurements across multiple publishes.
-  string measurement_name = 9;
+  string name = 9;
   // The type of the measurement. This is used to filter measurements in queries.
   string data_type = 10;
   // Any notes about the measurement.
-  string measurement_notes = 11;
+  string notes = 11;
   // The date and time at which the measurement was first published. If the measurement represents a parametric set,
   // this is the timestamp of the first measurement published to the parametric set.
   ni.protobuf.types.PrecisionTimestamp start_date_time = 12;
@@ -114,7 +114,7 @@ message TestResult {
   // numbers, spaces, hyphens, underscores, parentheses, periods and
   // spaces. It must begin and end with a letter or number.
   // Expected format: ^[\w\(\)-]([\w.\(\) -]*[\w\(\)-])?$
-  string test_result_name = 9;
+  string name = 9;
   // Optional. Start date and time of the test execution (timestamp)
   ni.protobuf.types.PrecisionTimestamp start_date_time = 10;
   // Optional. End date and time of the test execution (timestamp)
@@ -151,9 +151,9 @@ message Step
   // See ni.measurements.metadata.MetadataStoreService for more information.
   string test_id = 4;
   // Required. The name of the step.
-  string step_name = 5;
+  string name = 5;
   // Step type (e.g., Setup, Action, Measurement, Cleanup)
-  string step_type = 6;
+  string type = 6;
   // Any notes about the step
   string notes = 7;
   // Start date and time of the test step (timestamp)
