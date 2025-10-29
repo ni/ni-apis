@@ -235,6 +235,8 @@ message PublishMeasurementBatchRequest {
   oneof values {
     ni.protobuf.types.Vector scalar_values = 2;
   }
+  // Optional. Any notes to be associated with the captured measurement.
+  string notes = 3;
   // Optional. The timestamps corresponding to the N iterations of batched measurement being published.
   // This field must meet one of the following requirements:
   //
@@ -243,7 +245,7 @@ message PublishMeasurementBatchRequest {
   //   3. The field may contain N values, where N is the number of individual batched measurements being published.
   //      In this case, each timestamp aligns with the scalar value at the corresponding index within the vector.
   //
-  repeated ni.protobuf.types.PrecisionTimestamp timestamp = 3;
+  repeated ni.protobuf.types.PrecisionTimestamp timestamp = 4;
   // Optional. The outcomes corresponding to the N iterations of batched measurement being published.
   // This field must meet one of the following requirements:
   //
@@ -252,7 +254,7 @@ message PublishMeasurementBatchRequest {
   //   3. The field may contain N values, where N is the number of individual batched measurements being published.
   //      In this case, each outcome aligns with the scalar value at the corresponding index within the vector.
   //
-  repeated Outcome outcome = 4;
+  repeated Outcome outcome = 5;
   // Optional. The error information corresponding to the N iterations of batched measurement being published.
   // This field must meet one of the following requirements:
   //
@@ -261,24 +263,24 @@ message PublishMeasurementBatchRequest {
   //   3. The field may contain N values, where N is the number of individual batched measurements being published.
   //      In this case, each error information aligns with the scalar value at the corresponding index within the vector.
   //
-  repeated ErrorInformation error_information = 5;
+  repeated ErrorInformation error_information = 6;
 
   // Required.
   // The id of the step associated with this measurement.
   // This value is expected to be a parsable GUID.
-  string step_id = 6;
+  string step_id = 7;
 
   // Optional. The ids of the hardware items associated with this measurement. These values are expected
   // to be parsable GUIDs or aliases.
-  repeated string hardware_item_ids = 7;
+  repeated string hardware_item_ids = 8;
 
   // Optional. The ids of the test adapters associated with this measurement. These values are expected
   // to be parsable GUIDs or aliases.
-  repeated string test_adapter_ids = 8;
+  repeated string test_adapter_ids = 9;
 
   // Optional. The ids of the software items associated with this measurement. These values are expected
   // to be parsable GUIDs or aliases.
-  repeated string software_item_ids = 9;
+  repeated string software_item_ids = 10;
 }
 
 message PublishMeasurementBatchResponse {
