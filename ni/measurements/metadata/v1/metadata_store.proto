@@ -271,7 +271,7 @@ message ExtensionValue
 // A message that represents an extension schema stored on this system.
 message ExtensionSchema {
   // The id of the schema.
-  string schema_id = 1;
+  string id = 1;
   // The schema itself.
   string schema = 2;
 }
