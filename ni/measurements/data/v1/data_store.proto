@@ -67,7 +67,8 @@ message PublishedMeasurement {
   Outcome outcome = 14;
   // The index within a parametric set, or -1 if this represents the entire set.
   int32 parametric_index = 15;
-  // Error or exception information in JSON format
+  // Error or exception information in JSON format. If the measurement represents a parametric set,
+  // this contains the error information for the first error that occurred when publishing to the parametric set.
   ErrorInformation error_information = 16;
 }
 
@@ -120,11 +121,14 @@ message TestResult {
   // Optional. Overall test result outcome (e.g., Passed, Failed, Indeterminate)
   // This value can be set on creation if it is known at the time of creation.
   // Otherwise, this value will be calculated based on the outcomes of the
-  // associated steps.
+  // associated steps. If the value is calculated, the most 'significant' outcome
+  // is the outcome that will be reported.
+  // Significance hierarchy: Unspecified (default) < Passed < Indeterminate < Failed
   Outcome outcome = 12;
   // Optional. Any error information associated with the test result. This can be
   // set on creation if it is known at the time of creation. Otherwise, this value
-  // will be calculated based on the outcomes of the associated steps.
+  // will be calculated based on the outcomes of the associated steps.  If the value
+  // is calculated, the first observed error information will be reported.
   ErrorInformation error_information = 13;
   // Optional. A link to a resource that describes the test result.
   // This value is expected to be a valid URI.
@@ -168,11 +172,14 @@ message Step
   // Optional. Overall step outcome (e.g., Passed, Failed, Indeterminate)
   // This value can be set on creation if it is known at the time of creation.
   // Otherwise, this value will be calculated based on the outcomes of the
-  // associated measurements.
+  // associated measurements. If the value is calculated, the most 'significant' outcome
+  // is the outcome that will be reported.
+  // Significance hierarchy: Unspecified (default) < Passed < Indeterminate < Failed
   Outcome outcome = 10;
   // Optional. Any error information associated with the test step. This can be
   // set on creation if it is known at the time of creation. Otherwise, this value
-  // will be calculated based on the outcomes of the associated measurements.
+  // will be calculated based on the outcomes of the associated measurements.  If the
+  // value is calculated, the first observed error information will be reported.
   ErrorInformation error_information = 11;
   // A link to a resource that describes the step.
   // This value is expected to be a valid URI.
