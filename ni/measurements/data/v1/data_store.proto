@@ -19,7 +19,6 @@ message PublishedCondition {
   // The moniker of the condition that this value is associated with.
   // This moniker returns a ni.protobuf.types.Vector
   ni.datamonikers.v1.Moniker moniker = 1;
-  
   // The unique identifier of the condition. This can be used
   // to reference and find the condition in the data store.
   string id = 2;
@@ -39,7 +38,6 @@ message PublishedMeasurement {
   ni.datamonikers.v1.Moniker moniker = 1;
   // The conditions associated with the test step that owns this measurement.
   repeated PublishedCondition published_conditions = 2;
-  
   // The id of the measurement.
   string id = 3;
   // The id of the test result with which this measurement is associated.
@@ -69,7 +67,8 @@ message PublishedMeasurement {
   Outcome outcome = 14;
   // The index within a parametric set, or -1 if this represents the entire set.
   int32 parametric_index = 15;
-  // Error or exception information in JSON format
+  // Error or exception information in JSON format. If the measurement represents a parametric set,
+  // this contains the error information for the first error that occurred when publishing to the parametric set.
   ErrorInformation error_information = 16;
 }
 
@@ -120,16 +119,26 @@ message TestResult {
   // Optional. End date and time of the test execution (timestamp)
   ni.protobuf.types.PrecisionTimestamp end_date_time = 11;
   // Optional. Overall test result outcome (e.g., Passed, Failed, Indeterminate)
+  // The outcome can be set on creation if it is known at the time of creation.
+  // Otherwise, the outcome will be calculated based on the outcomes of the
+  // associated steps. If the outcome is calculated, the most 'significant' outcome
+  // is the outcome that will be reported.
+  // Significance hierarchy: Unspecified (default) < Passed < Indeterminate < Failed
   Outcome outcome = 12;
+  // Optional. Any error information associated with the test result. Error information can be
+  // set on creation if it is known at the time of creation. Otherwise, the error information
+  // will be calculated based on the outcomes of the associated steps.  If the error information
+  // is calculated, the first observed error information will be reported.
+  ErrorInformation error_information = 13;
   // Optional. A link to a resource that describes the test result.
   // This value is expected to be a valid URI.
-  string link = 13;
+  string link = 14;
   // Optional. Any extensions to be associated with the test result.
-  map<string, ni.measurements.metadata.v1.ExtensionValue> extensions = 14;
+  map<string, ni.measurements.metadata.v1.ExtensionValue> extensions = 15;
   // Optional.  If any of your messages contain 'extension', you must register
   // a schema, and specify the schema id here.  In that case, all metadata will
   // be validated against the specified schema.
-  string schema_id = 15;
+  string schema_id = 16;
 }
 
 // Represents the metadata of the step that was taken
@@ -160,16 +169,28 @@ message Step
   ni.protobuf.types.PrecisionTimestamp start_date_time = 8;
   // End date and time of the test step (timestamp)
   ni.protobuf.types.PrecisionTimestamp end_date_time = 9;
+  // Optional. Overall step outcome (e.g., Passed, Failed, Indeterminate)
+  // The outcome can be set on creation if it is known at the time of creation.
+  // Otherwise, the outcome will be calculated based on the outcomes of the
+  // associated measurements. If the outcome is calculated, the most 'significant' outcome
+  // is the outcome that will be reported.
+  // Significance hierarchy: Unspecified (default) < Passed < Indeterminate < Failed
+  Outcome outcome = 10;
+  // Optional. Any error information associated with the test step. Error information can be
+  // set on creation if it is known at the time of creation. Otherwise, the error information
+  // will be calculated based on the outcomes of the associated measurements.  If the
+  // error information is calculated, the first observed error information will be reported.
+  ErrorInformation error_information = 11;
   // A link to a resource that describes the step.
   // This value is expected to be a valid URI.
-  string link = 10;
+  string link = 12;
   // Any extensions to be associated with the test step
-  map<string, ni.measurements.metadata.v1.ExtensionValue> extensions = 11;
+  map<string, ni.measurements.metadata.v1.ExtensionValue> extensions = 13;
   // The unique identifier of the schema that applies to this instance's extension.
   // If any extension is associated with this instance, a schema_id must be provided, unless
   // the test step is created within the context of a test result, in which case
   // the test result must have a schema_id.
-  string schema_id = 12;
+  string schema_id = 14;
 }
 
 // Describes the outcome of a measurement
