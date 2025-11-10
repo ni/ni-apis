@@ -34,12 +34,12 @@ message UutInstance
   // A link to a resource that describes the UUT instance.
   // This value is expected to be a valid URI.
   string link = 7;
-  // Any extensions to be associated with the UUT instance
-  map<string, ExtensionValue> extensions = 8;
+  // Optional. Any attributes used to extend the definition of your UutInstance
+  // can go here. To add extension attributes, you must first register a schema,
+  // and specify the schema's id in the 'schema_id' field.
+  map<string, ExtensionValue> extension = 8;
   // The unique identifier of the schema that applies to this instance's extension.
-  // If any extension is associated with this instance, a schema_id must be provided, unless
-  // the UUT instance is created within the context of a test result, in which case
-  // the test result must have a schema_id.
+  // If any extension is associated with this instance, a schema_id must be provided.
   string schema_id = 9;
 }
 
@@ -61,12 +61,12 @@ message Uut
   // A link to a resource that describes the UUT.
   // This value is expected to be a valid URI.
   string link = 6;
-  // Any extensions to be associated with the UUT
-  map<string, ExtensionValue> extensions = 7;
+  // Optional. Any attributes used to extend the definition of your Uut
+  // can go here. To add extension attributes, you must first register a schema,
+  // and specify the schema's id in the 'schema_id' field.
+  map<string, ExtensionValue> extension = 7;
   // The unique identifier of the schema that applies to this instance's extension.
-  // If any extension is associated with this instance, a schema_id must be provided, unless
-  // the UUT is created within the context of a test result, in which case
-  // the test result must have a schema_id.
+  // If any extension is associated with this instance, a schema_id must be provided.
   string schema_id = 8;
 }
 
@@ -92,12 +92,12 @@ message HardwareItem
   // A link to a resource that describes the hardware item.
   // This value is expected to be a valid URI.
   string link = 8;
-  // Any extensions to be associated with the hardware item
-  map<string, ExtensionValue> extensions = 9;
+  // Optional. Any attributes used to extend the definition of your HardwareItem
+  // can go here. To add extension attributes, you must first register a schema,
+  // and specify the schema's id in the 'schema_id' field.
+  map<string, ExtensionValue> extension = 9;
   // The unique identifier of the schema that applies to this instance's extension.
-  // If any extension is associated with this instance, a schema_id must be provided, unless
-  // the hardware item is created within the context of a test result, in which case
-  // the test result must have a schema_id.
+  // If any extension is associated with this instance, a schema_id must be provided.
   string schema_id = 10;
 }
 
@@ -128,12 +128,12 @@ message TestAdapter
   // A link to a resource that describes the test adapter.
   // This value is expected to be a valid URI.
   string link = 9;
-  // Any extensions to be associated with the test adapter
-  map<string, ExtensionValue> extensions = 10;
+  // Optional. Any attributes used to extend the definition of your TestAdapter
+  // can go here. To add extension attributes, you must first register a schema,
+  // and specify the schema's id in the 'schema_id' field.
+  map<string, ExtensionValue> extension = 10;
   // The unique identifier of the schema that applies to this instance's extension.
-  // If any extension is associated with this instance, a schema_id must be provided, unless
-  // the test adapter is created within the context of a test result, in which case
-  // the test result must have a schema_id.
+  // If any extension is associated with this instance, a schema_id must be provided.
   string schema_id = 11;
 }
 
@@ -155,12 +155,12 @@ message SoftwareItem
   // A link to a resource that describes the software item.
   // This value is expected to be a valid URI.
   string link = 4;
-  // Any extensions to be associated with the software item
-  map<string, ExtensionValue> extensions = 5;
+  // Optional. Any attributes used to extend the definition of your SoftwareItem
+  // can go here. To add extension attributes, you must first register a schema,
+  // and specify the schema's id in the 'schema_id' field.
+  map<string, ExtensionValue> extension = 5;
   // The unique identifier of the schema that applies to this instance's extension.
-  // If any extension is associated with this instance, a schema_id must be provided, unless
-  // the software item is created within the context of a test result, in which case
-  // the test result must have a schema_id.
+  // If any extension is associated with this instance, a schema_id must be provided.
   string schema_id = 6;
 }
 
@@ -178,12 +178,12 @@ message Operator
   // A link to a resource that describes the operator.
   // This value is expected to be a valid URI.
   string link = 4;
-  // Any extensions to be associated with the operator
-  map<string, ExtensionValue> extensions = 5;
+  // Optional. Any attributes used to extend the definition of your Operator
+  // can go here. To add extension attributes, you must first register a schema,
+  // and specify the schema's id in the 'schema_id' field.
+  map<string, ExtensionValue> extension = 5;
   // The unique identifier of the schema that applies to this instance's extension.
-  // If any extension is associated with this instance, a schema_id must be provided, unless
-  // the operator is created within the context of a test result, in which case
-  // the test result must have a schema_id.
+  // If any extension is associated with this instance, a schema_id must be provided.
   string schema_id = 6;
 }
 
@@ -201,12 +201,12 @@ message TestDescription
   // A link to a resource that describes the test description.
   // This value is expected to be a valid URI.
   string link = 4;
-  // Any extensions to be associated with the test description
-  map<string, ExtensionValue> extensions = 5;
+  // Optional. Any attributes used to extend the definition of your TestDescription
+  // can go here. To add extension attributes, you must first register a schema,
+  // and specify the schema's id in the 'schema_id' field.
+  map<string, ExtensionValue> extension = 5;
   // The unique identifier of the schema that applies to this instance's extension.
-  // If any extension is associated with this instance, a schema_id must be provided, unless
-  // the test description is created within the context of a test result, in which case
-  // the test result must have a schema_id.
+  // If any extension is associated with this instance, a schema_id must be provided.
   string schema_id = 6;
 }
 
@@ -224,12 +224,12 @@ message Test
   // A link to a resource that describes the test.
   // This value is expected to be a valid URI.
   string link = 4;
-  // Any extensions to be associated with the test
-  map<string, ExtensionValue> extensions = 5;
+  // Optional. Any attributes used to extend the definition of your Test
+  // can go here. To add extension attributes, you must first register a schema,
+  // and specify the schema's id in the 'schema_id' field.
+  map<string, ExtensionValue> extension = 5;
   // The unique identifier of the schema that applies to this instance's extension.
-  // If any extension is associated with this instance, a schema_id must be provided, unless
-  // the test is created within the context of a test result, in which case
-  // the test result must have a schema_id.
+  // If any extension is associated with this instance, a schema_id must be provided
   string schema_id = 6;
 }
 
@@ -247,12 +247,12 @@ message TestStation
   // A link to a resource that describes the test station.
   // This value is expected to be a valid URI.
   string link = 4;
-  // Any extensions to be associated with the test station
-  map<string, ExtensionValue> extensions = 5;
+  // Optional. Any attributes used to extend the definition of your TestStation
+  // can go here. To add extension attributes, you must first register a schema,
+  // and specify the schema's id in the 'schema_id' field.
+  map<string, ExtensionValue> extension = 5;
   // The unique identifier of the schema that applies to this instance's extension.
-  // If any extension is associated with this instance, a schema_id must be provided, unless
-  // the test station is created within the context of a test result, in which case
-  // the test result must have a schema_id.
+  // If any extension is associated with this instance, a schema_id must be provided.
   string schema_id = 6;
 }
 

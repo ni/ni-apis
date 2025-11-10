@@ -25,7 +25,7 @@ message PublishedCondition {
   // The name of the condition.
   string name = 3;
   // The type of the condition. For example, "Setup" or "Environment".
-  string type = 4;
+  string condition_type = 4;
   // The id of the step with which this condition is associated.
   string step_id = 5;
   // The id of the test result with which this condition is associated.
@@ -52,8 +52,8 @@ message PublishedMeasurement {
   repeated string test_adapter_ids = 8;
   // The name used to group measurements across multiple publishes.
   string name = 9;
-  // The type of the measurement. This is used to filter measurements in queries.
-  string data_type = 10;
+  // The type of the value of the measurement. This is used to filter measurements in queries.
+  string value_type = 10;
   // Any notes about the measurement.
   string notes = 11;
   // The date and time at which the measurement was first published. If the measurement represents a parametric set,
@@ -133,8 +133,10 @@ message TestResult {
   // Optional. A link to a resource that describes the test result.
   // This value is expected to be a valid URI.
   string link = 14;
-  // Optional. Any extensions to be associated with the test result.
-  map<string, ni.measurements.metadata.v1.ExtensionValue> extensions = 15;
+  // Optional. Any attributes used to extend the definition of your test result
+  // can go here. To add extension attributes, you must first register a schema,
+  // and specify the schema's id in the 'schema_id' field.
+  map<string, ni.measurements.metadata.v1.ExtensionValue> extension = 15;
   // Optional.  If any of your messages contain 'extension', you must register
   // a schema, and specify the schema id here.  In that case, all metadata will
   // be validated against the specified schema.
@@ -162,7 +164,7 @@ message Step
   // Required. The name of the step.
   string name = 5;
   // Step type (e.g., Setup, Action, Measurement, Cleanup)
-  string type = 6;
+  string step_type = 6;
   // Any notes about the step
   string notes = 7;
   // Start date and time of the test step (timestamp)
@@ -184,12 +186,12 @@ message Step
   // A link to a resource that describes the step.
   // This value is expected to be a valid URI.
   string link = 12;
-  // Any extensions to be associated with the test step
-  map<string, ni.measurements.metadata.v1.ExtensionValue> extensions = 13;
+  // Optional. Any attributes used to extend the definition of your test step
+  // can go here. To add extension attributes, you must first register a schema,
+  // and specify the schema's id in the 'schema_id' field.
+  map<string, ni.measurements.metadata.v1.ExtensionValue> extension = 13;
   // The unique identifier of the schema that applies to this instance's extension.
-  // If any extension is associated with this instance, a schema_id must be provided, unless
-  // the test step is created within the context of a test result, in which case
-  // the test result must have a schema_id.
+  // If any extension is associated with this instance, a schema_id must be provided.
   string schema_id = 14;
 }
 
