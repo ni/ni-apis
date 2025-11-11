@@ -74,7 +74,7 @@
     }
   },
   "definitions": {
-    "Extensions": {
+    "Extension": {
       "type": "object",
       "description": "Extension fields as string key-value pairs for custom metadata",
       "additionalProperties": {
@@ -120,10 +120,10 @@
         },
         "schemaId": {
           "type": "string",
-          "description": "The unique identifier of the schema that applies to this instance's extensions"
+          "description": "The unique identifier of the schema that applies to this instance's extension"
         },
-        "extensions": {
-          "$ref": "#/definitions/Extensions"
+        "extension": {
+          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -150,10 +150,10 @@
         },
         "schemaId": {
           "type": "string",
-          "description": "The unique identifier of the schema that applies to this instance's extensions"
+          "description": "The unique identifier of the schema that applies to this instance's extension"
         },
-        "extensions": {
-          "$ref": "#/definitions/Extensions"
+        "extension": {
+          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -180,10 +180,10 @@
         },
         "schemaId": {
           "type": "string",
-          "description": "The unique identifier of the schema that applies to this instance's extensions"
+          "description": "The unique identifier of the schema that applies to this instance's extension"
         },
-        "extensions": {
-          "$ref": "#/definitions/Extensions"
+        "extension": {
+          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -230,10 +230,10 @@
         },
         "schemaId": {
           "type": "string",
-          "description": "The unique identifier of the schema that applies to this instance's extensions"
+          "description": "The unique identifier of the schema that applies to this instance's extension"
         },
-        "extensions": {
-          "$ref": "#/definitions/Extensions"
+        "extension": {
+          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -260,10 +260,10 @@
         },
         "schemaId": {
           "type": "string",
-          "description": "The unique identifier of the schema that applies to this instance's extensions"
+          "description": "The unique identifier of the schema that applies to this instance's extension"
         },
-        "extensions": {
-          "$ref": "#/definitions/Extensions"
+        "extension": {
+          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -290,10 +290,10 @@
         },
         "schemaId": {
           "type": "string",
-          "description": "The unique identifier of the schema that applies to this instance's extensions"
+          "description": "The unique identifier of the schema that applies to this instance's extension"
         },
-        "extensions": {
-          "$ref": "#/definitions/Extensions"
+        "extension": {
+          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -324,10 +324,10 @@
         },
         "schemaId": {
           "type": "string",
-          "description": "The unique identifier of the schema that applies to this instance's extensions"
+          "description": "The unique identifier of the schema that applies to this instance's extension"
         },
-        "extensions": {
-          "$ref": "#/definitions/Extensions"
+        "extension": {
+          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -362,14 +362,14 @@
         },
         "schemaId": {
           "type": "string",
-          "description": "The unique identifier of the schema that applies to this instance's extensions"
+          "description": "The unique identifier of the schema that applies to this instance's extension"
         },
         "uutAlias": {
           "type": "string",
           "description": "Alias reference to the parent UUT model or type"
         },
-        "extensions": {
-          "$ref": "#/definitions/Extensions"
+        "extension": {
+          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -392,14 +392,14 @@
         },
         "schemaId": {
           "type": "string",
-          "description": "The unique identifier of the schema that applies to this instance's extensions"
+          "description": "The unique identifier of the schema that applies to this instance's extension"
         },
         "uutAlias": {
           "type": "string",
           "description": "Alias reference to the UUT this test is designed for"
         },
-        "extensions": {
-          "$ref": "#/definitions/Extensions"
+        "extension": {
+          "$ref": "#/definitions/Extension"
         }
       }
     }
