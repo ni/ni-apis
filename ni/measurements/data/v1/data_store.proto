@@ -108,11 +108,8 @@ message TestResult {
   // Optional. The ids of the test adapters associated with this test result. These values are expected
   // to be parsable GUIDs or aliases. They will always be returned from the service as GUIDs.
   repeated string test_adapter_ids = 8;
-  // Optional.
-  // The name of the test result.  This value should only contain letters,
-  // numbers, spaces, hyphens, underscores, parentheses, periods and
-  // spaces. It must begin and end with a letter or number.
-  // Expected format: ^[\w\(\)-]([\w.\(\) -]*[\w\(\)-])?$
+  // Required.
+  // The name of the test result.
   string name = 9;
   // Optional. Start date and time of the test execution (timestamp)
   ni.protobuf.types.PrecisionTimestamp start_date_time = 10;
