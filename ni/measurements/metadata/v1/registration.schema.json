@@ -1,0 +1,407 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Digital Thread Data Schema",
+  "description": "Schema for validating JSON files used to describe entities that should be added to the digital thread.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "The JSON Schema URI for validation"
+    },
+    "hardwareItems": {
+      "type": "array",
+      "description": "Collection of hardware items used to take measurements",
+      "items": {
+        "$ref": "#/definitions/HardwareItem"
+      }
+    },
+    "operators": {
+      "type": "array",
+      "description": "Collection of operators who performed test operations",
+      "items": {
+        "$ref": "#/definitions/Operator"
+      }
+    },
+    "softwareItems": {
+      "type": "array",
+      "description": "Collection of software items used to take measurements",
+      "items": {
+        "$ref": "#/definitions/SoftwareItem"
+      }
+    },
+    "testAdapters": {
+      "type": "array",
+      "description": "Collection of test adapters (fixtures, interface boards, or mechanical setups)",
+      "items": {
+        "$ref": "#/definitions/TestAdapter"
+      }
+    },
+    "tests": {
+      "type": "array",
+      "description": "Collection of test definitions",
+      "items": {
+        "$ref": "#/definitions/Test"
+      }
+    },
+    "testStations": {
+      "type": "array",
+      "description": "Collection of test stations where tests are executed",
+      "items": {
+        "$ref": "#/definitions/TestStation"
+      }
+    },
+    "uuts": {
+      "type": "array",
+      "description": "Collection of Unit Under Test (UUT) definitions",
+      "items": {
+        "$ref": "#/definitions/Uut"
+      }
+    },
+    "uutInstances": {
+      "type": "array",
+      "description": "Collection of specific UUT instances with serial numbers",
+      "items": {
+        "$ref": "#/definitions/UutInstance"
+      }
+    },
+    "testDescriptions": {
+      "type": "array",
+      "description": "Collection of test descriptions defining tests for specific UUTs",
+      "items": {
+        "$ref": "#/definitions/TestDescription"
+      }
+    }
+  },
+  "definitions": {
+    "Extension": {
+      "type": "object",
+      "description": "Extension fields as string key-value pairs for custom metadata",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "HardwareItem": {
+      "type": "object",
+      "description": "Represents the metadata of a hardware item used to take measurements",
+      "additionalProperties": false,
+      "properties": {
+        "alias": {
+          "type": "string",
+          "description": "Optional alias identifier for referencing this hardware item from other entities"
+        },
+        "manufacturer": {
+          "type": "string",
+          "description": "The manufacturer or vendor of the hardware item"
+        },
+        "model": {
+          "type": "string",
+          "description": "The model name or number of the hardware item"
+        },
+        "serialNumber": {
+          "type": "string",
+          "description": "The serial number of the hardware item"
+        },
+        "partNumber": {
+          "type": "string",
+          "description": "The part number of the hardware item"
+        },
+        "assetIdentifier": {
+          "type": "string",
+          "description": "The asset identifier for tracking and inventory purposes"
+        },
+        "calibrationDueDate": {
+          "type": "string",
+          "description": "The date when calibration is due for the hardware item"
+        },
+        "link": {
+          "type": "string",
+          "description": "A URI to a resource that further describes this hardware item"
+        },
+        "schemaId": {
+          "type": "string",
+          "description": "The unique identifier of the schema that applies to this instance's extension"
+        },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        }
+      }
+    },
+    "Operator": {
+      "type": "object",
+      "description": "Represents the metadata of an operator who performed test operations",
+      "additionalProperties": false,
+      "properties": {
+        "alias": {
+          "type": "string",
+          "description": "Optional alias identifier for referencing this operator from other entities"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the operator"
+        },
+        "role": {
+          "type": "string",
+          "description": "The role of the operator"
+        },
+        "link": {
+          "type": "string",
+          "description": "A URI to a resource that further describes this operator"
+        },
+        "schemaId": {
+          "type": "string",
+          "description": "The unique identifier of the schema that applies to this instance's extension"
+        },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        }
+      }
+    },
+    "SoftwareItem": {
+      "type": "object",
+      "description": "Represents the metadata of a software item used to take measurements",
+      "additionalProperties": false,
+      "properties": {
+        "alias": {
+          "type": "string",
+          "description": "Optional alias identifier for referencing this software item from other entities"
+        },
+        "product": {
+          "type": "string",
+          "description": "The product name of the software item. Should only contain letters, numbers, spaces, hyphens, underscores, parentheses, and periods. Must begin and end with a letter or number."
+        },
+        "version": {
+          "type": "string",
+          "description": "The version of the software item"
+        },
+        "link": {
+          "type": "string",
+          "description": "A URI to a resource that further describes this software item"
+        },
+        "schemaId": {
+          "type": "string",
+          "description": "The unique identifier of the schema that applies to this instance's extension"
+        },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        }
+      }
+    },
+    "TestAdapter": {
+      "type": "object",
+      "description": "Represents a test adapter, fixture, interface board, breakout box, mechanical fixture, or connection adapter used to hold, connect, or interface the UUT with the test system",
+      "additionalProperties": false,
+      "properties": {
+        "alias": {
+          "type": "string",
+          "description": "Optional alias identifier for referencing this test adapter from other entities"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name or label for the test adapter"
+        },
+        "manufacturer": {
+          "type": "string",
+          "description": "The manufacturer or vendor of the test adapter"
+        },
+        "model": {
+          "type": "string",
+          "description": "The model number or name of the test adapter"
+        },
+        "serialNumber": {
+          "type": "string",
+          "description": "The serial number of the test adapter"
+        },
+        "partNumber": {
+          "type": "string",
+          "description": "The part number of the test adapter"
+        },
+        "assetIdentifier": {
+          "type": "string",
+          "description": "The asset identifier for tracking and inventory purposes"
+        },
+        "calibrationDueDate": {
+          "type": "string",
+          "description": "The date when calibration is due for the test adapter"
+        },
+        "link": {
+          "type": "string",
+          "description": "A URI to a resource that further describes this test adapter"
+        },
+        "schemaId": {
+          "type": "string",
+          "description": "The unique identifier of the schema that applies to this instance's extension"
+        },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        }
+      }
+    },
+    "Test": {
+      "type": "object",
+      "description": "Represents the metadata of a test definition",
+      "additionalProperties": false,
+      "properties": {
+        "alias": {
+          "type": "string",
+          "description": "Optional alias identifier for referencing this test from other entities"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the test"
+        },
+        "description": {
+          "type": "string",
+          "description": "Explanation of what the test does"
+        },
+        "link": {
+          "type": "string",
+          "description": "A URI to a resource that further describes this test"
+        },
+        "schemaId": {
+          "type": "string",
+          "description": "The unique identifier of the schema that applies to this instance's extension"
+        },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        }
+      }
+    },
+    "TestStation": {
+      "type": "object",
+      "description": "Represents the metadata of a test station where tests are executed",
+      "additionalProperties": false,
+      "properties": {
+        "alias": {
+          "type": "string",
+          "description": "Optional alias identifier for referencing this test station from other entities"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the test station"
+        },
+        "assetIdentifier": {
+          "type": "string",
+          "description": "The asset identifier for tracking and inventory purposes"
+        },
+        "link": {
+          "type": "string",
+          "description": "A URI to a resource that further describes this test station"
+        },
+        "schemaId": {
+          "type": "string",
+          "description": "The unique identifier of the schema that applies to this instance's extension"
+        },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        }
+      }
+    },
+    "Uut": {
+      "type": "object",
+      "description": "Represents the metadata of a Unit Under Test (UUT) model or type",
+      "additionalProperties": false,
+      "properties": {
+        "alias": {
+          "type": "string",
+          "description": "Optional alias identifier for referencing this UUT from other entities"
+        },
+        "modelName": {
+          "type": "string",
+          "description": "The name of the UUT model"
+        },
+        "partNumber": {
+          "type": "string",
+          "description": "The part number of the UUT"
+        },
+        "link": {
+          "type": "string",
+          "description": "A URI to a resource that further describes this UUT"
+        },
+        "family": {
+          "type": "string",
+          "description": "The UUT family or product line"
+        },
+        "schemaId": {
+          "type": "string",
+          "description": "The unique identifier of the schema that applies to this instance's extension"
+        },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        }
+      }
+    },
+    "UutInstance": {
+      "type": "object",
+      "description": "Represents the metadata of a specific UUT instance with a unique serial number",
+      "additionalProperties": false,
+      "properties": {
+        "alias": {
+          "type": "string",
+          "description": "Optional alias identifier for referencing this UUT instance from other entities"
+        },
+        "serialNumber": {
+          "type": "string",
+          "description": "The serial number of the UUT instance"
+        },
+        "manufactureDate": {
+          "type": "string",
+          "description": "The date the UUT instance was manufactured"
+        },
+        "firmwareVersion": {
+          "type": "string",
+          "description": "The version of the firmware on the UUT instance"
+        },
+        "hardwareVersion": {
+          "type": "string",
+          "description": "The hardware version of the UUT instance"
+        },
+        "link": {
+          "type": "string",
+          "description": "A URI to a resource that further describes this UUT instance"
+        },
+        "schemaId": {
+          "type": "string",
+          "description": "The unique identifier of the schema that applies to this instance's extension"
+        },
+        "uutAlias": {
+          "type": "string",
+          "description": "Alias reference to the parent UUT model or type"
+        },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        }
+      }
+    },
+    "TestDescription": {
+      "type": "object",
+      "description": "Represents the metadata of a test description defining a test for a specific UUT",
+      "additionalProperties": false,
+      "properties": {
+        "alias": {
+          "type": "string",
+          "description": "Optional alias identifier for referencing this test description from other entities"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the test description"
+        },
+        "link": {
+          "type": "string",
+          "description": "A URI to a resource that further describes this test description"
+        },
+        "schemaId": {
+          "type": "string",
+          "description": "The unique identifier of the schema that applies to this instance's extension"
+        },
+        "uutAlias": {
+          "type": "string",
+          "description": "Alias reference to the UUT this test is designed for"
+        },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        }
+      }
+    }
+  }
+}
