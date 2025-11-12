@@ -98,8 +98,8 @@ service MetadataStoreService {
   // Creates all of the metadata entries contained in the provided JSON document.
   // The JSON document should conform to the schema defined by
   // https://raw.githubusercontent.com/ni/ni-apis/main/ni/measurements/metadata/v1/registration.schema.json
-  // The response will contain all of associated the objects from the metadata store.  If the object
-  // already existed, the existing object will be returned; otherwise, a new object will be created
+  // The response will contain all of the associated objects from the metadata store.  If the object
+  // already exists, the existing object will be returned; otherwise, a new object will be created
   rpc CreateFromJsonDocument(CreateFromJsonDocumentRequest) returns (CreateFromJsonDocumentResponse);
 }
 
@@ -488,31 +488,31 @@ message CreateFromJsonDocumentRequest {
 }
 
 message CreateFromJsonDocumentResponse {
-  // The collection of HardwareItems associated with the JSON document.
-  // If an item already existed, the existing item is returned; otherwise, a new item is created.
-  repeated HardwareItem hardware_items = 1;
-  // The collection of SoftwareItems associated with the JSON document.
-  // If an item already existed, the existing item is returned; otherwise, a new item is created.
-  repeated SoftwareItem software_items = 2;
+  // The collection of UUTInstances associated with the JSON document.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
+  repeated UutInstance uut_instances = 1;
+  // The collection of UUTs associated with the JSON document.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
+  repeated Uut uuts = 2;
   // The collection of Operators associated with the JSON document.
-  // If an item already existed, the existing item is returned; otherwise, a new item is created.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
   repeated Operator operators = 3;
   // The collection of TestDescriptions associated with the JSON document.
-  // If an item already existed, the existing item is returned; otherwise, a new item is created.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
   repeated TestDescription test_descriptions = 4;
   // The collection of Tests associated with the JSON document.
-  // If an item already existed, the existing item is returned; otherwise, a new item is created.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
   repeated Test tests = 5;
   // The collection of TestStations associated with the JSON document.
-  // If an item already existed, the existing item is returned; otherwise, a new item is created.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
   repeated TestStation test_stations = 6;
+  // The collection of HardwareItems associated with the JSON document.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
+  repeated HardwareItem hardware_items = 7;
+  // The collection of SoftwareItems associated with the JSON document.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
+  repeated SoftwareItem software_items = 8;
   // The collection of TestAdapters associated with the JSON document.
-  // If an item already existed, the existing item is returned; otherwise, a new item is created.
-  repeated TestAdapter test_adapters = 7;
-  // The collection of UUTs associated with the JSON document.
-  // If an item already existed, the existing item is returned; otherwise, a new item is created.
-  repeated Uut uuts = 8;
-  // The collection of UUTInstances associated with the JSON document.
-  // If an item already existed, the existing item is returned; otherwise, a new item is created.
-  repeated UutInstance uut_instances = 9;
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
+  repeated TestAdapter test_adapters = 9;
 }
