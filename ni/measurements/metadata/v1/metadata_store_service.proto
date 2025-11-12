@@ -21,7 +21,7 @@ service MetadataStoreService {
   rpc QueryUutInstances(QueryUutInstancesRequest) returns (QueryUutInstancesResponse);
   // Creates a new UUT instance in the metadata store.
   rpc CreateUutInstance(CreateUutInstanceRequest) returns (CreateUutInstanceResponse);
-  
+
   // Gets the UUT associated with the identifier given in the request.
   rpc GetUut(GetUutRequest) returns (GetUutResponse);
   // Perform an OData query
@@ -94,6 +94,13 @@ service MetadataStoreService {
   rpc CreateAlias(CreateAliasRequest) returns (CreateAliasResponse);
   // Removes a registered alias
   rpc DeleteAlias(DeleteAliasRequest) returns (DeleteAliasResponse);
+
+  // Creates all of the metadata entries contained in the provided JSON document.
+  // The JSON document should conform to the schema defined by
+  // https://raw.githubusercontent.com/ni/ni-apis/main/ni/measurements/metadata/v1/registration.schema.json
+  // The response will contain all of the associated objects from the metadata store.  If the object
+  // already exists, the existing object will be returned; otherwise, a new object will be created
+  rpc CreateFromJsonDocument(CreateFromJsonDocumentRequest) returns (CreateFromJsonDocumentResponse);
 }
 
 // Message sent to get the UUT instance associated with the given identifier.
@@ -461,7 +468,7 @@ message CreateAliasRequest {
 
 message CreateAliasResponse {
   Alias alias = 1;
-} 
+}
 
 message DeleteAliasRequest {
   // The name of the alias to unregister
@@ -471,4 +478,41 @@ message DeleteAliasRequest {
 message DeleteAliasResponse {
   // Whether the action resulted in the specified alias becoming unregistered. (False if the alias does not exist.)
   bool unregistered = 1;
+}
+
+message CreateFromJsonDocumentRequest {
+  // The JSON document containing the metadata entries to create.
+  // The JSON document should conform to the schema defined by
+  // https://raw.githubusercontent.com/ni/ni-apis/main/ni/measurements/metadata/v1/registration.schema.json
+  string json_document = 1;
+}
+
+message CreateFromJsonDocumentResponse {
+  // The collection of UUTInstances associated with the JSON document.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
+  repeated UutInstance uut_instances = 1;
+  // The collection of UUTs associated with the JSON document.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
+  repeated Uut uuts = 2;
+  // The collection of Operators associated with the JSON document.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
+  repeated Operator operators = 3;
+  // The collection of TestDescriptions associated with the JSON document.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
+  repeated TestDescription test_descriptions = 4;
+  // The collection of Tests associated with the JSON document.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
+  repeated Test tests = 5;
+  // The collection of TestStations associated with the JSON document.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
+  repeated TestStation test_stations = 6;
+  // The collection of HardwareItems associated with the JSON document.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
+  repeated HardwareItem hardware_items = 7;
+  // The collection of SoftwareItems associated with the JSON document.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
+  repeated SoftwareItem software_items = 8;
+  // The collection of TestAdapters associated with the JSON document.
+  // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
+  repeated TestAdapter test_adapters = 9;
 }
