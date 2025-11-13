@@ -136,9 +136,9 @@ message QueryStepsResponse {
 
 message PublishConditionRequest {
   // Required. Identifier describing the condition value. For example, "Voltage".
-  string condition_name = 1;
+  string name = 1;
   // Required. The type of this condition. For example, "Upper Limit" or "Environment".
-  string type = 2;
+  string condition_type = 2;
   // Required. The single value for this condition for a publish on the test step.
   oneof value {
     ni.protobuf.types.Scalar scalar = 3;
@@ -158,9 +158,9 @@ message PublishConditionResponse {
 
 message PublishConditionBatchRequest {
   // Required. Identifier describing the condition values. For example, "Voltage".
-  string condition_name = 1;
+  string name = 1;
   // Required. The type of this condition. For example, "Upper Limit" or "Environment".
-  string type = 2;
+  string condition_type = 2;
   // Required. The values for this condition across all publishes on the test step.
   oneof values {
     ni.protobuf.types.Vector scalar_values = 3;
@@ -180,7 +180,7 @@ message PublishConditionBatchResponse {
 message PublishMeasurementRequest {
   // Required for measurement. This name is used for associating/grouping conceptually alike measurements across multiple publish iterations.
   // For example, a shared name of "Temperature" can be used for associating temperature readings across multiple iterations of publishing.
-  string measurement_name = 1;
+  string name = 1;
 
   // Required. The value of the measurement being published.
   oneof value {
@@ -229,7 +229,7 @@ message PublishMeasurementResponse {
 message PublishMeasurementBatchRequest {
   // Required for measurement. This name is used for associating/grouping conceptually alike measurements across multiple publish iterations.
   // For example, a shared name of "Temperature" can be used for associating temperature readings across multiple iterations of publishing.
-  string measurement_name = 1;
+  string name = 1;
 
   // Required. The values of the (scalar) measurement being published across N iterations.
   oneof values {
