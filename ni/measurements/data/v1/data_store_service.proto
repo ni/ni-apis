@@ -158,6 +158,10 @@ message PublishConditionRequest {
 message PublishConditionResponse {
   // The id of the published condition.
   string condition_id = 1;
+  // The id of the step associated with this condition.
+  string step_id = 2;
+  // The id of the test result associated with this condition.
+  string test_result_id = 3;
 }
 
 
@@ -180,6 +184,10 @@ message PublishConditionBatchRequest {
 message PublishConditionBatchResponse {
   // The id of the published condition.
   string condition_id = 1;
+  // The id of the step associated with this condition.
+  string step_id = 2;
+  // The id of the test result associated with this condition.
+  string test_result_id = 3;
 }
 
 message PublishMeasurementRequest {
@@ -229,6 +237,10 @@ message PublishMeasurementRequest {
 message PublishMeasurementResponse {
   // The id of the published measurement.
   string measurement_id = 1;
+  // The id of the step associated with this measurement.
+  string step_id = 2;
+  // The id of the test result associated with this measurement.
+  string test_result_id = 3;
 }
 
 message PublishMeasurementBatchRequest {
@@ -291,6 +303,10 @@ message PublishMeasurementBatchRequest {
 message PublishMeasurementBatchResponse {
   // The id of the published measurement.
   string measurement_id = 1;
+  // The id of the step associated with this measurement.
+  string step_id = 2;
+  // The id of the test result associated with this measurement.
+  string test_result_id = 3;
 }
 
 message GetMeasurementRequest {
