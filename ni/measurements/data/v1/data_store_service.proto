@@ -158,8 +158,6 @@ message PublishConditionRequest {
 message PublishConditionResponse {
   // The id of the published condition.
   string condition_id = 1;
-  // The id of the step associated with this condition.
-  string step_id = 2;
 }
 
 message PublishConditionBatchRequest {
@@ -181,8 +179,6 @@ message PublishConditionBatchRequest {
 message PublishConditionBatchResponse {
   // The id of the published condition.
   string condition_id = 1;
-  // The id of the step associated with this condition.
-  string step_id = 2;
 }
 
 message PublishMeasurementRequest {
@@ -232,8 +228,6 @@ message PublishMeasurementRequest {
 message PublishMeasurementResponse {
   // The id of the published measurement.
   string measurement_id = 1;
-  // The id of the step associated with this measurement.
-  string step_id = 2;
 }
 
 message PublishMeasurementBatchRequest {
@@ -296,8 +290,6 @@ message PublishMeasurementBatchRequest {
 message PublishMeasurementBatchResponse {
   // The ids of the published measurements. If your batch contained scalar data, this will be a single value.
   repeated string measurement_ids = 1;
-  // The id of the step associated with this measurement.
-  string step_id = 2;
 }
 
 message GetMeasurementRequest {
