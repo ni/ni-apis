@@ -57,6 +57,11 @@ service DataStoreService {
   // Publishes multiple scalar measurements at once for parametric sweeps.
   rpc PublishMeasurementBatch(PublishMeasurementBatchRequest) returns (PublishMeasurementBatchResponse);
 
+  // Gets the measurement associated with the given id.
+  rpc GetMeasurement(GetMeasurementRequest) returns (GetMeasurementResponse);
+  // Gets the condition associated with the given id.
+  rpc GetCondition(GetConditionRequest) returns (GetConditionResponse);
+
   // Queries conditions using OData query syntax.
   // See https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview.
   rpc QueryConditions(QueryConditionsRequest) returns (QueryConditionsResponse);
@@ -151,10 +156,9 @@ message PublishConditionRequest {
 }
 
 message PublishConditionResponse {
-  // A single condition present for the specified step.
-  PublishedCondition published_condition = 1;
+  // The id of the published condition.
+  string condition_id = 1;
 }
-
 
 message PublishConditionBatchRequest {
   // Required. Identifier describing the condition values. For example, "Voltage".
@@ -173,8 +177,8 @@ message PublishConditionBatchRequest {
 }
 
 message PublishConditionBatchResponse {
-  // A shared value for *all* condition measurements present for the specified step.
-  PublishedCondition published_condition = 1;
+  // The id of the published condition.
+  string condition_id = 1;
 }
 
 message PublishMeasurementRequest {
@@ -222,8 +226,8 @@ message PublishMeasurementRequest {
 }
 
 message PublishMeasurementResponse {
-  // The moniker of the published measurement and its metadata.
-  PublishedMeasurement published_measurement = 1;
+  // The id of the published measurement.
+  string measurement_id = 1;
 }
 
 message PublishMeasurementBatchRequest {
@@ -284,11 +288,31 @@ message PublishMeasurementBatchRequest {
 }
 
 message PublishMeasurementBatchResponse {
-  // The monikers of the published measurements and their corresponding metadata.
-  repeated PublishedMeasurement published_measurements = 1;
+  // The ids of the published measurements. If your batch contained scalar data, this will be a single value.
+  repeated string measurement_ids = 1;
 }
 
+message GetMeasurementRequest {
+  // The id of the desired measurement.
+  // This value is expected to be a parsable GUID.
+  string measurement_id = 1;
+}
 
+message GetMeasurementResponse {
+  // The measurement associated with the given id.
+  PublishedMeasurement published_measurement = 1;
+}
+
+message GetConditionRequest {
+  // The id of the desired condition.
+  // This value is expected to be a parsable GUID.
+  string condition_id = 1;
+}
+
+message GetConditionResponse {
+  // The condition associated with the given id.
+  PublishedCondition published_condition = 1;
+}
 
 message QueryConditionsRequest {
   // an OData query string.  example "$filter=name eq 'Value'"
