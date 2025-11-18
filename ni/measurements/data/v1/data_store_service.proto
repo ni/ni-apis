@@ -160,10 +160,7 @@ message PublishConditionResponse {
   string condition_id = 1;
   // The id of the step associated with this condition.
   string step_id = 2;
-  // The id of the test result associated with this condition.
-  string test_result_id = 3;
 }
-
 
 message PublishConditionBatchRequest {
   // Required. Identifier describing the condition values. For example, "Voltage".
@@ -186,8 +183,6 @@ message PublishConditionBatchResponse {
   string condition_id = 1;
   // The id of the step associated with this condition.
   string step_id = 2;
-  // The id of the test result associated with this condition.
-  string test_result_id = 3;
 }
 
 message PublishMeasurementRequest {
@@ -239,8 +234,6 @@ message PublishMeasurementResponse {
   string measurement_id = 1;
   // The id of the step associated with this measurement.
   string step_id = 2;
-  // The id of the test result associated with this measurement.
-  string test_result_id = 3;
 }
 
 message PublishMeasurementBatchRequest {
@@ -305,8 +298,6 @@ message PublishMeasurementBatchResponse {
   repeated string measurement_id = 1;
   // The id of the step associated with this measurement.
   string step_id = 2;
-  // The id of the test result associated with this measurement.
-  string test_result_id = 3;
 }
 
 message GetMeasurementRequest {
