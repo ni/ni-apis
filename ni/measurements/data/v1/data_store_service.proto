@@ -295,7 +295,7 @@ message PublishMeasurementBatchRequest {
 
 message PublishMeasurementBatchResponse {
   // The ids of the published measurements. If your batch contained scalar data, this will be a single value.
-  repeated string measurement_id = 1;
+  repeated string measurement_ids = 1;
   // The id of the step associated with this measurement.
   string step_id = 2;
 }
