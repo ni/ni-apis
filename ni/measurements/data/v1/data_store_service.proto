@@ -2,7 +2,9 @@ syntax = "proto3";
 
 package ni.measurements.data.v1;
 
+import "google/protobuf/any.proto";
 import "ni/protobuf/types/precision_timestamp.proto";
+import "ni/datamonikers/v1/data_moniker.proto";
 import "ni/measurements/data/v1/data_store.proto";
 import "ni/protobuf/types/scalar.proto";
 import "ni/protobuf/types/vector.proto";
@@ -68,6 +70,9 @@ service DataStoreService {
   // Queries measurements using OData query syntax.
   // See https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview.
   rpc QueryMeasurements(QueryMeasurementsRequest) returns (QueryMeasurementsResponse);
+
+  // Reads the data corresponding to the specified moniker.
+  rpc ReadData(ReadDataRequest) returns (ReadDataResponse);
 }
 
 message CreateTestResultRequest {
@@ -341,4 +346,14 @@ message QueryMeasurementsResponse {
   // The list of matching measurements. Each item contains a moniker for
   // retrieving the measurement, as well as the metadata associated with the measurement.
   repeated PublishedMeasurement published_measurements = 1;
+}
+
+message ReadDataRequest {
+  // The moniker identifying the data to read.
+  ni.datamonikers.v1.Moniker moniker = 1;
+}
+
+message ReadDataResponse {
+  // The data corresponding to the specified moniker.
+  google.protobuf.Any value = 1;
 }
