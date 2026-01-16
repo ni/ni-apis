@@ -21,8 +21,8 @@ option php_namespace = "NI\\Measurements\\Data\\V1";
 option ruby_package = "NI::Measurements::Data::V1";
 
 // This service provides endpoints for the publishing of measurements.
-// This includes associating measurements with the conditions associated with the measurement and
-// querying for the published measurements with OData queries.
+// This includes associating measurements with the conditions associated with the measurement,
+// querying for the published measurements with OData queries, and reading back these published values.
 service DataStoreService {
 
   // Creates a test result object for publishing measurements.  Once a test result is created,
