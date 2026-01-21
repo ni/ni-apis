@@ -71,8 +71,8 @@ service DataStoreService {
   // See https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview.
   rpc QueryMeasurements(QueryMeasurementsRequest) returns (QueryMeasurementsResponse);
 
-  // Reads the data corresponding to the specified moniker.
-  rpc ReadData(ReadDataRequest) returns (ReadDataResponse);
+  // Reads the value corresponding to the specified moniker.
+  rpc ReadValue(ReadValueRequest) returns (ReadValueResponse);
 }
 
 message CreateTestResultRequest {
@@ -348,12 +348,12 @@ message QueryMeasurementsResponse {
   repeated PublishedMeasurement published_measurements = 1;
 }
 
-message ReadDataRequest {
-  // The moniker identifying the data to read.
+message ReadValueRequest {
+  // The moniker identifying the value to read.
   ni.datamonikers.v1.Moniker moniker = 1;
 }
 
-message ReadDataResponse {
-  // The data corresponding to the specified moniker.
+message ReadValueResponse {
+  // The value corresponding to the specified moniker.
   google.protobuf.Any value = 1;
 }
