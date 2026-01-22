@@ -2,9 +2,7 @@ syntax = "proto3";
 
 package ni.measurements.data.v1;
 
-import "google/protobuf/any.proto";
 import "ni/protobuf/types/precision_timestamp.proto";
-import "ni/datamonikers/v1/data_moniker.proto";
 import "ni/measurements/data/v1/data_store.proto";
 import "ni/protobuf/types/scalar.proto";
 import "ni/protobuf/types/vector.proto";
@@ -71,11 +69,10 @@ service DataStoreService {
   // See https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview.
   rpc QueryMeasurements(QueryMeasurementsRequest) returns (QueryMeasurementsResponse);
 
-  // Reads the value corresponding to the specified measurement.
-  rpc ReadMeasurementValue(ReadMeasurementValueRequest) returns (ReadMeasurementValueResponse);
-
   // Reads the value corresponding to the specified condition.
   rpc ReadConditionValue(ReadConditionValueRequest) returns (ReadConditionValueResponse);
+  // Reads the value corresponding to the specified measurement.
+  rpc ReadMeasurementValue(ReadMeasurementValueRequest) returns (ReadMeasurementValueResponse);
 }
 
 message CreateTestResultRequest {
@@ -351,6 +348,18 @@ message QueryMeasurementsResponse {
   repeated PublishedMeasurement published_measurements = 1;
 }
 
+message ReadConditionValueRequest {
+  // The id of the condition to read.
+  string condition_id = 1;
+}
+
+message ReadConditionValueResponse {
+  // The value of the specified condition.
+  oneof value {
+    ni.protobuf.types.Vector vector = 1;
+  }
+}
+
 message ReadMeasurementValueRequest {
   // The id of the measurement to read.
   string measurement_id = 1;
@@ -367,17 +376,5 @@ message ReadMeasurementValueResponse {
     ni.protobuf.types.I16ComplexWaveform i16_complex_waveform = 6;
     ni.protobuf.types.DoubleSpectrum double_spectrum = 7;
     ni.protobuf.types.DigitalWaveform digital_waveform = 8;
-  }
-}
-
-message ReadConditionValueRequest {
-  // The id of the condition to read.
-  string condition_id = 1;
-}
-
-message ReadConditionValueResponse {
-  // The value of the specified condition.
-  oneof value {
-    ni.protobuf.types.Vector vector = 1;
   }
 }
