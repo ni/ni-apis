@@ -19,8 +19,8 @@ option php_namespace = "NI\\Measurements\\Data\\V1";
 option ruby_package = "NI::Measurements::Data::V1";
 
 // This service provides endpoints for the publishing of measurements.
-// This includes associating measurements with the conditions associated with the measurement and
-// querying for the published measurements with OData queries.
+// This includes associating measurements with the conditions associated with the measurement,
+// querying for the published measurements with OData queries, and reading back these published values.
 service DataStoreService {
 
   // Creates a test result object for publishing measurements.  Once a test result is created,
@@ -68,6 +68,11 @@ service DataStoreService {
   // Queries measurements using OData query syntax.
   // See https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview.
   rpc QueryMeasurements(QueryMeasurementsRequest) returns (QueryMeasurementsResponse);
+
+  // Reads the value corresponding to the specified condition.
+  rpc ReadConditionValue(ReadConditionValueRequest) returns (ReadConditionValueResponse);
+  // Reads the value corresponding to the specified measurement.
+  rpc ReadMeasurementValue(ReadMeasurementValueRequest) returns (ReadMeasurementValueResponse);
 }
 
 message CreateTestResultRequest {
@@ -341,4 +346,35 @@ message QueryMeasurementsResponse {
   // The list of matching measurements. Each item contains a moniker for
   // retrieving the measurement, as well as the metadata associated with the measurement.
   repeated PublishedMeasurement published_measurements = 1;
+}
+
+message ReadConditionValueRequest {
+  // The id of the condition to read.
+  string condition_id = 1;
+}
+
+message ReadConditionValueResponse {
+  // The value of the specified condition.
+  oneof value {
+    ni.protobuf.types.Vector vector = 1;
+  }
+}
+
+message ReadMeasurementValueRequest {
+  // The id of the measurement to read.
+  string measurement_id = 1;
+}
+
+message ReadMeasurementValueResponse {
+  // The value of the specified measurement.
+  oneof value {
+    ni.protobuf.types.Vector vector = 1;
+    ni.protobuf.types.DoubleAnalogWaveform double_analog_waveform = 2;
+    ni.protobuf.types.DoubleXYData x_y_data = 3;
+    ni.protobuf.types.I16AnalogWaveform i16_analog_waveform = 4;
+    ni.protobuf.types.DoubleComplexWaveform double_complex_waveform = 5;
+    ni.protobuf.types.I16ComplexWaveform i16_complex_waveform = 6;
+    ni.protobuf.types.DoubleSpectrum double_spectrum = 7;
+    ni.protobuf.types.DigitalWaveform digital_waveform = 8;
+  }
 }
