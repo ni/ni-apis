@@ -314,6 +314,13 @@
           "type": "string",
           "description": "The part number of the UUT"
         },
+        "manufacturers": {
+          "type": "array",
+          "description": "List of manufacturers of the UUT",
+          "items": {
+            "type": "string"
+          }
+        },
         "link": {
           "type": "string",
           "description": "A URI to a resource that further describes this UUT"
