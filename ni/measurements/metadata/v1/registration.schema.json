@@ -118,12 +118,12 @@
           "type": "string",
           "description": "A URI to a resource that further describes this hardware item"
         },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        },
         "schemaId": {
           "type": "string",
           "description": "The unique identifier of the schema that applies to this instance's extension"
-        },
-        "extension": {
-          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -148,12 +148,12 @@
           "type": "string",
           "description": "A URI to a resource that further describes this operator"
         },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        },
         "schemaId": {
           "type": "string",
           "description": "The unique identifier of the schema that applies to this instance's extension"
-        },
-        "extension": {
-          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -178,12 +178,12 @@
           "type": "string",
           "description": "A URI to a resource that further describes this software item"
         },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        },
         "schemaId": {
           "type": "string",
           "description": "The unique identifier of the schema that applies to this instance's extension"
-        },
-        "extension": {
-          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -228,12 +228,12 @@
           "type": "string",
           "description": "A URI to a resource that further describes this test adapter"
         },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        },
         "schemaId": {
           "type": "string",
           "description": "The unique identifier of the schema that applies to this instance's extension"
-        },
-        "extension": {
-          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -258,12 +258,12 @@
           "type": "string",
           "description": "A URI to a resource that further describes this test"
         },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        },
         "schemaId": {
           "type": "string",
           "description": "The unique identifier of the schema that applies to this instance's extension"
-        },
-        "extension": {
-          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -288,12 +288,12 @@
           "type": "string",
           "description": "A URI to a resource that further describes this test station"
         },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        },
         "schemaId": {
           "type": "string",
           "description": "The unique identifier of the schema that applies to this instance's extension"
-        },
-        "extension": {
-          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -310,6 +310,17 @@
           "type": "string",
           "description": "The name of the UUT model"
         },
+        "family": {
+          "type": "string",
+          "description": "The UUT family or product line"
+        },
+        "manufacturers": {
+          "type": "array",
+          "description": "List of manufacturers of the UUT",
+          "items": {
+            "type": "string"
+          }
+        },
         "partNumber": {
           "type": "string",
           "description": "The part number of the UUT"
@@ -318,16 +329,12 @@
           "type": "string",
           "description": "A URI to a resource that further describes this UUT"
         },
-        "family": {
-          "type": "string",
-          "description": "The UUT family or product line"
+        "extension": {
+          "$ref": "#/definitions/Extension"
         },
         "schemaId": {
           "type": "string",
           "description": "The unique identifier of the schema that applies to this instance's extension"
-        },
-        "extension": {
-          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -339,6 +346,10 @@
         "alias": {
           "type": "string",
           "description": "Optional alias identifier for referencing this UUT instance from other entities"
+        },
+        "uutAlias": {
+          "type": "string",
+          "description": "Alias reference to the parent UUT model or type"
         },
         "serialNumber": {
           "type": "string",
@@ -360,16 +371,12 @@
           "type": "string",
           "description": "A URI to a resource that further describes this UUT instance"
         },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        },
         "schemaId": {
           "type": "string",
           "description": "The unique identifier of the schema that applies to this instance's extension"
-        },
-        "uutAlias": {
-          "type": "string",
-          "description": "Alias reference to the parent UUT model or type"
-        },
-        "extension": {
-          "$ref": "#/definitions/Extension"
         }
       }
     },
@@ -382,6 +389,10 @@
           "type": "string",
           "description": "Optional alias identifier for referencing this test description from other entities"
         },
+        "uutAlias": {
+          "type": "string",
+          "description": "Alias reference to the UUT this test is designed for"
+        },
         "name": {
           "type": "string",
           "description": "The name of the test description"
@@ -390,16 +401,12 @@
           "type": "string",
           "description": "A URI to a resource that further describes this test description"
         },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        },
         "schemaId": {
           "type": "string",
           "description": "The unique identifier of the schema that applies to this instance's extension"
-        },
-        "uutAlias": {
-          "type": "string",
-          "description": "Alias reference to the UUT this test is designed for"
-        },
-        "extension": {
-          "$ref": "#/definitions/Extension"
         }
       }
     }
