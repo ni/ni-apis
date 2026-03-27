@@ -9,7 +9,6 @@ import "ni/protobuf/types/vector.proto";
 import "ni/protobuf/types/vector_wrappers.proto";
 import "ni/protobuf/types/waveform.proto";
 import "ni/protobuf/types/waveform_wrappers.proto";
-import "ni/protobuf/types/digital_waveform_wrappers.proto";
 import "ni/protobuf/types/xydata.proto";
 import "ni/protobuf/types/xydata_wrappers.proto";
 
