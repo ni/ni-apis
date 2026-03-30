@@ -25,5 +25,5 @@ option ruby_package = "NI::Protobuf::Types";
 
 // An array of XY data sets.
 message DoubleXYDataArrayValue {
-   repeated DoubleXYData xy_data = 1;
+   repeated DoubleXYData x_y_data = 1;
 }
