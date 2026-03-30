@@ -140,19 +140,6 @@ message ServiceLocation {
   string ssl_authenticated_port = 3;
 }
 
-// Combines a service descriptor with its optional location information.
-// The service_location field is populated only for services that are currently running
-// (i.e., services that have called RegisterService). Services that are known to the
-// discovery service but have not yet been started will have no service_location set.
-message ServiceDescriptorWithLocation {
-  // The description of the service.
-  ServiceDescriptor service_descriptor = 1;
-
-  // The location of the service. This field is set only if the service is currently running.
-  // If the service has not been started, this field will not be set.
-  ServiceLocation service_location = 2;
-}
-
 message RegisterServiceRequest {
   // Required. The description of the service.
   ServiceDescriptor service_description = 1;
@@ -195,11 +182,12 @@ message EnumerateServicesResponse {
   // To get extended information about the unreachable resources, use ResolveService
   // and handle the resulting error.
   repeated string unreachable = 2;
-  // The list of available services along with their location information.
-  // For each entry, the service_location field is set only if the service is currently running.
-  // Services known to the discovery service but not yet started will have no service_location set.
-  // This field can be used to determine a service's port/address without activating it via ResolveService.
-  repeated ServiceDescriptorWithLocation available_services_with_location = 3;
+  // The location of each service in 'available_services', index-aligned with that list
+  // and always the same length. An entry is set only if the corresponding service is
+  // currently running (i.e., has called RegisterService). An entry for a service that
+  // has not yet been started will be a default (empty) ServiceLocation message.
+  // Use this field to determine a service's port/address without activating it via ResolveService.
+  repeated ServiceLocation service_locations = 3;
 }
 
 message ResolveServiceRequest {
