@@ -262,9 +262,9 @@ message EnumerateActiveServicesRequest {
   string service_class = 2;
 }
 
-// Combines a service descriptor with its location.
+// Combines a service descriptor with its location to describe an active service.
 // Used in EnumerateActiveServicesResponse to represent a single active service instance.
-message ServiceDescriptorWithLocation {
+message ActiveServiceInformation {
   // The description of the service.
   ServiceDescriptor service_descriptor = 1;
 
@@ -279,7 +279,7 @@ message EnumerateActiveServicesResponse {
   // To communicate with a service, use ResolveService or ResolveServiceWithInformation instead.
   // Unlike EnumerateServices, multiple entries may share the same service_class when multiple
   // versions of the same service are running side by side.
-  repeated ServiceDescriptorWithLocation active_services = 1;
+  repeated ActiveServiceInformation active_services = 1;
 }
 
 // Message sent to enumerate the compute nodes that have registered themselves in the current session.
