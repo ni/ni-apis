@@ -67,10 +67,14 @@ service DiscoveryService {
   rpc EnumerateComputeNodes(EnumerateComputeNodesRequest) returns (EnumerateComputeNodesResponse);
 
   // Enumerate all service instances that are currently active (running).
+  // This RPC is intended for diagnostic and informational purposes, such as displaying the
+  // status of registered services to a user. It should not be used to obtain a service location
+  // for the purpose of communicating with that service; use ResolveService or
+  // ResolveServiceWithInformation for that purpose.
+  //
   // Unlike EnumerateServices, this RPC returns individual active service instances rather than
-  // collapsing multiple registered versions into a single ServiceDescriptor entry. Each result
-  // includes both the service descriptor and its location, so callers can connect to the service
-  // directly without needing to activate it via ResolveService.
+  // collapsing multiple registered versions into a single ServiceDescriptor entry, allowing
+  // callers to see each running instance independently when multiple versions are active side by side.
   rpc EnumerateActiveServices(EnumerateActiveServicesRequest) returns (EnumerateActiveServicesResponse);
 }
 
@@ -270,9 +274,10 @@ message ServiceDescriptorWithLocation {
 // Message returned from the EnumerateActiveServices method.
 message EnumerateActiveServicesResponse {
   // The list of currently active service instances which implement the specified service interface.
-  // Each entry contains both the service descriptor and its location, allowing callers to connect
-  // to the service directly. Unlike EnumerateServices, multiple entries may share the same
-  // service_class when multiple versions of the same service are running side by side.
+  // This information is intended for diagnostic and informational purposes only.
+  // To communicate with a service, use ResolveService or ResolveServiceWithInformation instead.
+  // Unlike EnumerateServices, multiple entries may share the same service_class when multiple
+  // versions of the same service are running side by side.
   repeated ServiceDescriptorWithLocation active_services = 1;
 }
 
