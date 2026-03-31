@@ -57,7 +57,7 @@ service DataStoreService {
   rpc PublishConditionBatch(PublishConditionBatchRequest) returns (PublishConditionBatchResponse);
   // Publishes a single measurement value associated with a test step.
   rpc PublishMeasurement(PublishMeasurementRequest) returns (PublishMeasurementResponse);
-  // Publishes multiple measurements at once for parametric sweeps or repeated iterations.
+  // Publishes multiple measurements at once for parametric sweeps.
   rpc PublishMeasurementBatch(PublishMeasurementBatchRequest) returns (PublishMeasurementBatchResponse);
 
   // Gets the measurement associated with the given id.
