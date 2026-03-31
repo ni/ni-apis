@@ -252,7 +252,8 @@ message ComputeNodeDescriptor {
 // Message sent to enumerate the active (currently running) service instances.
 message EnumerateActiveServicesRequest {
   // Optional. The gRPC full name of the service interface that is needed. If empty,
-  // information for all active services registered with the discovery service will be returned.
+  // information for all active services registered with the discovery service will be,
+  // returned, unless the 'service_class' field has been specified.
   string provided_interface = 1;
 
   // Optional. The "class" of the service that should be matched. If used in conjunction with
