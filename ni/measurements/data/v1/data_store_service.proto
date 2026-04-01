@@ -6,8 +6,11 @@ import "ni/protobuf/types/precision_timestamp.proto";
 import "ni/measurements/data/v1/data_store.proto";
 import "ni/protobuf/types/scalar.proto";
 import "ni/protobuf/types/vector.proto";
+import "ni/protobuf/types/vector_wrappers.proto";
 import "ni/protobuf/types/waveform.proto";
+import "ni/protobuf/types/waveform_wrappers.proto";
 import "ni/protobuf/types/xydata.proto";
+import "ni/protobuf/types/xydata_wrappers.proto";
 
 option csharp_namespace = "NationalInstruments.Measurements.Data.V1";
 option go_package = "datav1";
@@ -54,7 +57,7 @@ service DataStoreService {
   rpc PublishConditionBatch(PublishConditionBatchRequest) returns (PublishConditionBatchResponse);
   // Publishes a single measurement value associated with a test step.
   rpc PublishMeasurement(PublishMeasurementRequest) returns (PublishMeasurementResponse);
-  // Publishes multiple scalar measurements at once for parametric sweeps.
+  // Publishes multiple measurements at once for parametric sweeps.
   rpc PublishMeasurementBatch(PublishMeasurementBatchRequest) returns (PublishMeasurementBatchResponse);
 
   // Gets the measurement associated with the given id.
@@ -240,9 +243,26 @@ message PublishMeasurementBatchRequest {
   // For example, a shared name of "Temperature" can be used for associating temperature readings across multiple iterations of publishing.
   string name = 1;
 
-  // Required. The values of the (scalar) measurement being published across N iterations.
+  // Required. The values of the measurement being published across N iterations.
   oneof values {
+    // Scalar values packed into a vector (e.g., N doubles in a DoubleArray).
     ni.protobuf.types.Vector scalar_values = 2;
+    // N vector values, one per iteration.
+    ni.protobuf.types.VectorArrayValue vector_values = 11;
+    // N double-precision analog waveforms, one per iteration.
+    ni.protobuf.types.DoubleAnalogWaveformArrayValue double_analog_waveform_values = 12;
+    // N XY data sets, one per iteration.
+    ni.protobuf.types.DoubleXYDataArrayValue x_y_data_values = 13;
+    // N 16-bit integer analog waveforms, one per iteration.
+    ni.protobuf.types.I16AnalogWaveformArrayValue i16_analog_waveform_values = 14;
+    // N double-precision complex waveforms, one per iteration.
+    ni.protobuf.types.DoubleComplexWaveformArrayValue double_complex_waveform_values = 15;
+    // N 16-bit integer complex waveforms, one per iteration.
+    ni.protobuf.types.I16ComplexWaveformArrayValue i16_complex_waveform_values = 16;
+    // N double-precision spectrums, one per iteration.
+    ni.protobuf.types.DoubleSpectrumArrayValue double_spectrum_values = 17;
+    // N digital waveforms, one per iteration.
+    ni.protobuf.types.DigitalWaveformArrayValue digital_waveform_values = 18;
   }
   // Optional. Any notes to be associated with the captured measurement.
   string notes = 3;

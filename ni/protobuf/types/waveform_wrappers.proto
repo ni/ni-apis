@@ -47,3 +47,8 @@ message I16ComplexWaveformArrayValue {
 message DoubleSpectrumArrayValue {
    repeated DoubleSpectrum waveforms = 1;
 }
+
+// An array of digital waveforms.
+message DigitalWaveformArrayValue {
+   repeated DigitalWaveform waveforms = 1;
+}
