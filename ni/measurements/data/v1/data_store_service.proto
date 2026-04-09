@@ -150,7 +150,7 @@ message QueryStepsResponse {
 message PublishConditionRequest {
   // Required. Identifier describing the condition value. For example, "Voltage".
   string name = 1;
-  // Required. The type of this condition. For example, "Upper Limit" or "Environment".
+  // Optional. The type of this condition. For example, "Upper Limit" or "Environment".
   string condition_type = 2;
   // Required. The single value for this condition for a publish on the test step.
   oneof value {
@@ -171,7 +171,7 @@ message PublishConditionResponse {
 message PublishConditionBatchRequest {
   // Required. Identifier describing the condition values. For example, "Voltage".
   string name = 1;
-  // Required. The type of this condition. For example, "Upper Limit" or "Environment".
+  // Optional. The type of this condition. For example, "Upper Limit" or "Environment".
   string condition_type = 2;
   // Required. The values for this condition across all publishes on the test step.
   oneof values {
@@ -208,7 +208,7 @@ message PublishMeasurementRequest {
   }
   // Optional. Any notes to be associated with the captured measurement.
   string notes = 11;
-  // Required. The timestamp of the measurement.
+  // Optional. The timestamp of the measurement.
   ni.protobuf.types.PrecisionTimestamp timestamp = 12;
   // Optional. The outcome of the measurement.
   Outcome outcome = 13;
