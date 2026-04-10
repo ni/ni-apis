@@ -15,6 +15,28 @@ option objc_class_prefix = "NIMD";
 option php_namespace = "NI\\Measurements\\Data\\V1";
 option ruby_package = "NI::Measurements::Data::V1";
 
+// Aggregate statistics derived from one or more published numeric samples.
+// If a published value cannot be aggregated as numeric samples, the containing
+// message omits this field entirely.
+message Statistics {
+  // The minimum numeric sample observed.
+  double min = 1;
+  // The maximum numeric sample observed.
+  double max = 2;
+  // The arithmetic mean of the numeric samples.
+  double mean = 3;
+  // The sum of the numeric samples.
+  double sum = 4;
+  // The numeric range, computed as max - min.
+  double range = 5;
+  // The population variance of the numeric samples.
+  double variance = 6;
+  // The population standard deviation of the numeric samples.
+  double std_dev = 7;
+  // The root mean square of the numeric samples.
+  double rms = 8;
+}
+
 message PublishedCondition {
   // The moniker of the condition that this value is associated with.
   // This moniker returns a ni.protobuf.types.Vector
@@ -30,6 +52,15 @@ message PublishedCondition {
   string step_id = 5;
   // The id of the test result with which this condition is associated.
   string test_result_id = 6;
+  // The units associated with the published condition values.
+  // Empty when the published values do not expose units.
+  string units = 7;
+  // The number of values represented by this condition.
+  // Returns -1 when the count is unknown.
+  int64 count = 8;
+  // Aggregate statistics for the published condition values.
+  // Omitted when the published values are not aggregatable as numeric samples.
+  Statistics statistics = 9;
 }
 
 message PublishedMeasurement {
@@ -70,6 +101,15 @@ message PublishedMeasurement {
   // Error or exception information in JSON format. If the measurement represents a parametric set,
   // this contains the error information for the first error that occurred when publishing to the parametric set.
   ErrorInformation error_information = 16;
+  // The units associated with the published measurement values.
+  // Empty when the published values do not expose units.
+  string units = 17;
+  // The number of values represented by this measurement.
+  // Returns -1 when the count is unknown.
+  int64 count = 18;
+  // Aggregate statistics for the published measurement values.
+  // Omitted when the published values are not aggregatable as numeric samples.
+  Statistics statistics = 19;
 }
 
 // The information about the test result with which a test step is associated.
