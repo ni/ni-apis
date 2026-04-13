@@ -156,6 +156,33 @@ message DigitalWaveform {
   map<string, WaveformAttributeValue> attributes = 5;
 }
 
+// An analog waveform with irregular timing.
+message IrregularDoubleAnalogWaveform {
+  // The timestamps for each sample in y_data. The length of this field and y_data should match.
+  repeated PrecisionTimestamp timestamps = 1;
+  
+  // The waveform values associated with timestamps. The length of this field and timestamps should match.
+  repeated double y_data = 2;
+  
+  // Attribute names and values. See WaveformAttributeValue for more details.
+  map<string, WaveformAttributeValue> attributes = 3;
+}
+
+// An analog waveform with a relative start time.
+message RelativeDoubleAnalogWaveform {
+  // Relative start time in seconds as a double rather than an absolute timestamp.
+  double time_offset = 1;
+
+  // The time interval in seconds between data points in the waveform.
+  double dt = 2;
+
+  // The data values of the waveform.
+  repeated double y_data = 3;
+
+  // Attribute names and values. See WaveformAttributeValue for more details.
+  map<string, WaveformAttributeValue> attributes = 4;
+}
+
 // Scaling information for converting unscaled waveform data to scaled data.
 message Scale {
   oneof mode {
