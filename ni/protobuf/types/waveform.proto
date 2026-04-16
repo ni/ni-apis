@@ -32,34 +32,19 @@ message DoubleAnalogWaveform {
 
   // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 4;
-}
 
-// An analog waveform with irregular timing.
-message IrregularDoubleAnalogWaveform {
+  // A timestamp denoting some external stimulus like a trigger.
+  // Should be specified such that t0 = timestamp + time_offset.
+  PrecisionTimestamp timestamp = 5;
+
+  // The offset relative to timestamp when the first sample occurs.
+  // Should be specified such that t0 = timestamp + time_offset.
+  double time_offset = 6;
+
   // The timestamps for each sample in y_data. The length of this field and y_data should match.
-  repeated PrecisionTimestamp timestamps = 1;
-  
-  // The waveform values associated with timestamps. The length of this field and timestamps should match.
-  repeated double y_data = 2;
-  
-  // Attribute names and values. See WaveformAttributeValue for more details.
-  map<string, WaveformAttributeValue> attributes = 3;
-}
-
-// An analog waveform with a relative start time.
-message RelativeDoubleAnalogWaveform {
-  // Relative start time in seconds as a double rather than an absolute timestamp.
-  // This time offset is typically relative to an external event, such as a trigger.
-  double time_offset = 1;
-
-  // The time interval in seconds between data points in the waveform.
-  double dt = 2;
-
-  // The data values of the waveform.
-  repeated double y_data = 3;
-
-  // Attribute names and values. See WaveformAttributeValue for more details.
-  map<string, WaveformAttributeValue> attributes = 4;
+  // This is for use in cases where the waveform has irregular timing. This timestamps field
+  // is mutually exclusive with t0/timestamp/time_offset.
+  repeated PrecisionTimestamp timestamps = 7;
 }
 
 // A 16-bit integer analog waveform with timing and extended properties.
@@ -78,6 +63,19 @@ message I16AnalogWaveform {
 
   // Optional scaling information used to convert raw data to scaled data.
   Scale scale = 5;
+
+  // A timestamp denoting some external stimulus like a trigger.
+  // Should be specified such that t0 = timestamp + time_offset.
+  PrecisionTimestamp timestamp = 6;
+
+  // The offset relative to timestamp when the first sample occurs.
+  // Should be specified such that t0 = timestamp + time_offset.
+  double time_offset = 7;
+
+  // The timestamps for each sample in y_data. The length of this field and y_data should match.
+  // This is for use in cases where the waveform has irregular timing. This timestamps field
+  // is mutually exclusive with t0/timestamp/time_offset.
+  repeated PrecisionTimestamp timestamps = 8;
 }
 
 // A double-precision complex waveform with timing and extended properties.
