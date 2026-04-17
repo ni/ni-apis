@@ -22,8 +22,9 @@ option ruby_package = "NI::Protobuf::Types";
 // A double-precision analog waveform with timing and extended properties.
 message DoubleAnalogWaveform {
   // The time of the first sample in y_data.
-  // If unset, consumers should infer the value based on timestamp and time_offset,
-  // unless those values are also unset.
+  //
+  // Leave t0 unset only when the start time is unknown or when the waveform
+  // has irregular timing and the timestamps field is used instead.
   PrecisionTimestamp t0 = 1;
 
   // The time interval in seconds between data points in the waveform.
@@ -36,28 +37,31 @@ message DoubleAnalogWaveform {
   map<string, WaveformAttributeValue> attributes = 4;
 
   // A timestamp denoting some external stimulus like a trigger.
-  // Should be specified such that t0 = timestamp + time_offset.
-  // If unset, consumers should infer the value based on t0 and time_offset,
-  // unless those values are also unset.
+  //
+  // When setting timestamp, you should also always set t0 and time_offset such
+  // that t0 = timestamp + time_offset.
   PrecisionTimestamp timestamp = 5;
 
   // The offset, in seconds, relative to timestamp when the first sample occurs.
-  // Should be specified such that t0 = timestamp + time_offset.
-  // If unset, consumers should infer the value based on t0 and timestamp,
-  // unless those values are also unset.
+  //
+  // When setting time_offset, either both t0 and timestamp should remain unset
+  // or both should be set such that t0 = timestamp + time_offset.
   double time_offset = 6;
 
-  // The timestamps for each sample in y_data. The length of this field and y_data should match.
-  // This is for use in cases where the waveform has irregular timing. This timestamps field
-  // is mutually exclusive with t0/timestamp/time_offset/dt.
+  // The timestamps for each sample in y_data.
+  //
+  // The length of this field and y_data should match. This is for use in cases where
+  // the waveform has irregular timing. This timestamps field is mutually exclusive
+  // with t0/timestamp/time_offset/dt.
   repeated PrecisionTimestamp timestamps = 7;
 }
 
 // A 16-bit integer analog waveform with timing and extended properties.
 message I16AnalogWaveform {
   // The time of the first sample in y_data.
-  // If unset, consumers should infer the value based on timestamp and time_offset,
-  // unless those values are also unset.
+  //
+  // Leave t0 unset only when the start time is unknown or when the waveform
+  // has irregular timing and the timestamps field is used instead.
   PrecisionTimestamp t0 = 1;
 
   // The time interval in seconds between data points in the waveform.
@@ -73,28 +77,31 @@ message I16AnalogWaveform {
   Scale scale = 5;
 
   // A timestamp denoting some external stimulus like a trigger.
-  // Should be specified such that t0 = timestamp + time_offset.
-  // If unset, consumers should infer the value based on t0 and time_offset,
-  // unless those values are also unset.
+  //
+  // When setting timestamp, you should also always set t0 and time_offset such
+  // that t0 = timestamp + time_offset.
   PrecisionTimestamp timestamp = 6;
 
   // The offset, in seconds, relative to timestamp when the first sample occurs.
-  // Should be specified such that t0 = timestamp + time_offset.
-  // If unset, consumers should infer the value based on t0 and timestamp,
-  // unless those values are also unset.
+  //
+  // When setting time_offset, either both t0 and timestamp should remain unset
+  // or both should be set such that t0 = timestamp + time_offset.
   double time_offset = 7;
 
-  // The timestamps for each sample in y_data. The length of this field and y_data should match.
-  // This is for use in cases where the waveform has irregular timing. This timestamps field
-  // is mutually exclusive with t0/timestamp/time_offset/dt.
+  // The timestamps for each sample in y_data.
+  //
+  // The length of this field and y_data should match. This is for use in cases where
+  // the waveform has irregular timing. This timestamps field is mutually exclusive
+  // with t0/timestamp/time_offset/dt.
   repeated PrecisionTimestamp timestamps = 8;
 }
 
 // A double-precision complex waveform with timing and extended properties.
 message DoubleComplexWaveform {
   // The time of the first sample in y_data.
-  // If unset, consumers should infer the value based on timestamp and time_offset,
-  // unless those values are also unset.
+  //
+  // Leave t0 unset only when the start time is unknown or when the waveform
+  // has irregular timing and the timestamps field is used instead.
   PrecisionTimestamp t0 = 1;
 
   // The time interval in seconds between data points in the waveform.
@@ -110,28 +117,31 @@ message DoubleComplexWaveform {
   map<string, WaveformAttributeValue> attributes = 4;
 
   // A timestamp denoting some external stimulus like a trigger.
-  // Should be specified such that t0 = timestamp + time_offset.
-  // If unset, consumers should infer the value based on t0 and time_offset,
-  // unless those values are also unset.
+  //
+  // When setting timestamp, you should also always set t0 and time_offset such
+  // that t0 = timestamp + time_offset.
   PrecisionTimestamp timestamp = 5;
 
   // The offset, in seconds, relative to timestamp when the first sample occurs.
-  // Should be specified such that t0 = timestamp + time_offset.
-  // If unset, consumers should infer the value based on t0 and timestamp,
-  // unless those values are also unset.
+  //
+  // When setting time_offset, either both t0 and timestamp should remain unset
+  // or both should be set such that t0 = timestamp + time_offset.
   double time_offset = 6;
 
-  // The timestamps for each sample in y_data. The length of this field and y_data should match.
-  // This is for use in cases where the waveform has irregular timing. This timestamps field
-  // is mutually exclusive with t0/timestamp/time_offset/dt.
+  // The timestamps for each sample in y_data.
+  //
+  // The length of this field and y_data should match. This is for use in cases where
+  // the waveform has irregular timing. This timestamps field is mutually exclusive
+  // with t0/timestamp/time_offset/dt.
   repeated PrecisionTimestamp timestamps = 7;
 }
 
 // A 16-bit integer complex waveform with timing and extended properties.
 message I16ComplexWaveform {
   // The time of the first sample in y_data.
-  // If unset, consumers should infer the value based on timestamp and time_offset,
-  // unless those values are also unset.
+  //
+  // Leave t0 unset only when the start time is unknown or when the waveform
+  // has irregular timing and the timestamps field is used instead.
   PrecisionTimestamp t0 = 1;
 
   // The time interval in seconds between data points in the waveform.
@@ -150,20 +160,22 @@ message I16ComplexWaveform {
   Scale scale = 5;
 
   // A timestamp denoting some external stimulus like a trigger.
-  // Should be specified such that t0 = timestamp + time_offset.
-  // If unset, consumers should infer the value based on t0 and time_offset,
-  // unless those values are also unset.
+  //
+  // When setting timestamp, you should also always set t0 and time_offset such
+  // that t0 = timestamp + time_offset.
   PrecisionTimestamp timestamp = 6;
 
   // The offset, in seconds, relative to timestamp when the first sample occurs.
-  // Should be specified such that t0 = timestamp + time_offset.
-  // If unset, consumers should infer the value based on t0 and timestamp,
-  // unless those values are also unset.
+  //
+  // When setting time_offset, either both t0 and timestamp should remain unset
+  // or both should be set such that t0 = timestamp + time_offset.
   double time_offset = 7;
 
-  // The timestamps for each sample in y_data. The length of this field and y_data should match.
-  // This is for use in cases where the waveform has irregular timing. This timestamps field
-  // is mutually exclusive with t0/timestamp/time_offset/dt.
+  // The timestamps for each sample in y_data.
+  //
+  // The length of this field and y_data should match. This is for use in cases where
+  // the waveform has irregular timing. This timestamps field is mutually exclusive
+  // with t0/timestamp/time_offset/dt.
   repeated PrecisionTimestamp timestamps = 8;
 }
 
@@ -214,8 +226,9 @@ message WaveformAttributeValue {
 // A digital waveform as bytes with timing and extended properties.
 message DigitalWaveform {
   // The time of the first sample in y_data.
-  // If unset, consumers should infer the value based on timestamp and time_offset,
-  // unless those values are also unset.
+  //
+  // Leave t0 unset only when the start time is unknown or when the waveform
+  // has irregular timing and the timestamps field is used instead.
   PrecisionTimestamp t0 = 1;
 
   // The time interval in seconds between data points in the waveform.
@@ -234,20 +247,22 @@ message DigitalWaveform {
   map<string, WaveformAttributeValue> attributes = 5;
 
   // A timestamp denoting some external stimulus like a trigger.
-  // Should be specified such that t0 = timestamp + time_offset.
-  // If unset, consumers should infer the value based on t0 and time_offset,
-  // unless those values are also unset.
+  //
+  // When setting timestamp, you should also always set t0 and time_offset such
+  // that t0 = timestamp + time_offset.
   PrecisionTimestamp timestamp = 6;
 
   // The offset, in seconds, relative to timestamp when the first sample occurs.
-  // Should be specified such that t0 = timestamp + time_offset.
-  // If unset, consumers should infer the value based on t0 and timestamp,
-  // unless those values are also unset.
+  //
+  // When setting time_offset, either both t0 and timestamp should remain unset
+  // or both should be set such that t0 = timestamp + time_offset.
   double time_offset = 7;
 
-  // The timestamps for each sample in y_data. The length of this field and y_data should match.
-  // This is for use in cases where the waveform has irregular timing. This timestamps field
-  // is mutually exclusive with t0/timestamp/time_offset/dt.
+  // The timestamps for each sample in y_data.
+  //
+  // The length of this field and y_data should match. This is for use in cases where
+  // the waveform has irregular timing. This timestamps field is mutually exclusive
+  // with t0/timestamp/time_offset/dt.
   repeated PrecisionTimestamp timestamps = 8;
 }
 
