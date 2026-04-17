@@ -22,6 +22,9 @@ option ruby_package = "NI::Protobuf::Types";
 // A double-precision analog waveform with timing and extended properties.
 message DoubleAnalogWaveform {
   // The time of the first sample in y_data.
+  //
+  // Leave t0 unset only when the start time is unknown or when the waveform
+  // has irregular timing and the timestamps field is used instead.
   PrecisionTimestamp t0 = 1;
 
   // The time interval in seconds between data points in the waveform.
@@ -32,11 +35,34 @@ message DoubleAnalogWaveform {
 
   // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 4;
+
+  // A timestamp denoting some external stimulus like a trigger.
+  //
+  // When setting timestamp, you should also always set t0 and time_offset such
+  // that t0 = timestamp + time_offset. If timestamp is unset, it is inferred
+  // that timestamp is the same as t0.
+  PrecisionTimestamp timestamp = 5;
+
+  // The offset, in seconds, relative to timestamp when the first sample occurs.
+  //
+  // When setting time_offset, either both t0 and timestamp should remain unset
+  // or both should be set such that t0 = timestamp + time_offset.
+  double time_offset = 6;
+
+  // The timestamps for each sample in y_data.
+  //
+  // The length of this field and y_data should match. This is for use in cases where
+  // the waveform has irregular timing. This timestamps field is mutually exclusive
+  // with t0/timestamp/time_offset/dt.
+  repeated PrecisionTimestamp timestamps = 7;
 }
 
 // A 16-bit integer analog waveform with timing and extended properties.
 message I16AnalogWaveform {
   // The time of the first sample in y_data.
+  //
+  // Leave t0 unset only when the start time is unknown or when the waveform
+  // has irregular timing and the timestamps field is used instead.
   PrecisionTimestamp t0 = 1;
 
   // The time interval in seconds between data points in the waveform.
@@ -50,11 +76,34 @@ message I16AnalogWaveform {
 
   // Optional scaling information used to convert raw data to scaled data.
   Scale scale = 5;
+
+  // A timestamp denoting some external stimulus like a trigger.
+  //
+  // When setting timestamp, you should also always set t0 and time_offset such
+  // that t0 = timestamp + time_offset. If timestamp is unset, it is inferred
+  // that timestamp is the same as t0.
+  PrecisionTimestamp timestamp = 6;
+
+  // The offset, in seconds, relative to timestamp when the first sample occurs.
+  //
+  // When setting time_offset, either both t0 and timestamp should remain unset
+  // or both should be set such that t0 = timestamp + time_offset.
+  double time_offset = 7;
+
+  // The timestamps for each sample in y_data.
+  //
+  // The length of this field and y_data should match. This is for use in cases where
+  // the waveform has irregular timing. This timestamps field is mutually exclusive
+  // with t0/timestamp/time_offset/dt.
+  repeated PrecisionTimestamp timestamps = 8;
 }
 
 // A double-precision complex waveform with timing and extended properties.
 message DoubleComplexWaveform {
   // The time of the first sample in y_data.
+  //
+  // Leave t0 unset only when the start time is unknown or when the waveform
+  // has irregular timing and the timestamps field is used instead.
   PrecisionTimestamp t0 = 1;
 
   // The time interval in seconds between data points in the waveform.
@@ -68,11 +117,34 @@ message DoubleComplexWaveform {
 
   // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 4;
+
+  // A timestamp denoting some external stimulus like a trigger.
+  //
+  // When setting timestamp, you should also always set t0 and time_offset such
+  // that t0 = timestamp + time_offset. If timestamp is unset, it is inferred
+  // that timestamp is the same as t0.
+  PrecisionTimestamp timestamp = 5;
+
+  // The offset, in seconds, relative to timestamp when the first sample occurs.
+  //
+  // When setting time_offset, either both t0 and timestamp should remain unset
+  // or both should be set such that t0 = timestamp + time_offset.
+  double time_offset = 6;
+
+  // The timestamps for each sample in y_data.
+  //
+  // The length of this field and y_data should match. This is for use in cases where
+  // the waveform has irregular timing. This timestamps field is mutually exclusive
+  // with t0/timestamp/time_offset/dt.
+  repeated PrecisionTimestamp timestamps = 7;
 }
 
 // A 16-bit integer complex waveform with timing and extended properties.
 message I16ComplexWaveform {
   // The time of the first sample in y_data.
+  //
+  // Leave t0 unset only when the start time is unknown or when the waveform
+  // has irregular timing and the timestamps field is used instead.
   PrecisionTimestamp t0 = 1;
 
   // The time interval in seconds between data points in the waveform.
@@ -89,6 +161,26 @@ message I16ComplexWaveform {
 
   // Optional scaling information used to convert raw data to scaled data.
   Scale scale = 5;
+
+  // A timestamp denoting some external stimulus like a trigger.
+  //
+  // When setting timestamp, you should also always set t0 and time_offset such
+  // that t0 = timestamp + time_offset. If timestamp is unset, it is inferred
+  // that timestamp is the same as t0.
+  PrecisionTimestamp timestamp = 6;
+
+  // The offset, in seconds, relative to timestamp when the first sample occurs.
+  //
+  // When setting time_offset, either both t0 and timestamp should remain unset
+  // or both should be set such that t0 = timestamp + time_offset.
+  double time_offset = 7;
+
+  // The timestamps for each sample in y_data.
+  //
+  // The length of this field and y_data should match. This is for use in cases where
+  // the waveform has irregular timing. This timestamps field is mutually exclusive
+  // with t0/timestamp/time_offset/dt.
+  repeated PrecisionTimestamp timestamps = 8;
 }
 
 // A double-precision frequency spectrum with extended properties.
@@ -138,6 +230,9 @@ message WaveformAttributeValue {
 // A digital waveform as bytes with timing and extended properties.
 message DigitalWaveform {
   // The time of the first sample in y_data.
+  //
+  // Leave t0 unset only when the start time is unknown or when the waveform
+  // has irregular timing and the timestamps field is used instead.
   PrecisionTimestamp t0 = 1;
 
   // The time interval in seconds between data points in the waveform.
@@ -154,6 +249,26 @@ message DigitalWaveform {
 
   // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 5;
+
+  // A timestamp denoting some external stimulus like a trigger.
+  //
+  // When setting timestamp, you should also always set t0 and time_offset such
+  // that t0 = timestamp + time_offset. If timestamp is unset, it is inferred
+  // that timestamp is the same as t0.
+  PrecisionTimestamp timestamp = 6;
+
+  // The offset, in seconds, relative to timestamp when the first sample occurs.
+  //
+  // When setting time_offset, either both t0 and timestamp should remain unset
+  // or both should be set such that t0 = timestamp + time_offset.
+  double time_offset = 7;
+
+  // The timestamps for each sample in y_data.
+  //
+  // The length of this field and y_data should match. This is for use in cases where
+  // the waveform has irregular timing. This timestamps field is mutually exclusive
+  // with t0/timestamp/time_offset/dt.
+  repeated PrecisionTimestamp timestamps = 8;
 }
 
 // Scaling information for converting unscaled waveform data to scaled data.
