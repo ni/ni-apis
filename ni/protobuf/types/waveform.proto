@@ -46,8 +46,7 @@ message DoubleAnalogWaveform {
   // The offset, in seconds, relative to timestamp when the first sample occurs.
   //
   // When setting time_offset, either both t0 and timestamp should remain unset
-  // or both should be set such that t0 = timestamp + time_offset. If time_offset
-  // is unset, it is inferred to be 0.
+  // or both should be set such that t0 = timestamp + time_offset.
   double time_offset = 6;
 
   // The timestamps for each sample in y_data.
@@ -88,8 +87,7 @@ message I16AnalogWaveform {
   // The offset, in seconds, relative to timestamp when the first sample occurs.
   //
   // When setting time_offset, either both t0 and timestamp should remain unset
-  // or both should be set such that t0 = timestamp + time_offset. If time_offset
-  // is unset, it is inferred to be 0.
+  // or both should be set such that t0 = timestamp + time_offset.
   double time_offset = 7;
 
   // The timestamps for each sample in y_data.
@@ -130,8 +128,7 @@ message DoubleComplexWaveform {
   // The offset, in seconds, relative to timestamp when the first sample occurs.
   //
   // When setting time_offset, either both t0 and timestamp should remain unset
-  // or both should be set such that t0 = timestamp + time_offset. If time_offset
-  // is unset, it is inferred to be 0.
+  // or both should be set such that t0 = timestamp + time_offset.
   double time_offset = 6;
 
   // The timestamps for each sample in y_data.
@@ -175,8 +172,7 @@ message I16ComplexWaveform {
   // The offset, in seconds, relative to timestamp when the first sample occurs.
   //
   // When setting time_offset, either both t0 and timestamp should remain unset
-  // or both should be set such that t0 = timestamp + time_offset. If time_offset
-  // is unset, it is inferred to be 0.
+  // or both should be set such that t0 = timestamp + time_offset.
   double time_offset = 7;
 
   // The timestamps for each sample in y_data.
@@ -264,8 +260,7 @@ message DigitalWaveform {
   // The offset, in seconds, relative to timestamp when the first sample occurs.
   //
   // When setting time_offset, either both t0 and timestamp should remain unset
-  // or both should be set such that t0 = timestamp + time_offset. If time_offset
-  // is unset, it is inferred to be 0.
+  // or both should be set such that t0 = timestamp + time_offset.
   double time_offset = 7;
 
   // The timestamps for each sample in y_data.
