@@ -39,13 +39,15 @@ message DoubleAnalogWaveform {
   // A timestamp denoting some external stimulus like a trigger.
   //
   // When setting timestamp, you should also always set t0 and time_offset such
-  // that t0 = timestamp + time_offset.
+  // that t0 = timestamp + time_offset. If timestamp is unset, it is inferred
+  // that timestamp is the same as t0.
   PrecisionTimestamp timestamp = 5;
 
   // The offset, in seconds, relative to timestamp when the first sample occurs.
   //
   // When setting time_offset, either both t0 and timestamp should remain unset
-  // or both should be set such that t0 = timestamp + time_offset.
+  // or both should be set such that t0 = timestamp + time_offset. If time_offset
+  // is unset, it is inferred to be 0.
   double time_offset = 6;
 
   // The timestamps for each sample in y_data.
@@ -79,13 +81,15 @@ message I16AnalogWaveform {
   // A timestamp denoting some external stimulus like a trigger.
   //
   // When setting timestamp, you should also always set t0 and time_offset such
-  // that t0 = timestamp + time_offset.
+  // that t0 = timestamp + time_offset. If timestamp is unset, it is inferred
+  // that timestamp is the same as t0.
   PrecisionTimestamp timestamp = 6;
 
   // The offset, in seconds, relative to timestamp when the first sample occurs.
   //
   // When setting time_offset, either both t0 and timestamp should remain unset
-  // or both should be set such that t0 = timestamp + time_offset.
+  // or both should be set such that t0 = timestamp + time_offset. If time_offset
+  // is unset, it is inferred to be 0.
   double time_offset = 7;
 
   // The timestamps for each sample in y_data.
@@ -119,13 +123,15 @@ message DoubleComplexWaveform {
   // A timestamp denoting some external stimulus like a trigger.
   //
   // When setting timestamp, you should also always set t0 and time_offset such
-  // that t0 = timestamp + time_offset.
+  // that t0 = timestamp + time_offset. If timestamp is unset, it is inferred
+  // that timestamp is the same as t0.
   PrecisionTimestamp timestamp = 5;
 
   // The offset, in seconds, relative to timestamp when the first sample occurs.
   //
   // When setting time_offset, either both t0 and timestamp should remain unset
-  // or both should be set such that t0 = timestamp + time_offset.
+  // or both should be set such that t0 = timestamp + time_offset. If time_offset
+  // is unset, it is inferred to be 0.
   double time_offset = 6;
 
   // The timestamps for each sample in y_data.
@@ -162,13 +168,15 @@ message I16ComplexWaveform {
   // A timestamp denoting some external stimulus like a trigger.
   //
   // When setting timestamp, you should also always set t0 and time_offset such
-  // that t0 = timestamp + time_offset.
+  // that t0 = timestamp + time_offset. If timestamp is unset, it is inferred
+  // that timestamp is the same as t0.
   PrecisionTimestamp timestamp = 6;
 
   // The offset, in seconds, relative to timestamp when the first sample occurs.
   //
   // When setting time_offset, either both t0 and timestamp should remain unset
-  // or both should be set such that t0 = timestamp + time_offset.
+  // or both should be set such that t0 = timestamp + time_offset. If time_offset
+  // is unset, it is inferred to be 0.
   double time_offset = 7;
 
   // The timestamps for each sample in y_data.
@@ -249,13 +257,15 @@ message DigitalWaveform {
   // A timestamp denoting some external stimulus like a trigger.
   //
   // When setting timestamp, you should also always set t0 and time_offset such
-  // that t0 = timestamp + time_offset.
+  // that t0 = timestamp + time_offset. If timestamp is unset, it is inferred
+  // that timestamp is the same as t0.
   PrecisionTimestamp timestamp = 6;
 
   // The offset, in seconds, relative to timestamp when the first sample occurs.
   //
   // When setting time_offset, either both t0 and timestamp should remain unset
-  // or both should be set such that t0 = timestamp + time_offset.
+  // or both should be set such that t0 = timestamp + time_offset. If time_offset
+  // is unset, it is inferred to be 0.
   double time_offset = 7;
 
   // The timestamps for each sample in y_data.
