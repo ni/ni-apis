@@ -153,13 +153,13 @@ setuptools = ">=77.0.1"
 
 [[package]]
 name = "mypy-protobuf"
-version = "5.0.0"
+version = "5.1.0"
 description = "Generate mypy stub files from protobuf specs"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "mypy_protobuf-5.0.0-py3-none-any.whl", hash = "sha256:3a7dd753ef3e3b8783a824eb51f07983f62812f9ec066e4fbb1b22d6c5dc36d0"},
-    {file = "mypy_protobuf-5.0.0.tar.gz", hash = "sha256:6fdd1cfdbb4419c713291d800a332d4bba6510dbd1341ed95e0bcc82fcadb6b5"},
+    {file = "mypy_protobuf-5.1.0-py3-none-any.whl", hash = "sha256:d7031f563f806b8bcd448a3e86768bf0994c0af5b0017b344a4fbbba4191f43c"},
+    {file = "mypy_protobuf-5.1.0.tar.gz", hash = "sha256:8493758852a9cdc075a11dbe96c6e37ea2feba5fd5f33ef7442b9a275322a94c"},
 ]
 
 [package.dependencies]
