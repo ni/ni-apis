@@ -7,6 +7,8 @@ on:
   workflow_call:
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   check_protos:
     name: Check .proto files

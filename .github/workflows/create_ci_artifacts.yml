@@ -8,6 +8,8 @@ env:
   POETRY_VERSION: 1.8.2
   PYTHON_VERSION: 3.11.9
 
+permissions: {}
+
 jobs:
   build:
     name: 'Proto Artifacts'
