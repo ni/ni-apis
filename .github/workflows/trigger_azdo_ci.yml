@@ -1,12 +1,7 @@
 name: Trigger AzDO CIs
 
 on:
-  workflow_run:
-    workflows: [CI]
-    types:
-      - completed
-    branches:
-      - main
+  workflow_call:
   workflow_dispatch:
 
 permissions: {}
