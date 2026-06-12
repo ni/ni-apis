@@ -23,18 +23,24 @@ option php_namespace = "NI\\DataMonikers\\V2";
 option ruby_package = "NI::DataMonikers::V2";
 
 // Service for reading and writing data values using data monikers.
+//
 // Not all implementations implement all RPCs and clients should
 // handle this gracefully.
 service DataMonikerService {
   // Reads the current value for a single moniker. If no data value is available,
   // Implementations may choose to return an empty response.
-  // Returns NOT_FOUND error if the moniker does not exist.
+  //
+  // Status codes for errors:
+  //
+  // - NOT_FOUND: Specified moniker does not exist
   rpc ReadValueFromMoniker(ReadValueFromMonikerRequest) returns (ReadValueFromMonikerResponse) {};
 
   // Writes a single value to a single moniker.
-  // Returns NOT_FOUND error if the moniker does not exist.
-  // Returns INVALID_ARGUMENT if the data type of the data value is not appropriate
-  // for the moniker.
+  //
+  // Status codes for errors:
+  //
+  // - NOT_FOUND: Specified moniker does not exist
+  // - INVALID_ARGUMENT: Data type of the data value is not compatible with the moniker
   rpc WriteValueToMoniker(WriteValueToMonikerRequest) returns (WriteValueToMonikerResponse) {};
 
   // Reads multiple values from one or more monikers. A response message is
@@ -42,6 +48,8 @@ service DataMonikerService {
   // data values returned matches the moniker order specified in the request
   // message. The semantics for when data is published and how updates are
   // triggered is implementation dependent.
+  //
+  // - NOT_FOUND: Specified moniker does not exist
   rpc ReadValuesFromMonikersStream(ReadValuesFromMonikersStreamRequest) returns (stream ReadValuesFromMonikersStreamResponse) {};
 
   // Writes multiple values to one or more monikers. The first request message
@@ -50,6 +58,9 @@ service DataMonikerService {
   // values in each write request must match the number of monikers supplied
   // in the initialize request, and the data values are paired positionally with
   // the monikers specified in the initialize message.
+  //
+  // - NOT_FOUND: Specified moniker does not exist
+  // - INVALID_ARGUMENT: Data type of the data value is not compatible with the moniker
   rpc WriteValuesToMonikersStream(stream WriteValuesToMonikersStreamRequest) returns (WriteValuesToMonikersStreamResponse) {};
 
   // Reads and writes multiple values from one or more monikers. The first request
@@ -61,6 +72,9 @@ service DataMonikerService {
   // message is returned containing data values from the read monikers. Write
   // monikers are always updated before data is read from the read monikers.
   // Communication continues in this ping-pong fashion until the stream is closed.
+  //
+  // - NOT_FOUND: Specified moniker does not exist
+  // - INVALID_ARGUMENT: Data type of the data value is not compatible with the moniker
   rpc ReadWriteValuesForMonikersStream(stream ReadWriteValuesForMonikersStreamRequest) returns (stream ReadWriteValuesForMonikersStreamResult) {};
 
   // This would be BatchReadValueFromMoniker following google AIPs
@@ -101,7 +115,7 @@ message WriteValueToMonikerRequest {
   // The moniker to update.
   Moniker moniker = 1;
 
-  // The data value to write to the `moniker`.
+  // The data value to write to the moniker.
   google.protobuf.Any value = 2;
 }
 
@@ -122,15 +136,15 @@ message WriteValuesToMonikersStreamRequest {
 
   // Request message sent first to initialize the stream.
   message InitializeStreamRequest {
-	// The list of monikers that will be written with each `WriteDataRequest`
+	// The list of monikers that will be written with each WriteDataRequest
     repeated Moniker monikers = 1;
   }
 
   // Request message used to write new data values to the monikers.
   message WriteDataRequest {
-	// The data values to write to `monikers`. The number of data values must
-	// match the number of monikers specified in the `InitializeStreamRequest`
-	// and the data values are paired positionally with the `monikers`.
+	// The data values to write to monikers. The number of data values must
+	// match the number of monikers specified in the InitializeStreamRequest
+	// and the data values are paired positionally with the monikers.
 	repeated google.protobuf.Any values = 1;
   }
 
@@ -150,18 +164,18 @@ message WriteValuesToMonikersStreamResponse {
 message ReadWriteValuesForMonikersStreamRequest {
   // Request message sent first to initialize the stream.
   message InitializeStreamRequest {
-	// The list of monikers that will be read with each `WriteDataRequest`
+	// The list of monikers that will be read with each WriteDataRequest
     repeated Moniker read_monikers = 2;
 
-    // The list of monikers that will be written with each `WriteDataRequest`
+    // The list of monikers that will be written with each WriteDataRequest
     repeated Moniker write_monikers = 3;
   }
 
   // Request message used to write new data values to the monikers.
   message ReadWriteDataRequest {
-	// The data values to write to `write_monikers`. The number of data values must
-	// match the number of `write_monikers` specified in the `InitializeStreamRequest`
-	// and the data values are paired positionally with the `write_monikers`.
+	// The data values to write to write_monikers. The number of data values must
+	// match the number of write_monikers specified in the InitializeStreamRequest
+	// and the data values are paired positionally with the write_monikers.
 	repeated google.protobuf.Any values = 1;
   }
 

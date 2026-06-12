@@ -16,6 +16,7 @@ option csharp_namespace = "NationalInstruments.DataMonikers";
 option cc_enable_arenas = true;
 
 // Service for reading and writing data values using data monikers.
+//
 // Not all implementations implement all RPCs and clients should
 // handle this gracefully.
 service MonikerService {
@@ -23,7 +24,7 @@ service MonikerService {
   // RPC when higher throughput or lower latency are required beyond what
   // is traditionally possible with the standard gRPC transport.
   //
-  // The client supplies the preferred `strategy` and the list of monikers.
+  // The client supplies the preferred strategy and the list of monikers.
   // The server responds with the selected strategy plus the connection
   // metadata needed to establish the sideband channel. After this call,
   // the actual data exchange is expected to happen over the selected
@@ -35,6 +36,10 @@ service MonikerService {
   // order of data values returned matches the order of the read monikers.
   // The semantics for when data is published and how updates are triggered
   // is implementation dependent.
+  //
+  // Status codes for errors:
+  //
+  // - NOT_FOUND: Specified moniker does not exist
   rpc StreamRead(MonikerList) returns (stream MonikerReadResult) {};
 
   // Streams values to one or more monikers. The first request message specifies
@@ -45,6 +50,10 @@ service MonikerService {
   // positionally with the monikers declared in the first message. Implementations
   // may choose to return a response message after each request has been processed
   // for flow control purposes or no response message at all.
+  //
+  // Status codes for errors:
+  //
+  // - NOT_FOUND: Specified moniker does not exist
   rpc StreamWrite(stream MonikerWriteRequest) returns (stream StreamWriteResponse) {};
 
   // Streams data to and from the specified read and write monikers. The first
@@ -58,16 +67,26 @@ service MonikerService {
   // monikers similar to the StreamRead RPC. Write monikers are always updated before
   // data is read from the read monikers.Communication continues in this ping-pong
   // fashion until the stream is closed.
+  //
+  // Status codes for errors:
+  //
+  // - NOT_FOUND: Specified moniker does not exist
   rpc StreamReadWrite(stream MonikerWriteRequest) returns (stream MonikerReadResult) {};
 
   // Reads the current value for a single moniker. If no data value is available,
-  // Implementations may choose to return an empty response or a NOT_FOUND error.
+  // Implementations may choose to return an empty response or return an error.
+  //
+  // Status codes for errors:
+  //
+  // - NOT_FOUND: Specified moniker does not exist
   rpc ReadFromMoniker(Moniker) returns (ReadFromMonikerResult) {};
 
   // Writes a single value to a single moniker.
-  // Returns NOT_FOUND error if the moniker does not exist.
-  // Returns INVALID_ARGUMENT if the data type of the data value is not appropriate
-  // for the moniker.
+  //
+  // Status codes for errors:
+  //
+  // - NOT_FOUND: Specified moniker does not exist
+  // - INVALID_ARGUMENT: Data type of the data value is not compatible with the moniker
   rpc WriteToMoniker(WriteToMonikerRequest) returns (WriteToMonikerResponse) {};
 }
 
@@ -118,12 +137,12 @@ message Moniker {
   int64 data_instance = 3;
 }
 
-// Message which contains a batch of data values. For reads, `values`
+// Message which contains a batch of data values. For reads, values
 // contains the returned data values for one or more data monikers. For
-// writes, `values` contains the data values to be applied to one or more
+// writes, values contains the data values to be applied to one or more
 // data monikers.
 message MonikerValues {
-  // Data values carried as protobuf `Any` messages.
+  // Data values carried as protobuf Any messages.
   repeated google.protobuf.Any values = 1;
 }
 
@@ -148,13 +167,6 @@ message BeginMonikerSidebandStreamRequest {
   MonikerList monikers = 2;
 }
 
-// Response returned after sideband negotiation.
-//
-// Intended usage:
-// - `strategy` is the selected transport actually in effect.
-// - `connection_url` identifies where the client should connect.
-// - `sideband_identifier` correlates the negotiated session across endpoints.
-// - `buffer_size` communicates the recommended transfer buffer size.
 message BeginMonikerSidebandStreamResponse {
   // Selected transport used for the the sideband communication channel.
   SidebandStrategy strategy = 1;
@@ -199,7 +211,7 @@ message WriteToMonikerRequest {
   // The data moniker to update.
   Moniker moniker = 1;
 
-  // The data value to write to the `moniker`.
+  // The data value to write to the moniker.
   google.protobuf.Any value = 2;
 }
 
