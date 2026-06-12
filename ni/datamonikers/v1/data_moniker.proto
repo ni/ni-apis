@@ -13,88 +13,193 @@ package ni.datamonikers.v1;
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 option csharp_namespace = "NationalInstruments.DataMonikers";
+option cc_enable_arenas = true;
 
-// Service for reading and writing data using monikers
+// Service for reading and writing data values using data monikers.
+// Not all implementations implement all RPCs and clients should
+// handle this gracefully.
 service MonikerService {
+  // Negotiates a sideband transport for the specified monikers. Use this
+  // RPC when higher throughput or lower latency are required beyond what
+  // is traditionally possible with the standard gRPC transport.
+  //
+  // The client supplies the preferred `strategy` and the list of monikers.
+  // The server responds with the selected strategy plus the connection
+  // metadata needed to establish the sideband channel. After this call,
+  // the actual data exchange is expected to happen over the selected
+  // sideband transport, not over this unary RPC.
   rpc BeginSidebandStream(BeginMonikerSidebandStreamRequest) returns (BeginMonikerSidebandStreamResponse) {};
+
+  // Subscribes to updates from the requested monikers. A response message
+  // is returned once a data value is available from each read moniker. The
+  // order of data values returned matches the order of the read monikers.
+  // The semantics for when data is published and how updates are triggered
+  // is implementation dependent.
   rpc StreamRead(MonikerList) returns (stream MonikerReadResult) {};
+
+  // Streams values to one or more monikers. The first request message specifies
+  // the write monikers that will be updated. Subsequent request messages
+  // supply new data values to be written to the monikers. The number of data
+  // values in each request message must match the number of monikers supplied
+  // in the original request. The data values are applied in order and are paired
+  // positionally with the monikers declared in the first message. Implementations
+  // may choose to return a response message after each request has been processed
+  // for flow control purposes or no response message at all.
   rpc StreamWrite(stream MonikerWriteRequest) returns (stream StreamWriteResponse) {};
+
+  // Streams data to and from the specified read and write monikers. The first
+  // request message is used to setup the stream and specifies the monikers that
+  // are to be read and written. No response message is sent for the first request
+  // message.
+  //
+  // The second and subsequent request messages carry new data values to be written
+  // to the write monikers similar to the StreamWrite RPC. For each of these request
+  // message, a response message is returned containing data values from the read
+  // monikers similar to the StreamRead RPC. Write monikers are always updated before
+  // data is read from the read monikers.Communication continues in this ping-pong
+  // fashion until the stream is closed.
   rpc StreamReadWrite(stream MonikerWriteRequest) returns (stream MonikerReadResult) {};
+
+  // Reads the current value for a single moniker. If no data value is available,
+  // Implementations may choose to return an empty response or a NOT_FOUND error.
   rpc ReadFromMoniker(Moniker) returns (ReadFromMonikerResult) {};
+
+  // Writes a single value to a single moniker.
+  // Returns NOT_FOUND error if the moniker does not exist.
+  // Returns INVALID_ARGUMENT if the data type of the data value is not appropriate
+  // for the moniker.
   rpc WriteToMoniker(WriteToMonikerRequest) returns (WriteToMonikerResponse) {};
 }
 
 enum SidebandStrategy {
+  // No strategy selected.
   UNKNOWN = 0;
+
+  // Standard gRPC transport.
   GRPC = 1;
+
+  // Shared memory transport. Client and server must be on the same machine.
   SHARED_MEMORY = 2;
+
+  // Same as SHARED_MEMORY except double buffered. This uses more memory but
+  // allows the client and server to read and write at the same time without
+  // blocking each other.
   DOUBLE_BUFFERED_SHARED_MEMORY = 3;
+
+  // TCP Socket-based transport.
   SOCKETS = 4;
+
+  // TCP Socket-based transport optimized for lower latency at the expense
+  // of higher CPU usage.
   SOCKETS_LOW_LATENCY = 5;
+
+  // Hypervisor-assisted socket transport. Not currently implemented.
   HYPERVISOR_SOCKETS = 6;
+
+  // RDMA-based transport. Requires that the network card on both the client
+  // and the server support RDMA.
   RDMA = 7;
+
+  // RDMA transport optimized for lower latency at the expense of higher
+  // CPU usage.
   RDMA_LOW_LATENCY = 8;
 }
 
-// Moniker is a unique identifier for a data source.
+// Identifier used to represent a data source from which data values can
+// be read or written.
 message Moniker {
+  // Service location or endpoint identifier.
   string service_location = 1;
+
+  // Logical data source name.
   string data_source = 2;
+
+  // Specific instance identifier within the data source.
   int64 data_instance = 3;
 }
 
+// Message which contains a batch of data values. For reads, `values`
+// contains the returned data values for one or more data monikers. For
+// writes, `values` contains the data values to be applied to one or more
+// data monikers.
 message MonikerValues {
+  // Data values carried as protobuf `Any` messages.
   repeated google.protobuf.Any values = 1;
 }
 
+// Message which identifies the set of read and write monikers for a
+// particular operation.
 message MonikerList {
-  bool is_initial_write = 1;
+  // Deprecated. Preserved for backward compatibility.
+  bool is_initial_write = 1 [deprecated = true];
+
+  // Monikers from which to read.
   repeated Moniker read_monikers = 2;
+
+  // Monikers to update with new data values.
   repeated Moniker write_monikers = 3;
 }
 
 message BeginMonikerSidebandStreamRequest {
+  // The transport to use for the sideband communication channel.
   SidebandStrategy strategy = 1;
+
+  // Monikers participating in the sideband communication channel.
   MonikerList monikers = 2;
 }
 
-message BeginMonikerSidebandStreamResponse {  
+// Response returned after sideband negotiation.
+//
+// Intended usage:
+// - `strategy` is the selected transport actually in effect.
+// - `connection_url` identifies where the client should connect.
+// - `sideband_identifier` correlates the negotiated session across endpoints.
+// - `buffer_size` communicates the recommended transfer buffer size.
+message BeginMonikerSidebandStreamResponse {
+  // Selected transport used for the the sideband communication channel.
   SidebandStrategy strategy = 1;
+
+  // Transport-specific URL or endpoint used to establish the sideband connection.
   string connection_url = 2;
+
+  // Identifier used to identify communication session within the transport.
   string sideband_identifier = 3;
+
+  // The buffer size in bytes used for the sideband transport.
   sint64 buffer_size = 4;
 }
 
+// Request message used to perform streaming writes.
 message MonikerWriteRequest {
   oneof write_data {
+    // Initial handshake message that declares the target monikers.
     MonikerList monikers = 1;
+
+    // Value payload for the established write session. This field should be set
+	// on all subsequent messages after the initial handshake message.
     MonikerValues data = 2;
   }
 }
 
+// Response message used to perform streaming reads.
 message MonikerReadResult {
+  // Data values returned from the read monikers.
   MonikerValues data = 1;
-}
-
-message SidebandWriteRequest {
-  bool cancel = 1;
-  MonikerValues values = 2;
-}
-
-message SidebandReadResponse {
-  bool cancel = 1;
-  MonikerValues values = 2;
 }
 
 message StreamWriteResponse {
 }
 
 message ReadFromMonikerResult {
+  // Data value read from the moniker or empty if no value was available.
   google.protobuf.Any value = 1;
 }
 
 message WriteToMonikerRequest {
+  // The data moniker to update.
   Moniker moniker = 1;
+
+  // The data value to write to the `moniker`.
   google.protobuf.Any value = 2;
 }
 
