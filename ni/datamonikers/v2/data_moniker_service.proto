@@ -87,14 +87,6 @@ message Moniker {
   int64 data_instance = 3;
 }
 
-message MonikerDataValue {
-  // The moniker the data value belongs to.
-  Moniker moniker = 1;
-
-  // The data value for the `moniker`.
-  google.protobuf.Any value = 2;
-}
-
 message ReadValueFromMonikerRequest {
   // The data moniker from which to read.
   Moniker moniker = 1;
@@ -106,8 +98,11 @@ message ReadValueFromMonikerResponse {
 }
 
 message WriteValueToMonikerRequest {
-  // The data value to write to the moniker.
-  MonikerDataValue value = 1;
+  // The moniker to update.
+  Moniker moniker = 1;
+
+  // The data value to write to the `moniker`.
+  google.protobuf.Any value = 2;
 }
 
 message WriteValueToMonikerResponse {
