@@ -1,13 +1,13 @@
 name: Trigger AzDO CIs
 
 on:
-  workflow_run:
-    workflows: [CI]
-    types:
-      - completed
-    branches:
-      - main
+  workflow_call:
+    secrets:
+      AZDO_PIPELINE_TRIGGERS:
+        required: true
   workflow_dispatch:
+
+permissions: {}
 
 jobs:
   trigger_azdo_ci:
