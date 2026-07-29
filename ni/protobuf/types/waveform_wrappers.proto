@@ -28,6 +28,11 @@ message DoubleAnalogWaveformArrayValue {
    repeated DoubleAnalogWaveform waveforms = 1;
 }
 
+// An array of single-precision analog waveforms.
+message FloatAnalogWaveformArrayValue {
+   repeated FloatAnalogWaveform waveforms = 1;
+}
+
 // An array of 16-bit integer waveforms.
 message I16AnalogWaveformArrayValue {
    repeated I16AnalogWaveform waveforms = 1;
@@ -38,6 +43,11 @@ message DoubleComplexWaveformArrayValue {
    repeated DoubleComplexWaveform waveforms = 1;
 }
 
+// An array of single-precision complex waveforms.
+message FloatComplexWaveformArrayValue {
+   repeated FloatComplexWaveform waveforms = 1;
+}
+
 // An array of 16-bit integer complex waveforms.
 message I16ComplexWaveformArrayValue {
    repeated I16ComplexWaveform waveforms = 1;
@@ -46,6 +56,11 @@ message I16ComplexWaveformArrayValue {
 // An array of double-precision spectrums.
 message DoubleSpectrumArrayValue {
    repeated DoubleSpectrum waveforms = 1;
+}
+
+// An array of single-precision spectrums.
+message FloatSpectrumArrayValue {
+   repeated FloatSpectrum waveforms = 1;
 }
 
 // An array of digital waveforms.

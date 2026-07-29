@@ -57,6 +57,44 @@ message DoubleAnalogWaveform {
   repeated PrecisionTimestamp timestamps = 7;
 }
 
+// A single-precision analog waveform with timing and extended properties.
+message FloatAnalogWaveform {
+  // The time of the first sample in y_data.
+  //
+  // Leave t0 unset only when the start time is unknown or when the waveform
+  // has irregular timing and the timestamps field is used instead.
+  PrecisionTimestamp t0 = 1;
+
+  // The time interval in seconds between data points in the waveform.
+  double dt = 2;
+
+  // The data values of the waveform.
+  repeated float y_data = 3;
+
+  // Attribute names and values. See WaveformAttributeValue for more details.
+  map<string, WaveformAttributeValue> attributes = 4;
+
+  // A timestamp denoting some external stimulus like a trigger.
+  //
+  // When setting timestamp, you should also always set t0 and time_offset such
+  // that t0 = timestamp + time_offset. If timestamp is unset, it is inferred
+  // that timestamp is the same as t0.
+  PrecisionTimestamp timestamp = 5;
+
+  // The offset, in seconds, relative to timestamp when the first sample occurs.
+  //
+  // When setting time_offset, either both t0 and timestamp should remain unset
+  // or both should be set such that t0 = timestamp + time_offset.
+  double time_offset = 6;
+
+  // The timestamps for each sample in y_data.
+  //
+  // The length of this field and y_data should match. This is for use in cases where
+  // the waveform has irregular timing. This timestamps field is mutually exclusive
+  // with t0/timestamp/time_offset/dt.
+  repeated PrecisionTimestamp timestamps = 7;
+}
+
 // A 16-bit integer analog waveform with timing and extended properties.
 message I16AnalogWaveform {
   // The time of the first sample in y_data.
@@ -139,6 +177,47 @@ message DoubleComplexWaveform {
   repeated PrecisionTimestamp timestamps = 7;
 }
 
+// A single-precision complex waveform with timing and extended properties.
+message FloatComplexWaveform {
+  // The time of the first sample in y_data.
+  //
+  // Leave t0 unset only when the start time is unknown or when the waveform
+  // has irregular timing and the timestamps field is used instead.
+  PrecisionTimestamp t0 = 1;
+
+  // The time interval in seconds between data points in the waveform.
+  double dt = 2;
+
+  // The data values of the waveform.
+  //
+  // This data consists of interleaved real and imaginary parts.
+  // Example: [1.0+2.0j, 3.0+4.0j] is represented as [1.0, 2.0, 3.0, 4.0].
+  repeated float y_data = 3;
+
+  // Attribute names and values. See WaveformAttributeValue for more details.
+  map<string, WaveformAttributeValue> attributes = 4;
+
+  // A timestamp denoting some external stimulus like a trigger.
+  //
+  // When setting timestamp, you should also always set t0 and time_offset such
+  // that t0 = timestamp + time_offset. If timestamp is unset, it is inferred
+  // that timestamp is the same as t0.
+  PrecisionTimestamp timestamp = 5;
+
+  // The offset, in seconds, relative to timestamp when the first sample occurs.
+  //
+  // When setting time_offset, either both t0 and timestamp should remain unset
+  // or both should be set such that t0 = timestamp + time_offset.
+  double time_offset = 6;
+
+  // The timestamps for each sample in y_data.
+  //
+  // The length of this field and y_data should match. This is for use in cases where
+  // the waveform has irregular timing. This timestamps field is mutually exclusive
+  // with t0/timestamp/time_offset/dt.
+  repeated PrecisionTimestamp timestamps = 7;
+}
+
 // A 16-bit integer complex waveform with timing and extended properties.
 message I16ComplexWaveform {
   // The time of the first sample in y_data.
@@ -193,6 +272,21 @@ message DoubleSpectrum {
 
   // The data values of the spectrum.
   repeated double data = 3;
+
+  // Attribute names and values. See WaveformAttributeValue for more details.
+  map<string, WaveformAttributeValue> attributes = 4;
+}
+
+// A single-precision frequency spectrum with extended properties.
+message FloatSpectrum {
+  // The start frequency of the spectrum.
+  double start_frequency = 1;
+
+  // The frequency increment of the spectrum.
+  double frequency_increment = 2;
+
+  // The data values of the spectrum.
+  repeated float data = 3;
 
   // Attribute names and values. See WaveformAttributeValue for more details.
   map<string, WaveformAttributeValue> attributes = 4;
