@@ -199,15 +199,15 @@ message PublishMeasurementRequest {
     ni.protobuf.types.Scalar scalar = 2;
     ni.protobuf.types.Vector vector = 3;
     ni.protobuf.types.DoubleAnalogWaveform double_analog_waveform = 4;
-    ni.protobuf.types.FloatAnalogWaveform float_analog_waveform = 19;
     ni.protobuf.types.DoubleXYData x_y_data = 5;
     ni.protobuf.types.I16AnalogWaveform i16_analog_waveform = 6;
     ni.protobuf.types.DoubleComplexWaveform double_complex_waveform = 7;
-    ni.protobuf.types.FloatComplexWaveform float_complex_waveform = 20;
     ni.protobuf.types.I16ComplexWaveform i16_complex_waveform = 8;
     ni.protobuf.types.DoubleSpectrum double_spectrum = 9;
-    ni.protobuf.types.FloatSpectrum float_spectrum = 21;
     ni.protobuf.types.DigitalWaveform digital_waveform = 10;
+    ni.protobuf.types.FloatAnalogWaveform float_analog_waveform = 19;
+    ni.protobuf.types.FloatComplexWaveform float_complex_waveform = 20;
+    ni.protobuf.types.FloatSpectrum float_spectrum = 21;
   }
   // Optional. Any notes to be associated with the captured measurement.
   string notes = 11;
@@ -254,24 +254,24 @@ message PublishMeasurementBatchRequest {
     ni.protobuf.types.VectorArrayValue vector_values = 11;
     // N double-precision analog waveforms, one per iteration.
     ni.protobuf.types.DoubleAnalogWaveformArrayValue double_analog_waveform_values = 12;
-    // N single-precision analog waveforms, one per iteration.
-    ni.protobuf.types.FloatAnalogWaveformArrayValue float_analog_waveform_values = 19;
     // N XY data sets, one per iteration.
     ni.protobuf.types.DoubleXYDataArrayValue x_y_data_values = 13;
     // N 16-bit integer analog waveforms, one per iteration.
     ni.protobuf.types.I16AnalogWaveformArrayValue i16_analog_waveform_values = 14;
     // N double-precision complex waveforms, one per iteration.
     ni.protobuf.types.DoubleComplexWaveformArrayValue double_complex_waveform_values = 15;
-    // N single-precision complex waveforms, one per iteration.
-    ni.protobuf.types.FloatComplexWaveformArrayValue float_complex_waveform_values = 20;
     // N 16-bit integer complex waveforms, one per iteration.
     ni.protobuf.types.I16ComplexWaveformArrayValue i16_complex_waveform_values = 16;
     // N double-precision spectrums, one per iteration.
     ni.protobuf.types.DoubleSpectrumArrayValue double_spectrum_values = 17;
-    // N single-precision spectrums, one per iteration.
-    ni.protobuf.types.FloatSpectrumArrayValue float_spectrum_values = 21;
     // N digital waveforms, one per iteration.
     ni.protobuf.types.DigitalWaveformArrayValue digital_waveform_values = 18;
+    // N single-precision analog waveforms, one per iteration.
+    ni.protobuf.types.FloatAnalogWaveformArrayValue float_analog_waveform_values = 19;
+    // N single-precision complex waveforms, one per iteration.
+    ni.protobuf.types.FloatComplexWaveformArrayValue float_complex_waveform_values = 20;
+    // N single-precision spectrums, one per iteration.
+    ni.protobuf.types.FloatSpectrumArrayValue float_spectrum_values = 21;
   }
   // Optional. Any notes to be associated with the captured measurement.
   string notes = 3;
@@ -399,14 +399,14 @@ message ReadMeasurementValueResponse {
   oneof value {
     ni.protobuf.types.Vector vector = 1;
     ni.protobuf.types.DoubleAnalogWaveform double_analog_waveform = 2;
-    ni.protobuf.types.FloatAnalogWaveform float_analog_waveform = 9;
     ni.protobuf.types.DoubleXYData x_y_data = 3;
     ni.protobuf.types.I16AnalogWaveform i16_analog_waveform = 4;
     ni.protobuf.types.DoubleComplexWaveform double_complex_waveform = 5;
-    ni.protobuf.types.FloatComplexWaveform float_complex_waveform = 10;
     ni.protobuf.types.I16ComplexWaveform i16_complex_waveform = 6;
     ni.protobuf.types.DoubleSpectrum double_spectrum = 7;
-    ni.protobuf.types.FloatSpectrum float_spectrum = 11;
     ni.protobuf.types.DigitalWaveform digital_waveform = 8;
+    ni.protobuf.types.FloatAnalogWaveform float_analog_waveform = 9;
+    ni.protobuf.types.FloatComplexWaveform float_complex_waveform = 10;
+    ni.protobuf.types.FloatSpectrum float_spectrum = 11;
   }
 }
