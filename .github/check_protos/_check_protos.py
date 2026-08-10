@@ -3,8 +3,8 @@
 
 import pathlib
 import sys
+import importlib.resources
 import grpc_tools.protoc
-import pkg_resources
 
 PROTO_ROOT_PATH = pathlib.Path(__file__).parent.parent.parent
 PROTO_PATH = PROTO_ROOT_PATH / "ni"
@@ -19,7 +19,7 @@ def main():
         "protoc",
         f"--proto_path={str(PROTO_ROOT_PATH)}",
         f"--proto_path={str(GRPC_DEVICE_PROTO_PATH)}",
-        f"--proto_path={pkg_resources.resource_filename('grpc_tools', '_proto')}",
+        f"--proto_path={importlib.resources.files('grpc_tools').joinpath('_proto')}",
         f"--python_out={str(PROTO_ROOT_PATH)}",
         f"--grpc_python_out={str(PROTO_ROOT_PATH)}",
     ]
