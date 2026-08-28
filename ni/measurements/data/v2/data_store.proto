@@ -5,6 +5,7 @@ package ni.measurements.data.v2;
 import "google/protobuf/struct.proto";
 import "ni/datamonikers/v1/data_moniker.proto";
 import "ni/measurements/metadata/v1/metadata_store.proto";
+import "ni/protobuf/types/array.proto";
 import "ni/protobuf/types/precision_duration.proto";
 import "ni/protobuf/types/precision_timestamp.proto";
 import "ni/protobuf/types/scalar.proto";
@@ -61,8 +62,6 @@ message ExtensionValue {
 message MeasurementValue {
   oneof value {
     ni.protobuf.types.Scalar scalar = 1;
-    // Vectors are one-dimensional. Multidimensional values use a data moniker
-    // until a dedicated inline representation is defined.
     ni.protobuf.types.Vector vector = 2;
     ni.protobuf.types.DoubleAnalogWaveform double_analog_waveform = 3;
     ni.protobuf.types.DoubleXYData x_y_data = 4;
@@ -75,6 +74,8 @@ message MeasurementValue {
     ni.protobuf.types.FloatAnalogWaveform float_analog_waveform = 11;
     ni.protobuf.types.FloatComplexWaveform float_complex_waveform = 12;
     ni.protobuf.types.FloatSpectrum float_spectrum = 13;
+    ni.protobuf.types.Double2DArray double_2d_array = 14;
+    ni.protobuf.types.String2DArray string_2d_array = 15;
   }
 }
 
@@ -220,7 +221,8 @@ message Step {
   Status status = 28;
 }
 
-// Represents one scalar, waveform, XY, spectrum, or digital measurement.
+// Represents one scalar, vector, 2D array, waveform, XY, spectrum, or digital
+// measurement. A data moniker can reference values without an inline type.
 message Measurement {
   // Output only. The service-generated identifier.
   string id = 1;
