@@ -1,0 +1,307 @@
+syntax = "proto3";
+
+package ni.measurements.data.v2;
+
+import "google/protobuf/struct.proto";
+import "ni/datamonikers/v1/data_moniker.proto";
+import "ni/measurements/metadata/v1/metadata_store.proto";
+import "ni/protobuf/types/precision_duration.proto";
+import "ni/protobuf/types/precision_timestamp.proto";
+import "ni/protobuf/types/scalar.proto";
+import "ni/protobuf/types/vector.proto";
+import "ni/protobuf/types/waveform.proto";
+import "ni/protobuf/types/xydata.proto";
+
+option csharp_namespace = "NationalInstruments.Measurements.Data.V2";
+option go_package = "datav2";
+option java_multiple_files = true;
+option java_outer_classname = "DataStoreProto";
+option java_package = "com.ni.measurements.data.v2";
+option objc_class_prefix = "NIMD";
+option php_namespace = "NI\\Measurements\\Data\\V2";
+option ruby_package = "NI::Measurements::Data::V2";
+
+enum Outcome {
+  OUTCOME_UNSPECIFIED = 0;
+  OUTCOME_PASSED = 1;
+  OUTCOME_FAILED = 2;
+  OUTCOME_SKIPPED = 3;
+  OUTCOME_TERMINATED = 4;
+  OUTCOME_ERRORED = 5;
+  OUTCOME_TIMED_OUT = 6;
+}
+
+// Represents lifecycle progress independently from a terminal Outcome.
+enum Status {
+  // No lifecycle status was provided.
+  STATUS_UNSPECIFIED = 0;
+  STATUS_NOT_STARTED = 1;
+  STATUS_LOOPING = 2;
+  STATUS_RUNNING = 3;
+  STATUS_WAITING = 4;
+  STATUS_DONE = 5;
+}
+
+message ErrorInformation {
+  int32 error_code = 1;
+  string message = 2;
+  string source = 3;
+}
+
+// Represents custom metadata attached to a Data Store resource.
+message ExtensionValue {
+  oneof metadata {
+    string string_value = 1;
+    // Any JSON scalar, object, array, or null value.
+    google.protobuf.Value json_value = 2;
+  }
+}
+
+// Represents inline measurement data or a reference to externally stored data.
+message MeasurementValue {
+  oneof value {
+    ni.protobuf.types.Scalar scalar = 1;
+    // Vectors are one-dimensional. Multidimensional values use a data moniker
+    // until a dedicated inline representation is defined.
+    ni.protobuf.types.Vector vector = 2;
+    ni.protobuf.types.DoubleAnalogWaveform double_analog_waveform = 3;
+    ni.protobuf.types.DoubleXYData x_y_data = 4;
+    ni.protobuf.types.I16AnalogWaveform i16_analog_waveform = 5;
+    ni.protobuf.types.DoubleComplexWaveform double_complex_waveform = 6;
+    ni.protobuf.types.I16ComplexWaveform i16_complex_waveform = 7;
+    ni.protobuf.types.DoubleSpectrum double_spectrum = 8;
+    ni.protobuf.types.DigitalWaveform digital_waveform = 9;
+    ni.datamonikers.v1.Moniker data_moniker = 10;
+    ni.protobuf.types.FloatAnalogWaveform float_analog_waveform = 11;
+    ni.protobuf.types.FloatComplexWaveform float_complex_waveform = 12;
+    ni.protobuf.types.FloatSpectrum float_spectrum = 13;
+  }
+}
+
+// Represents one execution of a test process.
+message TestResult {
+  // Output only. The service-generated identifier.
+  string id = 1;
+  // Optional. Accepts an existing metadata identifier or alias.
+  string uut_instance_id = 2;
+  // Optional. Accepts an existing metadata identifier or alias.
+  string operator_id = 3;
+  // Optional. Accepts an existing metadata identifier or alias.
+  string test_station_id = 4;
+  // Optional. Accepts an existing metadata identifier or alias.
+  string test_description_id = 5;
+  // Optional. Existing metadata identifiers or aliases.
+  repeated string software_item_ids = 6;
+  // Optional. Existing metadata identifiers or aliases.
+  repeated string hardware_item_ids = 7;
+  // Optional. Existing metadata identifiers or aliases.
+  repeated string test_adapter_ids = 8;
+  // Required. Immutable.
+  string name = 9;
+  // Optional.
+  ni.protobuf.types.PrecisionTimestamp start_date_time = 10;
+  // Optional.
+  ni.protobuf.types.PrecisionTimestamp end_date_time = 11;
+  // Optional.
+  Outcome outcome = 12;
+  // Optional.
+  ErrorInformation error_information = 13;
+  // Optional. A URI associated with the test result.
+  string link = 14;
+  // Optional. Open custom metadata when schema_id is omitted.
+  map<string, ExtensionValue> extension = 15;
+  // Optional. The schema that governs extension.
+  string schema_id = 16;
+  // Optional. Direct reference to the UUT product definition.
+  string uut_id = 17;
+  // Optional. The workspace assigned to this test result and its children.
+  string workspace = 18;
+  // Optional. Ad-hoc classification labels.
+  repeated string keywords = 19;
+  // Optional. The client-reported execution duration. This value is not
+  // derived from start_date_time and end_date_time.
+  ni.protobuf.types.PrecisionDuration duration = 20;
+  // Output only.
+  ni.protobuf.types.PrecisionTimestamp created_at = 21;
+  // Output only.
+  ni.protobuf.types.PrecisionTimestamp updated_at = 22;
+  // Output only.
+  string created_by = 23;
+  // Output only.
+  string updated_by = 24;
+  // Input on create and output when explicitly requested. Use Step methods to
+  // modify existing steps.
+  repeated Step steps = 25;
+  // Optional. Inline metadata used for find-or-create or expanded reads.
+  ni.measurements.metadata.v1.UutInstance uut_instance = 26;
+  // Optional. Inline metadata used for find-or-create or expanded reads.
+  ni.measurements.metadata.v1.Operator operator = 27;
+  // Optional. Inline metadata used for find-or-create or expanded reads.
+  ni.measurements.metadata.v1.TestStation test_station = 28;
+  // Optional. Inline metadata used for find-or-create or expanded reads.
+  ni.measurements.metadata.v1.TestDescription test_description = 29;
+  // Optional. Inline metadata used for find-or-create or expanded reads.
+  ni.measurements.metadata.v1.Uut uut = 30;
+  // Optional. Inline metadata used for find-or-create or expanded reads.
+  repeated ni.measurements.metadata.v1.SoftwareItem software_items = 31;
+  // Optional. Inline metadata used for find-or-create or expanded reads.
+  repeated ni.measurements.metadata.v1.HardwareItem hardware_items = 32;
+  // Optional. Inline metadata used for find-or-create or expanded reads.
+  repeated ni.measurements.metadata.v1.TestAdapter test_adapters = 33;
+  // Optional. A non-unspecified Outcome sets status to STATUS_DONE. A
+  // conflicting non-Done status is invalid.
+  Status status = 34;
+}
+
+// Represents one execution of a test step.
+message Step {
+  // Output only. The service-generated identifier.
+  string id = 1;
+  // Optional. Immutable. The parent Step must belong to the same TestResult.
+  string parent_step_id = 2;
+  // Required for direct creation and inferred for nested creation. Immutable.
+  string test_result_id = 3;
+  // Optional. Accepts an existing metadata identifier or alias.
+  string test_id = 4;
+  // Required. Immutable.
+  string name = 5;
+  // Optional. Immutable free-form classification.
+  string step_type = 6;
+  // Optional.
+  string notes = 7;
+  // Optional.
+  ni.protobuf.types.PrecisionTimestamp start_date_time = 8;
+  // Optional.
+  ni.protobuf.types.PrecisionTimestamp end_date_time = 9;
+  // Optional.
+  Outcome outcome = 10;
+  // Optional.
+  ErrorInformation error_information = 11;
+  // Optional. A URI associated with the step.
+  string link = 12;
+  // Optional. Open custom metadata when schema_id is omitted. TestStand
+  // integrations may store code-module inputs, outputs, and additional results
+  // here when they are not represented as Conditions or Measurements.
+  map<string, ExtensionValue> extension = 13;
+  // Optional. The schema that governs extension.
+  string schema_id = 14;
+  // Output only. Inherited from the owning TestResult.
+  string workspace = 15;
+  // Optional. Ad-hoc classification labels.
+  repeated string keywords = 16;
+  // Optional. The client-reported execution duration. This value is not
+  // derived from start_date_time and end_date_time.
+  ni.protobuf.types.PrecisionDuration duration = 17;
+  // Output only. Step-name path including this step.
+  repeated string path = 18;
+  // Output only. Step-identifier path including this step.
+  repeated string path_ids = 19;
+  // Output only.
+  ni.protobuf.types.PrecisionTimestamp created_at = 20;
+  // Output only.
+  ni.protobuf.types.PrecisionTimestamp updated_at = 21;
+  // Output only.
+  string created_by = 22;
+  // Output only.
+  string updated_by = 23;
+  // Input on create and output when explicitly requested. Use AddCondition and
+  // RemoveCondition to modify existing conditions.
+  repeated Condition conditions = 24;
+  // Input on create and output when explicitly requested. Use Measurement
+  // methods to modify existing measurements.
+  repeated Measurement measurements = 25;
+  // Input only. Recursively nested child Steps created with this Step.
+  repeated Step children = 26;
+  // Optional. Inline metadata used for find-or-create or expanded reads.
+  ni.measurements.metadata.v1.Test test = 27;
+  // Optional. A non-unspecified Outcome sets status to STATUS_DONE. A
+  // conflicting non-Done status is invalid.
+  Status status = 28;
+}
+
+// Represents one scalar, waveform, XY, spectrum, or digital measurement.
+message Measurement {
+  // Output only. The service-generated identifier.
+  string id = 1;
+  // Output only. Inferred from the owning Step.
+  string test_result_id = 2;
+  // Required for direct creation and inferred for nested creation. Immutable.
+  string step_id = 3;
+  // Required. Immutable.
+  string name = 4;
+  // Output only. The service-generated measurement value type.
+  string value_type = 5;
+  // Required. Immutable.
+  MeasurementValue value = 6;
+  // Optional. Immutable engineering units for the scalar or primary value.
+  string units = 7;
+  // Optional. Immutable.
+  MeasurementValue upper_limit = 8;
+  // Optional. Immutable.
+  MeasurementValue lower_limit = 9;
+  // Optional. Existing metadata identifiers or aliases.
+  repeated string software_item_ids = 10;
+  // Optional. Existing metadata identifiers or aliases.
+  repeated string hardware_item_ids = 11;
+  // Optional. Existing metadata identifiers or aliases.
+  repeated string test_adapter_ids = 12;
+  // Optional.
+  string notes = 13;
+  // Optional.
+  ni.protobuf.types.PrecisionTimestamp start_date_time = 14;
+  // Optional.
+  ni.protobuf.types.PrecisionTimestamp end_date_time = 15;
+  // Optional.
+  Outcome outcome = 16;
+  // Optional.
+  ErrorInformation error_information = 17;
+  // Output only. Inherited from the owning TestResult.
+  string workspace = 18;
+  // Optional. Open custom metadata when schema_id is omitted.
+  map<string, ExtensionValue> extension = 19;
+  // Optional. The schema that governs extension.
+  string schema_id = 20;
+  // Optional. The client-reported measurement duration. This value is not
+  // derived from start_date_time and end_date_time.
+  ni.protobuf.types.PrecisionDuration duration = 21;
+  // Output only. Conditions copied from the owning Step.
+  repeated Condition conditions = 22;
+  // Output only.
+  ni.protobuf.types.PrecisionTimestamp created_at = 23;
+  // Output only.
+  ni.protobuf.types.PrecisionTimestamp updated_at = 24;
+  // Output only.
+  string created_by = 25;
+  // Output only.
+  string updated_by = 26;
+  // Optional. Inline metadata used for find-or-create or expanded reads.
+  repeated ni.measurements.metadata.v1.SoftwareItem software_items = 27;
+  // Optional. Inline metadata used for find-or-create or expanded reads.
+  repeated ni.measurements.metadata.v1.HardwareItem hardware_items = 28;
+  // Optional. Inline metadata used for find-or-create or expanded reads.
+  repeated ni.measurements.metadata.v1.TestAdapter test_adapters = 29;
+  // Optional. Immutable publisher-defined comparison operation. The service
+  // stores this value as provenance and does not derive Outcome from it.
+  string comparison_type = 30;
+}
+
+// Represents a condition value. Initially, only scalar values are supported.
+message ConditionValue {
+  oneof value {
+    ni.protobuf.types.Scalar scalar = 1;
+  }
+}
+
+// Represents an immutable operational condition value owned by a Step.
+message Condition {
+  // Required. Immutable and unique within a Step by exact, case-sensitive name.
+  string name = 1;
+  // Optional. Immutable.
+  string condition_type = 2;
+  // Required. Immutable.
+  ConditionValue value = 3;
+  // Optional. Immutable.
+  string value_label = 4;
+  // Optional. Immutable.
+  string units = 5;
+}

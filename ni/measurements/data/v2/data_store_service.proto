@@ -1,0 +1,421 @@
+syntax = "proto3";
+
+package ni.measurements.data.v2;
+
+import "google/protobuf/field_mask.proto";
+import "ni/measurements/data/v2/data_store.proto";
+
+option csharp_namespace = "NationalInstruments.Measurements.Data.V2";
+option go_package = "datav2";
+option java_multiple_files = true;
+option java_outer_classname = "DataStoreServiceProto";
+option java_package = "com.ni.measurements.data.v2";
+option objc_class_prefix = "NIMD";
+option php_namespace = "NI\\Measurements\\Data\\V2";
+option ruby_package = "NI::Measurements::Data::V2";
+
+// Provides create, read, query, update, and delete operations for test results,
+// step executions, and measurements. Conditions are managed through their
+// owning Steps.
+//
+// Mutation operations enforce applicable limits before changing state:
+//   Batch request items:                1 to 1,000
+//   Step depth:                         16 (a root Step is depth 1)
+//   Nested Steps per request:           100 (recursive children included)
+//   Measurements per request:           1,000
+//   Conditions per request:             100 total and 100 per Step
+//   Aggregate nested items per request: 1,000
+//   Derived ConditionMeasurement rows:  10,000
+service DataStoreService {
+  rpc CreateTestResult(CreateTestResultRequest) returns (CreateTestResultResponse);
+  rpc BatchCreateTestResults(BatchCreateTestResultsRequest) returns (BatchCreateTestResultsResponse);
+  rpc GetTestResult(GetTestResultRequest) returns (GetTestResultResponse);
+  rpc QueryTestResults(QueryTestResultsRequest) returns (QueryTestResultsResponse);
+  rpc UpdateTestResult(UpdateTestResultRequest) returns (UpdateTestResultResponse);
+  rpc BatchUpdateTestResults(BatchUpdateTestResultsRequest) returns (BatchUpdateTestResultsResponse);
+  rpc AddTestResultMetadata(AddTestResultMetadataRequest) returns (AddTestResultMetadataResponse);
+  rpc RemoveTestResultMetadata(RemoveTestResultMetadataRequest) returns (RemoveTestResultMetadataResponse);
+  rpc DeleteTestResult(DeleteTestResultRequest) returns (DeleteTestResultResponse);
+  rpc BatchDeleteTestResults(BatchDeleteTestResultsRequest) returns (BatchDeleteTestResultsResponse);
+
+  rpc CreateStep(CreateStepRequest) returns (CreateStepResponse);
+  rpc BatchCreateSteps(BatchCreateStepsRequest) returns (BatchCreateStepsResponse);
+  rpc GetStep(GetStepRequest) returns (GetStepResponse);
+  rpc QuerySteps(QueryStepsRequest) returns (QueryStepsResponse);
+  rpc UpdateStep(UpdateStepRequest) returns (UpdateStepResponse);
+  rpc BatchUpdateSteps(BatchUpdateStepsRequest) returns (BatchUpdateStepsResponse);
+  rpc AddCondition(AddConditionRequest) returns (AddConditionResponse);
+  rpc RemoveCondition(RemoveConditionRequest) returns (RemoveConditionResponse);
+  rpc DeleteStep(DeleteStepRequest) returns (DeleteStepResponse);
+  rpc BatchDeleteSteps(BatchDeleteStepsRequest) returns (BatchDeleteStepsResponse);
+
+  rpc CreateMeasurement(CreateMeasurementRequest) returns (CreateMeasurementResponse);
+  rpc BatchCreateMeasurements(BatchCreateMeasurementsRequest) returns (BatchCreateMeasurementsResponse);
+  rpc GetMeasurement(GetMeasurementRequest) returns (GetMeasurementResponse);
+  rpc QueryMeasurements(QueryMeasurementsRequest) returns (QueryMeasurementsResponse);
+  rpc UpdateMeasurement(UpdateMeasurementRequest) returns (UpdateMeasurementResponse);
+  rpc BatchUpdateMeasurements(BatchUpdateMeasurementsRequest) returns (BatchUpdateMeasurementsResponse);
+  rpc AddMeasurementMetadata(AddMeasurementMetadataRequest) returns (AddMeasurementMetadataResponse);
+  rpc RemoveMeasurementMetadata(RemoveMeasurementMetadataRequest) returns (RemoveMeasurementMetadataResponse);
+  rpc DeleteMeasurement(DeleteMeasurementRequest) returns (DeleteMeasurementResponse);
+  rpc BatchDeleteMeasurements(BatchDeleteMeasurementsRequest) returns (BatchDeleteMeasurementsResponse);
+  rpc ReadMeasurementValue(ReadMeasurementValueRequest) returns (ReadMeasurementValueResponse);
+}
+
+message CreateTestResultRequest {
+  // Required. May include bounded nested Steps, Conditions, Measurements, and
+  // inline metadata. The request is atomic.
+  TestResult test_result = 1;
+}
+
+message CreateTestResultResponse {
+  // The canonical resource. Nested and expanded resources are omitted.
+  TestResult test_result = 1;
+}
+
+message BatchCreateTestResultsRequest {
+  // Required. One to 1,000 requests. The batch is atomic.
+  repeated CreateTestResultRequest requests = 1;
+}
+
+message BatchCreateTestResultsResponse {
+  // Canonical root resources in request order. Nested resources are omitted.
+  repeated TestResult test_results = 1;
+}
+
+message GetTestResultRequest {
+  // Required. The test result identifier.
+  string test_result_id = 1;
+  // Optional. Fields and expanded relationships to return.
+  google.protobuf.FieldMask read_mask = 2;
+}
+
+message GetTestResultResponse {
+  TestResult test_result = 1;
+}
+
+message QueryTestResultsRequest {
+  // Optional. An OData query expression.
+  string odata_query = 1;
+  // Optional. Fields and expanded relationships to return.
+  google.protobuf.FieldMask read_mask = 2;
+}
+
+message QueryTestResultsResponse {
+  repeated TestResult test_results = 1;
+  // The OData next-link URL when more results are available.
+  string next_link = 2;
+}
+
+message UpdateTestResultRequest {
+  // Required. The test result identifier.
+  string test_result_id = 1;
+  // Required. Values for fields selected by update_mask.
+  TestResult test_result = 2;
+  // Optional. An empty mask applies mutable fields with non-default values.
+  // An explicit mask is required to clear a field to its default value.
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message UpdateTestResultResponse {
+  TestResult test_result = 1;
+}
+
+message BatchUpdateTestResultsRequest {
+  // Required. One to 1,000 requests. Duplicate targets are invalid, and the
+  // batch is atomic.
+  repeated UpdateTestResultRequest requests = 1;
+  // Optional. A common mask for every request. A populated child mask must
+  // match this mask after path normalization.
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+message BatchUpdateTestResultsResponse {
+  // Updated resources in request order. Nested resources are omitted.
+  repeated TestResult test_results = 1;
+}
+
+message AddTestResultMetadataRequest {
+  // Required. The test result identifier.
+  string test_result_id = 1;
+  repeated string software_item_ids = 2;
+  repeated string hardware_item_ids = 3;
+  repeated string test_adapter_ids = 4;
+}
+
+message AddTestResultMetadataResponse {
+  TestResult test_result = 1;
+}
+
+message RemoveTestResultMetadataRequest {
+  // Required. The test result identifier.
+  string test_result_id = 1;
+  repeated string software_item_ids = 2;
+  repeated string hardware_item_ids = 3;
+  repeated string test_adapter_ids = 4;
+}
+
+message RemoveTestResultMetadataResponse {
+  TestResult test_result = 1;
+}
+
+message DeleteTestResultRequest {
+  // Required. The test result identifier.
+  string test_result_id = 1;
+  // Optional. Deletes owned Steps, Measurements, Conditions, relationship
+  // rows, and applicable value-store records. Without cascade, the operation
+  // fails when required children exist.
+  bool cascade = 2;
+}
+
+message DeleteTestResultResponse {}
+
+message BatchDeleteTestResultsRequest {
+  // Required. One to 1,000 requests. Each request has its own cascade value.
+  // Duplicate targets are invalid, and the batch is atomic.
+  repeated DeleteTestResultRequest requests = 1;
+}
+
+message BatchDeleteTestResultsResponse {}
+
+message CreateStepRequest {
+  // Required. May include bounded nested child Steps, Conditions,
+  // Measurements, and inline metadata. The request is atomic.
+  Step step = 1;
+}
+
+message CreateStepResponse {
+  // The canonical resource. Nested and expanded resources are omitted.
+  Step step = 1;
+}
+
+message BatchCreateStepsRequest {
+  // Required. One to 1,000 requests. The batch is atomic.
+  repeated CreateStepRequest requests = 1;
+}
+
+message BatchCreateStepsResponse {
+  // Canonical root resources in request order. Nested resources are omitted.
+  repeated Step steps = 1;
+}
+
+message GetStepRequest {
+  // Required. The step identifier.
+  string step_id = 1;
+  // Optional. Fields and expanded relationships to return.
+  google.protobuf.FieldMask read_mask = 2;
+}
+
+message GetStepResponse {
+  Step step = 1;
+}
+
+message QueryStepsRequest {
+  // Optional. An OData query expression.
+  string odata_query = 1;
+  // Optional. Fields and expanded relationships to return.
+  google.protobuf.FieldMask read_mask = 2;
+}
+
+message QueryStepsResponse {
+  repeated Step steps = 1;
+  // The OData next-link URL when more results are available.
+  string next_link = 2;
+}
+
+message UpdateStepRequest {
+  // Required. The step identifier.
+  string step_id = 1;
+  // Required. Values for fields selected by update_mask.
+  Step step = 2;
+  // Optional. An empty mask applies mutable fields with non-default values.
+  // An explicit mask is required to clear a field to its default value.
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message UpdateStepResponse {
+  Step step = 1;
+}
+
+message BatchUpdateStepsRequest {
+  // Required. One to 1,000 requests. Duplicate targets are invalid, and the
+  // batch is atomic.
+  repeated UpdateStepRequest requests = 1;
+  // Optional. A common mask for every request. A populated child mask must
+  // match this mask after path normalization.
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+message BatchUpdateStepsResponse {
+  // Updated resources in request order. Nested resources are omitted.
+  repeated Step steps = 1;
+}
+
+message AddConditionRequest {
+  // Required. The step identifier.
+  string step_id = 1;
+  // Required. Adding an identical condition is idempotent. Adding the same
+  // name with different values relinks the Step to the new condition value.
+  Condition condition = 2;
+}
+
+message AddConditionResponse {
+  Step step = 1;
+}
+
+message RemoveConditionRequest {
+  // Required. The step identifier.
+  string step_id = 1;
+  // Required. Exact, case-sensitive condition name.
+  string condition_name = 2;
+}
+
+message RemoveConditionResponse {
+  Step step = 1;
+}
+
+message DeleteStepRequest {
+  // Required. The step identifier.
+  string step_id = 1;
+  // Optional. Deletes descendant Steps, owned Measurements, relationship rows,
+  // applicable value-store records, and Conditions that become unused. Without
+  // cascade, the operation fails when required children exist.
+  bool cascade = 2;
+}
+
+message DeleteStepResponse {}
+
+message BatchDeleteStepsRequest {
+  // Required. One to 1,000 requests. Each request has its own cascade value.
+  // Duplicate and ancestor/descendant target pairs are invalid, and the batch
+  // is atomic.
+  repeated DeleteStepRequest requests = 1;
+}
+
+message BatchDeleteStepsResponse {}
+
+message CreateMeasurementRequest {
+  // Required. Inline metadata must resolve to links present on the parent
+  // TestResult.
+  Measurement measurement = 1;
+}
+
+message CreateMeasurementResponse {
+  // The canonical resource. Expanded resources are omitted, and non-scalar
+  // values and limits are returned through data-moniker references.
+  Measurement measurement = 1;
+}
+
+message BatchCreateMeasurementsRequest {
+  // Required. One to 1,000 requests. Requests may target different Steps and
+  // TestResults, and the batch is atomic.
+  repeated CreateMeasurementRequest requests = 1;
+}
+
+message BatchCreateMeasurementsResponse {
+  // Canonical resources in request order.
+  repeated Measurement measurements = 1;
+}
+
+message GetMeasurementRequest {
+  // Required. The measurement identifier.
+  string measurement_id = 1;
+  // Optional. Fields and expanded relationships to return.
+  google.protobuf.FieldMask read_mask = 2;
+}
+
+message GetMeasurementResponse {
+  Measurement measurement = 1;
+}
+
+message QueryMeasurementsRequest {
+  // Optional. An OData query expression.
+  string odata_query = 1;
+  // Optional. Fields and expanded relationships to return.
+  google.protobuf.FieldMask read_mask = 2;
+}
+
+message QueryMeasurementsResponse {
+  repeated Measurement measurements = 1;
+  // The OData next-link URL when more results are available.
+  string next_link = 2;
+}
+
+message UpdateMeasurementRequest {
+  // Required. The measurement identifier.
+  string measurement_id = 1;
+  // Required. Values for fields selected by update_mask.
+  Measurement measurement = 2;
+  // Optional. An empty mask applies mutable fields with non-default values.
+  // An explicit mask is required to clear a field to its default value.
+  // Conditions and measurement values cannot be updated through this method.
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message UpdateMeasurementResponse {
+  Measurement measurement = 1;
+}
+
+message BatchUpdateMeasurementsRequest {
+  // Required. One to 1,000 requests. Duplicate targets are invalid, and the
+  // batch is atomic.
+  repeated UpdateMeasurementRequest requests = 1;
+  // Optional. A common mask for every request. A populated child mask must
+  // match this mask after path normalization.
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+message BatchUpdateMeasurementsResponse {
+  // Updated resources in request order.
+  repeated Measurement measurements = 1;
+}
+
+message AddMeasurementMetadataRequest {
+  // Required. The measurement identifier. Added metadata must already be
+  // linked to the parent TestResult.
+  string measurement_id = 1;
+  repeated string software_item_ids = 2;
+  repeated string hardware_item_ids = 3;
+  repeated string test_adapter_ids = 4;
+}
+
+message AddMeasurementMetadataResponse {
+  Measurement measurement = 1;
+}
+
+message RemoveMeasurementMetadataRequest {
+  // Required. The measurement identifier.
+  string measurement_id = 1;
+  repeated string software_item_ids = 2;
+  repeated string hardware_item_ids = 3;
+  repeated string test_adapter_ids = 4;
+}
+
+message RemoveMeasurementMetadataResponse {
+  Measurement measurement = 1;
+}
+
+message DeleteMeasurementRequest {
+  // Required. Deletes the Measurement, relationship rows, and applicable
+  // value-store records. It does not delete other Data Store resources.
+  string measurement_id = 1;
+}
+
+message DeleteMeasurementResponse {}
+
+message BatchDeleteMeasurementsRequest {
+  // Required. One to 1,000 requests. Duplicate targets are invalid, and the
+  // batch is atomic.
+  repeated DeleteMeasurementRequest requests = 1;
+}
+
+message BatchDeleteMeasurementsResponse {}
+
+message ReadMeasurementValueRequest {
+  // Required. The measurement identifier.
+  string measurement_id = 1;
+}
+
+message ReadMeasurementValueResponse {
+  MeasurementValue value = 1;
+}
