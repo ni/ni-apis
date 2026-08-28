@@ -25,7 +25,7 @@ option ruby_package = "NI::Measurements::Data::V2";
 //   Measurements per request:           1,000
 //   Conditions per request:             100 total and 100 per Step
 //   Aggregate nested items per request: 1,000
-//   Derived ConditionMeasurement rows:  10,000
+//   Condition-to-Measurement associations: 10,000
 service DataStoreService {
   rpc CreateTestResult(CreateTestResultRequest) returns (CreateTestResultResponse);
   rpc BatchCreateTestResults(BatchCreateTestResultsRequest) returns (BatchCreateTestResultsResponse);
