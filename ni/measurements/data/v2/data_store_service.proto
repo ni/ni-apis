@@ -18,13 +18,13 @@ option ruby_package = "NI::Measurements::Data::V2";
 // step executions, and measurements. Conditions are managed through their
 // owning Steps.
 //
-// Mutation operations enforce applicable limits before changing state:
+// Each operation checks its request limits before changing data:
 //   Batch request items:                1 to 1,000
 //   Step depth:                         16 (a root Step is depth 1)
 //   Nested Steps per request:           100 (recursive children included)
 //   Measurements per request:           1,000
 //   Conditions per request:             100 total and 100 per Step
-//   Aggregate nested items per request: 1,000
+//   Total nested items per request:     1,000
 //   Condition-to-Measurement associations: 10,000
 service DataStoreService {
   rpc CreateTestResult(CreateTestResultRequest) returns (CreateTestResultResponse);
@@ -69,7 +69,7 @@ message CreateTestResultRequest {
 }
 
 message CreateTestResultResponse {
-  // The canonical resource. Nested and expanded resources are omitted.
+  // The saved TestResult. Nested and related resources are omitted.
   TestResult test_result = 1;
 }
 
@@ -79,14 +79,14 @@ message BatchCreateTestResultsRequest {
 }
 
 message BatchCreateTestResultsResponse {
-  // Canonical root resources in request order. Nested resources are omitted.
+  // Saved TestResults in request order. Nested resources are omitted.
   repeated TestResult test_results = 1;
 }
 
 message GetTestResultRequest {
   // Required. The test result identifier.
   string test_result_id = 1;
-  // Optional. Fields and expanded relationships to return.
+  // Optional. Fields and related resources to return.
   google.protobuf.FieldMask read_mask = 2;
 }
 
@@ -97,7 +97,7 @@ message GetTestResultResponse {
 message QueryTestResultsRequest {
   // Optional. An OData query expression.
   string odata_query = 1;
-  // Optional. Fields and expanded relationships to return.
+  // Optional. Fields and related resources to return.
   google.protobuf.FieldMask read_mask = 2;
 }
 
@@ -112,7 +112,8 @@ message UpdateTestResultRequest {
   string test_result_id = 1;
   // Required. Values for fields selected by update_mask.
   TestResult test_result = 2;
-  // Optional. An empty mask applies mutable fields with non-default values.
+  // Optional. An empty mask updates supplied mutable fields whose values are
+  // not their protobuf defaults.
   // An explicit mask is required to clear a field to its default value.
   google.protobuf.FieldMask update_mask = 3;
 }
@@ -125,8 +126,9 @@ message BatchUpdateTestResultsRequest {
   // Required. One to 1,000 requests. Duplicate targets are invalid, and the
   // batch is atomic.
   repeated UpdateTestResultRequest requests = 1;
-  // Optional. A common mask for every request. A populated child mask must
-  // match this mask after path normalization.
+  // Optional. A mask used by every request. If a request also contains a mask,
+  // both masks must select the same fields. The service normalizes field paths
+  // before comparing the masks.
   google.protobuf.FieldMask update_mask = 2;
 }
 
@@ -162,9 +164,9 @@ message RemoveTestResultMetadataResponse {
 message DeleteTestResultRequest {
   // Required. The test result identifier.
   string test_result_id = 1;
-  // Optional. Deletes owned Steps, Measurements, Conditions, relationship
-  // rows, and applicable value-store records. Without cascade, the operation
-  // fails when required children exist.
+  // Optional. Deletes owned Steps, Measurements, Conditions, links, and
+  // externally stored Measurement values. Without cascade, the operation fails
+  // when required children exist.
   bool cascade = 2;
 }
 
@@ -185,7 +187,7 @@ message CreateStepRequest {
 }
 
 message CreateStepResponse {
-  // The canonical resource. Nested and expanded resources are omitted.
+  // The saved Step. Nested and related resources are omitted.
   Step step = 1;
 }
 
@@ -195,14 +197,14 @@ message BatchCreateStepsRequest {
 }
 
 message BatchCreateStepsResponse {
-  // Canonical root resources in request order. Nested resources are omitted.
+  // Saved Steps in request order. Nested resources are omitted.
   repeated Step steps = 1;
 }
 
 message GetStepRequest {
   // Required. The step identifier.
   string step_id = 1;
-  // Optional. Fields and expanded relationships to return.
+  // Optional. Fields and related resources to return.
   google.protobuf.FieldMask read_mask = 2;
 }
 
@@ -213,7 +215,7 @@ message GetStepResponse {
 message QueryStepsRequest {
   // Optional. An OData query expression.
   string odata_query = 1;
-  // Optional. Fields and expanded relationships to return.
+  // Optional. Fields and related resources to return.
   google.protobuf.FieldMask read_mask = 2;
 }
 
@@ -228,7 +230,8 @@ message UpdateStepRequest {
   string step_id = 1;
   // Required. Values for fields selected by update_mask.
   Step step = 2;
-  // Optional. An empty mask applies mutable fields with non-default values.
+  // Optional. An empty mask updates supplied mutable fields whose values are
+  // not their protobuf defaults.
   // An explicit mask is required to clear a field to its default value.
   google.protobuf.FieldMask update_mask = 3;
 }
@@ -241,8 +244,9 @@ message BatchUpdateStepsRequest {
   // Required. One to 1,000 requests. Duplicate targets are invalid, and the
   // batch is atomic.
   repeated UpdateStepRequest requests = 1;
-  // Optional. A common mask for every request. A populated child mask must
-  // match this mask after path normalization.
+  // Optional. A mask used by every request. If a request also contains a mask,
+  // both masks must select the same fields. The service normalizes field paths
+  // before comparing the masks.
   google.protobuf.FieldMask update_mask = 2;
 }
 
@@ -254,8 +258,8 @@ message BatchUpdateStepsResponse {
 message AddConditionRequest {
   // Required. The step identifier.
   string step_id = 1;
-  // Required. Adding an identical condition is idempotent. Adding the same
-  // name with different values relinks the Step to the new condition value.
+  // Required. Adding the same name and value again has no effect. Adding the
+  // same name with a different value changes the Step to use the new value.
   Condition condition = 2;
 }
 
@@ -277,9 +281,9 @@ message RemoveConditionResponse {
 message DeleteStepRequest {
   // Required. The step identifier.
   string step_id = 1;
-  // Optional. Deletes descendant Steps, owned Measurements, relationship rows,
-  // applicable value-store records, and Conditions that become unused. Without
-  // cascade, the operation fails when required children exist.
+  // Optional. Deletes child Steps, owned Measurements, links, externally stored
+  // Measurement values, and Conditions that become unused. Without cascade,
+  // the operation fails when required children exist.
   bool cascade = 2;
 }
 
@@ -301,8 +305,8 @@ message CreateMeasurementRequest {
 }
 
 message CreateMeasurementResponse {
-  // The canonical resource. Expanded resources are omitted, and non-scalar
-  // values and limits are returned through data-moniker references.
+  // The saved Measurement. Related resources are omitted. Non-scalar values and
+  // limits are returned as data-moniker references.
   Measurement measurement = 1;
 }
 
@@ -313,14 +317,14 @@ message BatchCreateMeasurementsRequest {
 }
 
 message BatchCreateMeasurementsResponse {
-  // Canonical resources in request order.
+  // Saved Measurements in request order.
   repeated Measurement measurements = 1;
 }
 
 message GetMeasurementRequest {
   // Required. The measurement identifier.
   string measurement_id = 1;
-  // Optional. Fields and expanded relationships to return.
+  // Optional. Fields and related resources to return.
   google.protobuf.FieldMask read_mask = 2;
 }
 
@@ -331,7 +335,7 @@ message GetMeasurementResponse {
 message QueryMeasurementsRequest {
   // Optional. An OData query expression.
   string odata_query = 1;
-  // Optional. Fields and expanded relationships to return.
+  // Optional. Fields and related resources to return.
   google.protobuf.FieldMask read_mask = 2;
 }
 
@@ -346,7 +350,8 @@ message UpdateMeasurementRequest {
   string measurement_id = 1;
   // Required. Values for fields selected by update_mask.
   Measurement measurement = 2;
-  // Optional. An empty mask applies mutable fields with non-default values.
+  // Optional. An empty mask updates supplied mutable fields whose values are
+  // not their protobuf defaults.
   // An explicit mask is required to clear a field to its default value.
   // Conditions and measurement values cannot be updated through this method.
   google.protobuf.FieldMask update_mask = 3;
@@ -360,8 +365,9 @@ message BatchUpdateMeasurementsRequest {
   // Required. One to 1,000 requests. Duplicate targets are invalid, and the
   // batch is atomic.
   repeated UpdateMeasurementRequest requests = 1;
-  // Optional. A common mask for every request. A populated child mask must
-  // match this mask after path normalization.
+  // Optional. A mask used by every request. If a request also contains a mask,
+  // both masks must select the same fields. The service normalizes field paths
+  // before comparing the masks.
   google.protobuf.FieldMask update_mask = 2;
 }
 
@@ -396,8 +402,8 @@ message RemoveMeasurementMetadataResponse {
 }
 
 message DeleteMeasurementRequest {
-  // Required. Deletes the Measurement, relationship rows, and applicable
-  // value-store records. It does not delete other Data Store resources.
+  // Required. Deletes the Measurement, its links, and its externally stored
+  // values. It does not delete other Data Store resources.
   string measurement_id = 1;
 }
 

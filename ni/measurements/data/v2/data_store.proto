@@ -116,10 +116,10 @@ message TestResult {
   string uut_id = 17;
   // Optional. The workspace assigned to this test result and its children.
   string workspace = 18;
-  // Optional. Ad-hoc classification labels.
+  // Optional. Labels used to classify the test result.
   repeated string keywords = 19;
-  // Optional. The client-reported execution duration. This value is not
-  // derived from start_date_time and end_date_time.
+  // Optional. The execution duration reported by the client. The service does
+  // not calculate this value from start_date_time and end_date_time.
   ni.protobuf.types.PrecisionDuration duration = 20;
   // Output only.
   ni.protobuf.types.PrecisionTimestamp created_at = 21;
@@ -159,7 +159,8 @@ message Step {
   string id = 1;
   // Optional. Immutable. The parent Step must belong to the same TestResult.
   string parent_step_id = 2;
-  // Required for direct creation and inferred for nested creation. Immutable.
+  // Required when created directly. When nested, set from the owning TestResult.
+  // Immutable.
   string test_result_id = 3;
   // Optional. Accepts an existing metadata identifier or alias.
   string test_id = 4;
@@ -187,10 +188,10 @@ message Step {
   string schema_id = 14;
   // Output only. Inherited from the owning TestResult.
   string workspace = 15;
-  // Optional. Ad-hoc classification labels.
+  // Optional. Labels used to classify the step.
   repeated string keywords = 16;
-  // Optional. The client-reported execution duration. This value is not
-  // derived from start_date_time and end_date_time.
+  // Optional. The execution duration reported by the client. The service does
+  // not calculate this value from start_date_time and end_date_time.
   ni.protobuf.types.PrecisionDuration duration = 17;
   // Output only. Step-name path including this step.
   repeated string path = 18;
@@ -223,9 +224,10 @@ message Step {
 message Measurement {
   // Output only. The service-generated identifier.
   string id = 1;
-  // Output only. Inferred from the owning Step.
+  // Output only. Set from the owning Step.
   string test_result_id = 2;
-  // Required for direct creation and inferred for nested creation. Immutable.
+  // Required when created directly. When nested, set from the owning Step.
+  // Immutable.
   string step_id = 3;
   // Required. Immutable.
   string name = 4;
@@ -261,8 +263,8 @@ message Measurement {
   map<string, ExtensionValue> extension = 19;
   // Optional. The schema that governs extension.
   string schema_id = 20;
-  // Optional. The client-reported measurement duration. This value is not
-  // derived from start_date_time and end_date_time.
+  // Optional. The measurement duration reported by the client. The service does
+  // not calculate this value from start_date_time and end_date_time.
   ni.protobuf.types.PrecisionDuration duration = 21;
   // Output only. Conditions copied from the owning Step.
   repeated Condition conditions = 22;
