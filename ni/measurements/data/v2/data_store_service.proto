@@ -18,14 +18,8 @@ option ruby_package = "NI::Measurements::Data::V2";
 // step executions, and measurements. Conditions are managed through their
 // owning Steps.
 //
-// Each operation checks its request limits before changing data:
-//   Batch request items:                1 to 1,000
-//   Step depth:                         16 (a root Step is depth 1)
-//   Nested Steps per request:           100 (recursive children included)
-//   Measurements per request:           1,000
-//   Conditions per request:             100 total and 100 per Step
-//   Total nested items per request:     1,000
-//   Condition-to-Measurement associations: 10,000
+// Requests are subject to service-defined limits. An operation that exceeds a
+// limit fails with RESOURCE_EXHAUSTED before changing data.
 service DataStoreService {
   rpc CreateTestResult(CreateTestResultRequest) returns (CreateTestResultResponse);
   rpc BatchCreateTestResults(BatchCreateTestResultsRequest) returns (BatchCreateTestResultsResponse);
@@ -74,7 +68,7 @@ message CreateTestResultResponse {
 }
 
 message BatchCreateTestResultsRequest {
-  // Required. One to 1,000 requests. The batch is atomic.
+  // Required. Non-empty and subject to service limits. The batch is atomic.
   repeated CreateTestResultRequest requests = 1;
 }
 
@@ -123,8 +117,8 @@ message UpdateTestResultResponse {
 }
 
 message BatchUpdateTestResultsRequest {
-  // Required. One to 1,000 requests. Duplicate targets are invalid, and the
-  // batch is atomic.
+  // Required. Non-empty and subject to service limits. Duplicate targets are
+  // invalid, and the batch is atomic.
   repeated UpdateTestResultRequest requests = 1;
   // Optional. A mask used by every request. If a request also contains a mask,
   // both masks must select the same fields. The service normalizes field paths
@@ -173,8 +167,8 @@ message DeleteTestResultRequest {
 message DeleteTestResultResponse {}
 
 message BatchDeleteTestResultsRequest {
-  // Required. One to 1,000 requests. Each request has its own cascade value.
-  // Duplicate targets are invalid, and the batch is atomic.
+  // Required. Non-empty and subject to service limits. Each request has its
+  // own cascade value. Duplicate targets are invalid, and the batch is atomic.
   repeated DeleteTestResultRequest requests = 1;
 }
 
@@ -192,7 +186,7 @@ message CreateStepResponse {
 }
 
 message BatchCreateStepsRequest {
-  // Required. One to 1,000 requests. The batch is atomic.
+  // Required. Non-empty and subject to service limits. The batch is atomic.
   repeated CreateStepRequest requests = 1;
 }
 
@@ -241,8 +235,8 @@ message UpdateStepResponse {
 }
 
 message BatchUpdateStepsRequest {
-  // Required. One to 1,000 requests. Duplicate targets are invalid, and the
-  // batch is atomic.
+  // Required. Non-empty and subject to service limits. Duplicate targets are
+  // invalid, and the batch is atomic.
   repeated UpdateStepRequest requests = 1;
   // Optional. A mask used by every request. If a request also contains a mask,
   // both masks must select the same fields. The service normalizes field paths
@@ -290,9 +284,9 @@ message DeleteStepRequest {
 message DeleteStepResponse {}
 
 message BatchDeleteStepsRequest {
-  // Required. One to 1,000 requests. Each request has its own cascade value.
-  // Duplicate and ancestor/descendant target pairs are invalid, and the batch
-  // is atomic.
+  // Required. Non-empty and subject to service limits. Each request has its
+  // own cascade value. Duplicate and ancestor/descendant target pairs are
+  // invalid, and the batch is atomic.
   repeated DeleteStepRequest requests = 1;
 }
 
@@ -311,8 +305,8 @@ message CreateMeasurementResponse {
 }
 
 message BatchCreateMeasurementsRequest {
-  // Required. One to 1,000 requests. Requests may target different Steps and
-  // TestResults, and the batch is atomic.
+  // Required. Non-empty and subject to service limits. Requests may target
+  // different Steps and TestResults, and the batch is atomic.
   repeated CreateMeasurementRequest requests = 1;
 }
 
@@ -362,8 +356,8 @@ message UpdateMeasurementResponse {
 }
 
 message BatchUpdateMeasurementsRequest {
-  // Required. One to 1,000 requests. Duplicate targets are invalid, and the
-  // batch is atomic.
+  // Required. Non-empty and subject to service limits. Duplicate targets are
+  // invalid, and the batch is atomic.
   repeated UpdateMeasurementRequest requests = 1;
   // Optional. A mask used by every request. If a request also contains a mask,
   // both masks must select the same fields. The service normalizes field paths
@@ -410,8 +404,8 @@ message DeleteMeasurementRequest {
 message DeleteMeasurementResponse {}
 
 message BatchDeleteMeasurementsRequest {
-  // Required. One to 1,000 requests. Duplicate targets are invalid, and the
-  // batch is atomic.
+  // Required. Non-empty and subject to service limits. Duplicate targets are
+  // invalid, and the batch is atomic.
   repeated DeleteMeasurementRequest requests = 1;
 }
 
