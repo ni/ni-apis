@@ -59,6 +59,8 @@ service DataStoreService {
   rpc PublishMeasurement(PublishMeasurementRequest) returns (PublishMeasurementResponse);
   // Publishes multiple measurements at once for parametric sweeps.
   rpc PublishMeasurementBatch(PublishMeasurementBatchRequest) returns (PublishMeasurementBatchResponse);
+  // Publishes all conditions and measurements belonging to one step in a single transaction.
+  rpc PublishStepData(PublishStepDataRequest) returns (PublishStepDataResponse);
 
   // Gets the measurement associated with the given id.
   rpc GetMeasurement(GetMeasurementRequest) returns (GetMeasurementResponse);
@@ -318,6 +320,18 @@ message PublishMeasurementBatchRequest {
 message PublishMeasurementBatchResponse {
   // The ids of the published measurements. If your batch contained scalar data, this will be a single value.
   repeated string measurement_ids = 1;
+}
+
+message PublishStepDataRequest {
+  // Required. The step that owns all of the data in this request.
+  string step_id = 1;
+  repeated PublishConditionRequest conditions = 2;
+  repeated PublishMeasurementRequest measurements = 3;
+}
+
+message PublishStepDataResponse {
+  repeated string condition_ids = 1;
+  repeated string measurement_ids = 2;
 }
 
 message GetMeasurementRequest {
