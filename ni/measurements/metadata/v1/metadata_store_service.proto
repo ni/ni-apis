@@ -78,7 +78,8 @@ service MetadataStoreService {
   // Creates a new test adapter in the metadata store.
   rpc CreateTestAdapter(CreateTestAdapterRequest) returns (CreateTestAdapterResponse);
 
-  // Registers a schema. Once a schema has been published, it cannot be modified or removed.
+  // Registers a schema. A registered schema cannot be modified. Schema removal is available
+  // only in v2 mode through DeleteSchema; v1 registration behavior is unchanged.
   rpc RegisterSchema(RegisterSchemaRequest) returns (RegisterSchemaResponse);
   // Lists the schemas that have been previously registered
   rpc ListSchemas(ListSchemasRequest) returns (ListSchemasResponse);
@@ -92,7 +93,9 @@ service MetadataStoreService {
   // - The specified metadata must have already been created prior to the alias registration.
   // - This method may be called with an already registered alias name in order to update the target mapped for that existing alias.
   rpc CreateAlias(CreateAliasRequest) returns (CreateAliasResponse);
-  // Removes a registered alias
+  // Removes a registered alias without deleting its target metadata. This method remains
+  // available in both API modes. If the alias is absent, v2 returns NOT_FOUND while v1 returns
+  // success with unregistered=false.
   rpc DeleteAlias(DeleteAliasRequest) returns (DeleteAliasResponse);
 
   // Creates all of the metadata entries contained in the provided JSON document.
@@ -101,6 +104,101 @@ service MetadataStoreService {
   // The response will contain all of the associated objects from the metadata store.  If the object
   // already exists, the existing object will be returned; otherwise, a new object will be created
   rpc CreateFromJsonDocument(CreateFromJsonDocumentRequest) returns (CreateFromJsonDocumentResponse);
+
+  // These delete RPCs are on the retained MetadataStoreService and are executable only in v2 API
+  // mode. In v1 mode, new RPCs return UNIMPLEMENTED without changing metadata or test data; this
+  // does not add a metadata HTTP delete route or a parallel v2 metadata service.
+  //
+  // Ordinary kinds use UUID identifiers and per-item force; Schema uses its exact registered ID,
+  // and Alias uses its exact registered name. Alias names are not ordinary UUID identifiers.
+  // Without force, references from retained test data or metadata restrict an ordinary target;
+  // Alias and Schema references do not. With force, eligible incoming links and memberships are
+  // removed while linked TestResults, Steps, Measurements, their value data and payloads, and
+  // other metadata are retained. Forced UUT deletion also removes its owned UutInstances; direct
+  // UutInstance deletion does not remove its UUT or sibling instances. Aliases targeting an
+  // ordinary resource are removed regardless of force. Force may override future
+  // finalization-based relationship immutability, but does not bypass authorization or other
+  // delete checks.
+  //
+  // Every new singular request and batch is atomic. New delete RPCs return empty responses on
+  // success; the existing successful DeleteAlias response is unchanged. Each batch is
+  // homogeneous and contains 1 to 1,000 requests. Ordinary items may use different force values;
+  // Schema and Alias requests do not have force. Empty batches return INVALID_ARGUMENT; batches
+  // larger than 1,000 return RESOURCE_EXHAUSTED before per-item validation or database access.
+  // For admitted batches, check shape (INVALID_ARGUMENT), then the first missing direct target in
+  // request order (NOT_FOUND), then reference restrictions (FAILED_PRECONDITION), then delete
+  // impact (RESOURCE_EXHAUSTED). No allow_missing option is defined.
+  //
+  // Before mutation, count distinct observed metadata rows to delete: direct targets, owned
+  // UutInstances, and aliases targeting those resources. Exclude link rows removed and retained
+  // rows whose links change. Exactly 50,000 observed rows passes; more than 50,000 returns
+  // RESOURCE_EXHAUSTED before effects. This preflight guardrail is not a commit-time ceiling:
+  // there is no capacity reservation or final recount, and concurrent changes can increase actual
+  // deletions beyond the observed count.
+  //
+  // During concurrent changes, error selection is best effort; no additional synchronization or
+  // retries guarantee a particular status. No cross-request replay guarantee is provided; a
+  // repeated request may observe that its target is already missing. Requests preserve database
+  // reference integrity. A failure has no partial effects from that request, but does not undo
+  // independent concurrent commits.
+  // Deletes an Operator by UUID.
+  rpc DeleteOperator(DeleteOperatorRequest) returns (DeleteOperatorResponse);
+  // Atomically deletes Operators by UUID using each request's force setting.
+  rpc BatchDeleteOperators(BatchDeleteOperatorsRequest) returns (BatchDeleteOperatorsResponse);
+
+  // Deletes a TestStation by UUID.
+  rpc DeleteTestStation(DeleteTestStationRequest) returns (DeleteTestStationResponse);
+  // Atomically deletes TestStations by UUID using each request's force setting.
+  rpc BatchDeleteTestStations(BatchDeleteTestStationsRequest) returns (BatchDeleteTestStationsResponse);
+
+  // Deletes a TestDescription by UUID.
+  rpc DeleteTestDescription(DeleteTestDescriptionRequest) returns (DeleteTestDescriptionResponse);
+  // Atomically deletes TestDescriptions by UUID using each request's force setting.
+  rpc BatchDeleteTestDescriptions(BatchDeleteTestDescriptionsRequest) returns (BatchDeleteTestDescriptionsResponse);
+
+  // Deletes a UUT by UUID. With force, its owned UutInstances are also deleted.
+  rpc DeleteUut(DeleteUutRequest) returns (DeleteUutResponse);
+  // Atomically deletes UUTs by UUID using each request's force setting.
+  rpc BatchDeleteUuts(BatchDeleteUutsRequest) returns (BatchDeleteUutsResponse);
+
+  // Deletes a UutInstance by UUID without deleting its UUT.
+  rpc DeleteUutInstance(DeleteUutInstanceRequest) returns (DeleteUutInstanceResponse);
+  // Atomically deletes UutInstances by UUID using each request's force setting.
+  rpc BatchDeleteUutInstances(BatchDeleteUutInstancesRequest) returns (BatchDeleteUutInstancesResponse);
+
+  // Deletes a SoftwareItem by UUID.
+  rpc DeleteSoftwareItem(DeleteSoftwareItemRequest) returns (DeleteSoftwareItemResponse);
+  // Atomically deletes SoftwareItems by UUID using each request's force setting.
+  rpc BatchDeleteSoftwareItems(BatchDeleteSoftwareItemsRequest) returns (BatchDeleteSoftwareItemsResponse);
+
+  // Deletes a HardwareItem by UUID.
+  rpc DeleteHardwareItem(DeleteHardwareItemRequest) returns (DeleteHardwareItemResponse);
+  // Atomically deletes HardwareItems by UUID using each request's force setting.
+  rpc BatchDeleteHardwareItems(BatchDeleteHardwareItemsRequest) returns (BatchDeleteHardwareItemsResponse);
+
+  // Deletes a TestAdapter by UUID.
+  rpc DeleteTestAdapter(DeleteTestAdapterRequest) returns (DeleteTestAdapterResponse);
+  // Atomically deletes TestAdapters by UUID using each request's force setting.
+  rpc BatchDeleteTestAdapters(BatchDeleteTestAdaptersRequest) returns (BatchDeleteTestAdaptersResponse);
+
+  // Deletes a Test by UUID.
+  rpc DeleteTest(DeleteTestRequest) returns (DeleteTestResponse);
+  // Atomically deletes Tests by UUID using each request's force setting.
+  rpc BatchDeleteTests(BatchDeleteTestsRequest) returns (BatchDeleteTestsResponse);
+
+  // Deletes a Schema by its exact registered schema ID and clears associations on the nine
+  // metadata kinds while retaining their Extension values, resource IDs, stored identity keys,
+  // and existing Aliases. TestResults, Steps, and Measurements have no Schema associations;
+  // non-empty v2 datastore-resource schema_id values remain rejected. This operation has no
+  // force option.
+  rpc DeleteSchema(DeleteSchemaRequest) returns (DeleteSchemaResponse);
+  // Atomically deletes Schemas by exact registered schema ID. This operation has no force option.
+  rpc BatchDeleteSchemas(BatchDeleteSchemasRequest) returns (BatchDeleteSchemasResponse);
+
+  // Atomically deletes Aliases by exact registered name without deleting their target metadata.
+  // This operation has no force option; the existing DeleteAlias RPC remains available in both
+  // API modes.
+  rpc BatchDeleteAliases(BatchDeleteAliasesRequest) returns (BatchDeleteAliasesResponse);
 }
 
 // Message sent to get the UUT instance associated with the given identifier.
@@ -470,13 +568,15 @@ message CreateAliasResponse {
   Alias alias = 1;
 }
 
+// Request to delete an Alias by its exact registered name.
 message DeleteAliasRequest {
-  // The name of the alias to unregister
+  // Required. Exact registered Alias name.
   string alias_name = 1;
 }
 
 message DeleteAliasResponse {
-  // Whether the action resulted in the specified alias becoming unregistered. (False if the alias does not exist.)
+  // Whether the action unregistered the alias. In v1 mode, false means the alias did not exist;
+  // in v2 mode, an absent alias returns NOT_FOUND.
   bool unregistered = 1;
 }
 
@@ -516,3 +616,211 @@ message CreateFromJsonDocumentResponse {
   // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
   repeated TestAdapter test_adapters = 9;
 }
+
+// Request to delete one Operator by UUID.
+message DeleteOperatorRequest {
+  // Required. UUID of the Operator to delete; aliases are not accepted.
+  string operator_id = 1;
+  // If true, remove incoming links but retain linked test data and other metadata.
+  bool force = 2;
+}
+
+// Empty response returned when an Operator is deleted successfully.
+message DeleteOperatorResponse {}
+
+// Request to atomically delete Operators; each item has its own force value.
+message BatchDeleteOperatorsRequest {
+  // 1 to 1,000 Operator delete requests.
+  repeated DeleteOperatorRequest requests = 1;
+}
+
+// Empty response returned when all Operators are deleted successfully.
+message BatchDeleteOperatorsResponse {}
+
+// Request to delete one TestStation by UUID.
+message DeleteTestStationRequest {
+  // Required. UUID of the TestStation to delete; aliases are not accepted.
+  string test_station_id = 1;
+  // If true, remove incoming links but retain linked test data and other metadata.
+  bool force = 2;
+}
+
+// Empty response returned when a TestStation is deleted successfully.
+message DeleteTestStationResponse {}
+
+// Request to atomically delete TestStations; each item has its own force value.
+message BatchDeleteTestStationsRequest {
+  // 1 to 1,000 TestStation delete requests.
+  repeated DeleteTestStationRequest requests = 1;
+}
+
+// Empty response returned when all TestStations are deleted successfully.
+message BatchDeleteTestStationsResponse {}
+
+// Request to delete one TestDescription by UUID.
+message DeleteTestDescriptionRequest {
+  // Required. UUID of the TestDescription to delete; aliases are not accepted.
+  string test_description_id = 1;
+  // If true, remove incoming links but retain linked test data and other metadata.
+  bool force = 2;
+}
+
+// Empty response returned when a TestDescription is deleted successfully.
+message DeleteTestDescriptionResponse {}
+
+// Request to atomically delete TestDescriptions; each item has its own force value.
+message BatchDeleteTestDescriptionsRequest {
+  // 1 to 1,000 TestDescription delete requests.
+  repeated DeleteTestDescriptionRequest requests = 1;
+}
+
+// Empty response returned when all TestDescriptions are deleted successfully.
+message BatchDeleteTestDescriptionsResponse {}
+
+// Request to delete one UUT by UUID.
+message DeleteUutRequest {
+  // Required. UUID of the UUT to delete; aliases are not accepted.
+  string uut_id = 1;
+  // If true, remove incoming links and delete the UUT's owned UutInstances. Retain linked test
+  // data and TestDescriptions.
+  bool force = 2;
+}
+
+// Empty response returned when a UUT is deleted successfully.
+message DeleteUutResponse {}
+
+// Request to atomically delete UUTs; each item has its own force value.
+message BatchDeleteUutsRequest {
+  // 1 to 1,000 UUT delete requests.
+  repeated DeleteUutRequest requests = 1;
+}
+
+// Empty response returned when all UUTs are deleted successfully.
+message BatchDeleteUutsResponse {}
+
+// Request to delete one UutInstance by UUID.
+message DeleteUutInstanceRequest {
+  // Required. UUID of the UutInstance to delete; aliases are not accepted.
+  string uut_instance_id = 1;
+  // If true, remove incoming links but retain linked test data and the owning UUT.
+  bool force = 2;
+}
+
+// Empty response returned when a UutInstance is deleted successfully.
+message DeleteUutInstanceResponse {}
+
+// Request to atomically delete UutInstances; each item has its own force value.
+message BatchDeleteUutInstancesRequest {
+  // 1 to 1,000 UutInstance delete requests.
+  repeated DeleteUutInstanceRequest requests = 1;
+}
+
+// Empty response returned when all UutInstances are deleted successfully.
+message BatchDeleteUutInstancesResponse {}
+
+// Request to delete one SoftwareItem by UUID.
+message DeleteSoftwareItemRequest {
+  // Required. UUID of the SoftwareItem to delete; aliases are not accepted.
+  string software_item_id = 1;
+  // If true, remove incoming links but retain linked test data and other metadata.
+  bool force = 2;
+}
+
+// Empty response returned when a SoftwareItem is deleted successfully.
+message DeleteSoftwareItemResponse {}
+
+// Request to atomically delete SoftwareItems; each item has its own force value.
+message BatchDeleteSoftwareItemsRequest {
+  // 1 to 1,000 SoftwareItem delete requests.
+  repeated DeleteSoftwareItemRequest requests = 1;
+}
+
+// Empty response returned when all SoftwareItems are deleted successfully.
+message BatchDeleteSoftwareItemsResponse {}
+
+// Request to delete one HardwareItem by UUID.
+message DeleteHardwareItemRequest {
+  // Required. UUID of the HardwareItem to delete; aliases are not accepted.
+  string hardware_item_id = 1;
+  // If true, remove incoming links but retain linked test data and other metadata.
+  bool force = 2;
+}
+
+// Empty response returned when a HardwareItem is deleted successfully.
+message DeleteHardwareItemResponse {}
+
+// Request to atomically delete HardwareItems; each item has its own force value.
+message BatchDeleteHardwareItemsRequest {
+  // 1 to 1,000 HardwareItem delete requests.
+  repeated DeleteHardwareItemRequest requests = 1;
+}
+
+// Empty response returned when all HardwareItems are deleted successfully.
+message BatchDeleteHardwareItemsResponse {}
+
+// Request to delete one TestAdapter by UUID.
+message DeleteTestAdapterRequest {
+  // Required. UUID of the TestAdapter to delete; aliases are not accepted.
+  string test_adapter_id = 1;
+  // If true, remove incoming links but retain linked test data and other metadata.
+  bool force = 2;
+}
+
+// Empty response returned when a TestAdapter is deleted successfully.
+message DeleteTestAdapterResponse {}
+
+// Request to atomically delete TestAdapters; each item has its own force value.
+message BatchDeleteTestAdaptersRequest {
+  // 1 to 1,000 TestAdapter delete requests.
+  repeated DeleteTestAdapterRequest requests = 1;
+}
+
+// Empty response returned when all TestAdapters are deleted successfully.
+message BatchDeleteTestAdaptersResponse {}
+
+// Request to delete one Test by UUID.
+message DeleteTestRequest {
+  // Required. UUID of the Test to delete; aliases are not accepted.
+  string test_id = 1;
+  // If true, remove incoming links but retain linked test data and other metadata.
+  bool force = 2;
+}
+
+// Empty response returned when a Test is deleted successfully.
+message DeleteTestResponse {}
+
+// Request to atomically delete Tests; each item has its own force value.
+message BatchDeleteTestsRequest {
+  // 1 to 1,000 Test delete requests.
+  repeated DeleteTestRequest requests = 1;
+}
+
+// Empty response returned when all Tests are deleted successfully.
+message BatchDeleteTestsResponse {}
+
+// Request to delete a Schema by its exact registered ID.
+message DeleteSchemaRequest {
+  // Required. Exact registered Schema ID; this is not an ordinary UUID identifier.
+  string schema_id = 1;
+}
+
+// Empty response returned when a Schema is deleted successfully.
+message DeleteSchemaResponse {}
+
+// Request to atomically delete Schemas by their exact registered IDs; no force option is available.
+message BatchDeleteSchemasRequest {
+  // 1 to 1,000 Schema delete requests.
+  repeated DeleteSchemaRequest requests = 1;
+}
+
+// Empty response returned when all Schemas are deleted successfully.
+message BatchDeleteSchemasResponse {}
+
+// Request to atomically delete Aliases by their exact registered names; no force option is available.
+message BatchDeleteAliasesRequest {
+  // 1 to 1,000 Alias delete requests. Each uses the exact registered alias_name.
+  repeated DeleteAliasRequest requests = 1;
+}
+
+// Empty response returned when all Aliases are deleted successfully.
+message BatchDeleteAliasesResponse {}
