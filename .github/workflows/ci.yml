@@ -12,17 +12,17 @@ permissions: {}
 jobs:
   check_protos:
     name: Check .proto files
-    uses: ./.github/workflows/check_protos.yml
+    uses: $/.github/workflows/check_protos.yml
   check_workflows:
     name: Check workflows
-    uses: ./.github/workflows/check_workflows.yml
+    uses: $/.github/workflows/check_workflows.yml
     permissions:
       security-events: write
   create_ci_artifacts:
     name: Create CI artifacts
-    uses: ./.github/workflows/create_ci_artifacts.yml
+    uses: $/.github/workflows/create_ci_artifacts.yml
   trigger_azdo_ci:
     name: Trigger AzDO CI
-    uses: ./.github/workflows/trigger_azdo_ci.yml
+    uses: $/.github/workflows/trigger_azdo_ci.yml
     secrets:
       AZDO_PIPELINE_TRIGGERS: ${{ secrets.AZDO_PIPELINE_TRIGGERS }}

@@ -12,9 +12,9 @@ permissions: {}
 jobs:
   check_protos:
     name: Check .proto files
-    uses: ./.github/workflows/check_protos.yml
+    uses: $/.github/workflows/check_protos.yml
   check_workflows:
     name: Check workflows
-    uses: ./.github/workflows/check_workflows.yml
+    uses: $/.github/workflows/check_workflows.yml
     permissions:
       security-events: write
