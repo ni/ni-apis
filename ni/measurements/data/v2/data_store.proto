@@ -339,6 +339,10 @@ message Step {
   // both is invalid. On reads, test is populated only when requested by
   // read_mask or OData expansion.
   ni.measurements.metadata.v1.Test test = 27;
+  // Output only. True once this Step has committed at least one direct child.
+  // The service manages this historical value and does not clear it after
+  // deletion.
+  bool has_children = 28;
 }
 
 enum Outcome {
