@@ -4,7 +4,7 @@ package ni.measurements.data.v2;
 
 import "google/protobuf/field_mask.proto";
 import "google/protobuf/empty.proto";
-import "data_store.proto";
+import "ni/measurements/data/v2/data_store.proto";
 
 option csharp_namespace = "NationalInstruments.Measurements.Data.V2";
 option go_package = "datav2";
