@@ -4,7 +4,7 @@ package ni.measurements.data.v2;
 
 import "google/protobuf/field_mask.proto";
 import "google/protobuf/empty.proto";
-import "ni/measurements/data/v2/data_store.proto";
+import "data_store.proto";
 
 option csharp_namespace = "NationalInstruments.Measurements.Data.V2";
 option go_package = "datav2";
@@ -107,14 +107,21 @@ message QueryTestResultsRequest {
   // Optional. Fields to return for each matching TestResult. Use this mask
   // instead of OData $select for gRPC projections.
   google.protobuf.FieldMask read_mask = 2;
+  // Optional. Maximum TestResults to return in this page. Zero or unset uses
+  // the service default; values above the service maximum are capped.
+  int32 page_size = 3;
+  // Optional. Opaque token from a previous response's next_page_token. Omit
+  // for the first page; all other request fields must match the original query.
+  string page_token = 4;
 }
 
 message QueryTestResultsResponse {
   // Matching TestResults as flat resources. Use QuerySteps to retrieve their
   // Steps.
   repeated TestResult test_results = 1;
-  // Reserved for future gRPC pagination. Current queries return an empty value.
-  string next_link = 2;
+  // Token for the next page. Empty when the query is complete. A page may be
+  // empty and still carry a token.
+  string next_page_token = 2;
 }
 
 message UpdateTestResultRequest {
@@ -216,14 +223,21 @@ message QueryStepsRequest {
   // Optional. Fields to return for each matching Step. Use this mask instead
   // of OData $select for gRPC projections.
   google.protobuf.FieldMask read_mask = 2;
+  // Optional. Maximum Steps to return in this page. Zero or unset uses the
+  // service default; values above the service maximum are capped.
+  int32 page_size = 3;
+  // Optional. Opaque token from a previous response's next_page_token. Omit
+  // for the first page; all other request fields must match the original query.
+  string page_token = 4;
 }
 
 message QueryStepsResponse {
   // Matching Steps as flat resources. Descendants are returned as
   // separate matching Steps linked through parent_step_id.
   repeated Step steps = 1;
-  // Reserved for future gRPC pagination. Current queries return an empty value.
-  string next_link = 2;
+  // Token for the next page. Empty when the query is complete. A page may be
+  // empty and still carry a token.
+  string next_page_token = 2;
 }
 
 message UpdateStepRequest {
@@ -324,12 +338,19 @@ message QueryMeasurementsRequest {
   // Optional. Fields to return for each matching Measurement. Use this mask
   // instead of OData $select for gRPC projections.
   google.protobuf.FieldMask read_mask = 2;
+  // Optional. Maximum Measurements to return in this page. Zero or unset uses
+  // the service default; values above the service maximum are capped.
+  int32 page_size = 3;
+  // Optional. Opaque token from a previous response's next_page_token. Omit
+  // for the first page; all other request fields must match the original query.
+  string page_token = 4;
 }
 
 message QueryMeasurementsResponse {
   repeated Measurement measurements = 1;
-  // Reserved for future gRPC pagination. Current queries return an empty value.
-  string next_link = 2;
+  // Token for the next page. Empty when the query is complete. A page may be
+  // empty and still carry a token.
+  string next_page_token = 2;
 }
 
 message UpdateMeasurementRequest {

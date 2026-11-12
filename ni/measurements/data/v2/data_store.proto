@@ -136,9 +136,10 @@ message Measurement {
   google.protobuf.Struct extension = 18;
   // Reserved for a future schema associated with the extension. Must be empty.
   string schema_id = 19;
-  // Optional. For this resource, the service derives the omitted timing value
-  // when exactly two of start_date_time, end_date_time, and duration are
-  // provided. All three must be consistent when provided. Zero or one is
+  // Optional. Values are quantized to whole microseconds. Responses encode the
+  // value as whole seconds plus the exact remaining microseconds. Exactly two
+  // timing values derive only an absent third. An explicit triple is preserved
+  // at supported precision without agreement validation. Zero or one is
   // accepted without derivation. Child timing does not update this resource.
   ni.protobuf.types.PrecisionDuration duration = 20;
   // Output only. Conditions copied from the owning Step.
@@ -215,9 +216,10 @@ message TestResult {
   string uut_id = 18;
   // Optional. Labels used to classify the test result.
   repeated string keywords = 19;
-  // Optional. For this resource, the service derives the omitted timing value
-  // when exactly two of start_date_time, end_date_time, and duration are
-  // provided. All three must be consistent when provided. Zero or one is
+  // Optional. Values are quantized to whole microseconds. Responses encode the
+  // value as whole seconds plus the exact remaining microseconds. Exactly two
+  // timing values derive only an absent third. An explicit triple is preserved
+  // at supported precision without agreement validation. Zero or one is
   // accepted without derivation. Child timing does not update this resource.
   ni.protobuf.types.PrecisionDuration duration = 20;
   // Output only.
@@ -309,9 +311,10 @@ message Step {
   string schema_id = 15;
   // Optional. Labels used to classify the step.
   repeated string keywords = 16;
-  // Optional. For this resource, the service derives the omitted timing value
-  // when exactly two of start_date_time, end_date_time, and duration are
-  // provided. All three must be consistent when provided. Zero or one is
+  // Optional. Values are quantized to whole microseconds. Responses encode the
+  // value as whole seconds plus the exact remaining microseconds. Exactly two
+  // timing values derive only an absent third. An explicit triple is preserved
+  // at supported precision without agreement validation. Zero or one is
   // accepted without derivation. Child timing does not update this resource.
   ni.protobuf.types.PrecisionDuration duration = 17;
   // Output only. Step-name path including this step.
