@@ -56,25 +56,51 @@ Notes for LabVIEW client code:
 
 ## Generating a LabVIEW client
 
-The companion imports files from three locations. Give the generator these
-include paths, or copy the files into one folder that keeps the same relative
-paths:
+The grpc-labview generator needs the companion and every file it imports:
 
-| Include path | Provides |
+| Source | Files |
 |---|---|
-| `labview/` | `ni/measurements/data/v2/data_store_labview.proto`, `ni/measurements/data/v2/data_store_service_labview.proto` |
-| Repository root | `ni/datamonikers/v1/data_moniker.proto`, `ni/measurements/metadata/v1/metadata_store.proto`, `ni/protobuf/types/` (`array`, `attribute_value`, `precision_duration`, `precision_timestamp`, `scalar`, `vector`, `waveform`, `xydata`) |
-| Protobuf well-known types (shipped with `protoc` and gRPC tools) | `google/protobuf/any.proto`, `google/protobuf/empty.proto`, `google/protobuf/field_mask.proto` |
+| `labview/` in this repository | `ni/measurements/data/v2/data_store_labview.proto`, `ni/measurements/data/v2/data_store_service_labview.proto` |
+| `ni/` in this repository | `ni/datamonikers/v1/data_moniker.proto`, `ni/measurements/metadata/v1/metadata_store.proto`, `ni/protobuf/types/` (`array`, `attribute_value`, `precision_duration`, `precision_timestamp`, `scalar`, `vector`, `waveform`, `xydata`) |
+| Protobuf well-known types, from a `protoc` installation or the `grpcio-tools` Python package | `google/protobuf/any.proto`, `google/protobuf/empty.proto`, `google/protobuf/field_mask.proto` |
 
-Select `ni/measurements/data/v2/data_store_service_labview.proto` as the input
-file. When connecting, use a `host:port` address without a URL scheme.
+The generator may not resolve imports that span several include paths, so
+generate from one bundle folder:
+
+1. **Build the bundle.** Copy all of the files above into one folder,
+   keeping their relative paths, so that the folder contains `ni/` and
+   `google/` at its top level. Use a short folder path, because the generated
+   file paths are long.
+2. **Map a short drive.** Map the folder that contains the bundle to a drive
+   letter (for example with `subst`). Use that drive for every later step,
+   including the LabVIEW project; mixing two paths for the same files makes
+   LabVIEW load them twice.
+3. **Create an empty LabVIEW project** on the same drive.
+4. **Run the generator** (**Tools » gRPC Server-Client [2] - Code
+   Generator**):
+
+   | Field | Value |
+   |---|---|
+   | Proto file | `ni/measurements/data/v2/data_store_service_labview.proto` in the bundle |
+   | Import paths | The bundle folder only |
+   | Target project | The empty project |
+   | Target name | `My Computer` |
+   | Generate server or client | `gRPC Client` |
+
+   Select the service file; the generator follows its imports. Generating the
+   full MDS Data Store v2 client with grpc-labview 1.7.0.1 in LabVIEW 2026
+   takes about an hour.
+5. **Check the result.** The generated library has one VI per RPC, and a
+   mass compile of the generated folder reports no `Bad VI`.
+
+When connecting from the generated client, use a `host:port` address without
+a URL scheme. An `http://` prefix makes the call wait instead of failing.
 
 ## Keeping a companion in sync
 
 Update the companion in the same change as, or immediately after, any change to
 its canonical file. Derive it by applying only the transformations listed above
-to the current canonical file, and update the commit reference in the file
-header.
+to the current canonical file.
 
 A companion is in sync when all of these hold:
 

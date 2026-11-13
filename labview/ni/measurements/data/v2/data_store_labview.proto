@@ -8,14 +8,10 @@
 // RPCs, messages, field numbers, and wire types, except:
 //   - google.protobuf.Struct fields are bytes at the same field number:
 //     JsonValue.value (1), Measurement.extension (18),
-//     TestResult.extension (16), Step.extension (14). (DEC-044)
+//     TestResult.extension (16), Step.extension (14).
 //   - Step.children (26) is reserved; rebuild hierarchy with parent_step_id.
-//     (DEC-044)
 //   - TestResult.uut_instance, operator, test_station, test_description, uut
 //     (26-30) and Step.test (27) are reserved; use the matching *_id fields.
-//     (DEC-067 option a)
-//
-// Derived from ni-apis commit 78a9faaa57cd008b436f821939a944df5e56b540.
 
 syntax = "proto3";
 
@@ -50,8 +46,8 @@ message ErrorInformation {
 // Represents structured JSON data
 message JsonValue {
   // Required. The JSON content.
-  // LabVIEW companion (DEC-044): google.protobuf.Struct in the canonical
-  // contract. Carries the serialized Struct message bytes, not JSON text.
+  // LabVIEW companion: google.protobuf.Struct in the canonical contract.
+  // Carries the serialized Struct message bytes, not JSON text.
   bytes value = 1;
   // Reserved for a schema associated with the JSON content. Schema validation
   // is not implemented for the preview; requests that set this field fail.
@@ -153,15 +149,16 @@ message Measurement {
   ErrorInformation error_information = 17;
   // Optional. Open custom data; values may be any JSON kind. An update that
   // selects this field replaces the whole value.
-  // LabVIEW companion (DEC-044): google.protobuf.Struct in the canonical
-  // contract. Carries the serialized Struct message bytes, not JSON text.
+  // LabVIEW companion: google.protobuf.Struct in the canonical contract.
+  // Carries the serialized Struct message bytes, not JSON text.
   bytes extension = 18;
   // Reserved for a future schema associated with the extension. Must be empty.
   string schema_id = 19;
-  // Optional. For this resource, the service derives the omitted timing value
-  // when exactly two of start_date_time, end_date_time, and duration are
-  // provided. All three must be consistent when provided. Zero or one is
-  // accepted without derivation. Child timing does not update this resource.
+  // Optional. Stored at microsecond precision; additional precision is dropped.
+  // When exactly two of start_date_time, end_date_time, and duration are set,
+  // the service derives the missing value. Fewer values are accepted as given.
+  // If all three are set, they are preserved without checking that they agree.
+  // Timing on the owning Step or TestResult does not update this Measurement.
   ni.protobuf.types.PrecisionDuration duration = 20;
   // Output only. Conditions copied from the owning Step.
   repeated Condition conditions = 21;
@@ -230,8 +227,8 @@ message TestResult {
   string link = 15;
   // Optional. Open custom data; values may be any JSON kind. An update that
   // selects this field replaces the whole value.
-  // LabVIEW companion (DEC-044): google.protobuf.Struct in the canonical
-  // contract. Carries the serialized Struct message bytes, not JSON text.
+  // LabVIEW companion: google.protobuf.Struct in the canonical contract.
+  // Carries the serialized Struct message bytes, not JSON text.
   bytes extension = 16;
   // Reserved for a future schema associated with the extension. Must be empty.
   string schema_id = 17;
@@ -239,10 +236,11 @@ message TestResult {
   string uut_id = 18;
   // Optional. Labels used to classify the test result.
   repeated string keywords = 19;
-  // Optional. For this resource, the service derives the omitted timing value
-  // when exactly two of start_date_time, end_date_time, and duration are
-  // provided. All three must be consistent when provided. Zero or one is
-  // accepted without derivation. Child timing does not update this resource.
+  // Optional. Stored at microsecond precision; additional precision is dropped.
+  // When exactly two of start_date_time, end_date_time, and duration are set,
+  // the service derives the missing value. Fewer values are accepted as given.
+  // If all three are set, they are preserved without checking that they agree.
+  // Timing on child Steps and Measurements does not update this TestResult.
   ni.protobuf.types.PrecisionDuration duration = 20;
   // Output only.
   ni.protobuf.types.PrecisionTimestamp created_at = 21;
@@ -255,13 +253,14 @@ message TestResult {
   // Input only. Recursively nested Steps created with this TestResult. Use
   // QuerySteps to read the hierarchy as a flat, paged collection.
   repeated Step steps = 25;
-  // LabVIEW companion (DEC-067 option a): the singular inline metadata
-  // resources are removed because a LabVIEW cluster cannot leave them absent,
-  // and an empty inline object next to its ID is rejected by the service.
-  // Use uut_instance_id, operator_id, test_station_id, test_description_id,
-  // and uut_id (ID or alias) instead.
+  // LabVIEW companion: the singular inline metadata resources are removed
+  // because a LabVIEW cluster cannot leave them absent, and an empty inline
+  // object next to its ID is rejected by the service. Use uut_instance_id,
+  // operator_id, test_station_id, test_description_id, and uut_id (ID or
+  // alias) instead.
   reserved 26 to 30;
-  reserved "uut_instance", "operator", "test_station", "test_description", "uut";
+  reserved "uut_instance", "operator", "test_station", "test_description",
+      "uut";
   // Optional. On create, find or create these items and merge their IDs with
   // software_item_ids, removing duplicates. Populated on reads only when
   // requested by read_mask or OData expansion.
@@ -315,17 +314,19 @@ message Step {
   // integrations may store code-module inputs, outputs, and additional results
   // here when they are not represented as Conditions or Measurements. An update
   // that selects this field replaces the whole value.
-  // LabVIEW companion (DEC-044): google.protobuf.Struct in the canonical
-  // contract. Carries the serialized Struct message bytes, not JSON text.
+  // LabVIEW companion: google.protobuf.Struct in the canonical contract.
+  // Carries the serialized Struct message bytes, not JSON text.
   bytes extension = 14;
   // Reserved for a future schema associated with the extension. Must be empty.
   string schema_id = 15;
   // Optional. Labels used to classify the step.
   repeated string keywords = 16;
-  // Optional. For this resource, the service derives the omitted timing value
-  // when exactly two of start_date_time, end_date_time, and duration are
-  // provided. All three must be consistent when provided. Zero or one is
-  // accepted without derivation. Child timing does not update this resource.
+  // Optional. Stored at microsecond precision; additional precision is dropped.
+  // When exactly two of start_date_time, end_date_time, and duration are set,
+  // the service derives the missing value. Fewer values are accepted as given.
+  // If all three are set, they are preserved without checking that they agree.
+  // This duration does not update or validate against the parent Step or
+  // TestResult duration. Child timing does not update this Step.
   ni.protobuf.types.PrecisionDuration duration = 17;
   // Output only. Step-name path including this step.
   repeated string path = 18;
@@ -345,14 +346,13 @@ message Step {
   // Input on create and output when explicitly requested. Use Measurement
   // methods to modify existing measurements.
   repeated Measurement measurements = 25;
-  // LabVIEW companion (DEC-044): children is removed because Step would
-  // contain Step, which grpc-labview cannot generate. Create child Steps
-  // flat with parent_step_id instead.
+  // LabVIEW companion: children is removed because Step would contain Step,
+  // which grpc-labview cannot generate. Create child Steps flat with
+  // parent_step_id instead.
   reserved 26;
   reserved "children";
-  // LabVIEW companion (DEC-067 option a): the inline test resource is removed
-  // because a LabVIEW cluster cannot leave it absent. Use test_id (ID or
-  // alias) instead.
+  // LabVIEW companion: the inline test resource is removed because a LabVIEW
+  // cluster cannot leave it absent. Use test_id (ID or alias) instead.
   reserved 27;
   reserved "test";
   // Output only. True once this Step has committed at least one direct child.
