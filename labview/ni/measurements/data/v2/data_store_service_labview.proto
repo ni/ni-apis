@@ -2,11 +2,14 @@
 //
 // Use this file only to generate LabVIEW gRPC clients with grpc-labview.
 // Do not use it for servers or other clients. The canonical proto is the
-// source of truth; re-derive this file whenever the canonical proto changes.
+// source of truth; update this file in the same change as the canonical proto.
+// See README.md in this folder for the full list of differences.
 //
 // Wire-compatible with the canonical contract: same package, services,
 // RPCs, messages, field numbers, and wire types, except:
 //   - imports data_store_labview.proto instead of data_store.proto.
+//   - the LabVIEW companion messages omit inline metadata and nested
+//     resources, so LabVIEW requests carry only IDs and aliases.
 
 syntax = "proto3";
 
@@ -87,8 +90,9 @@ service DataStoreService {
 }
 
 message CreateTestResultRequest {
-  // Required. May include bounded nested Steps, Conditions, Measurements, and
-  // inline metadata. The request is atomic.
+  // Required. The request is atomic.
+  // LabVIEW companion: nested Steps, Measurements, and inline metadata are
+  // not available; create Steps with CreateStep and link metadata by ID.
   TestResult test_result = 1;
 }
 
@@ -200,10 +204,11 @@ message BatchDeleteTestResultsRequest {
 message BatchDeleteTestResultsResponse {}
 
 message CreateStepRequest {
-  // Required. May include bounded nested child Steps, Conditions,
-  // Measurements, and inline metadata. test_result_id identifies the owning
-  // TestResult. Set parent_step_id when creating a child Step; the parent Step
-  // must belong to the same TestResult. The request is atomic.
+  // Required. test_result_id identifies the owning TestResult. Set
+  // parent_step_id when creating a child Step; the parent Step must belong to
+  // the same TestResult. The request is atomic.
+  // LabVIEW companion: nested child Steps, Measurements, and inline metadata
+  // are not available; create each with its own call and link metadata by ID.
   Step step = 1;
 }
 
@@ -317,7 +322,7 @@ message BatchDeleteStepsRequest {
 message BatchDeleteStepsResponse {}
 
 message CreateMeasurementRequest {
-  // Required. Inline metadata must resolve to links present on the parent
+  // Required. Metadata IDs must resolve to links present on the parent
   // TestResult.
   Measurement measurement = 1;
 }

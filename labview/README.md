@@ -5,72 +5,91 @@ This folder contains LabVIEW-only companions of canonical `.proto` files under
 [grpc-labview](https://github.com/ni/grpc-labview). Do not use them for servers
 or for clients in other languages; use the canonical files instead.
 
-The canonical files remain the source of truth. A companion changes only the
-constructs that the grpc-labview generator cannot handle, such as recursive
-messages, and keeps the wire format compatible with the canonical contract.
+The canonical files remain the source of truth. A companion changes only what
+the grpc-labview generator or a LabVIEW client cannot handle, and keeps the
+wire format compatible with the canonical contract.
+
+Each companion has a `README.md` next to it that lists its differences from the
+canonical files.
+
+| Companion | Canonical | Details |
+|---|---|---|
+| `labview/ni/measurements/data/v2/` | `ni/measurements/data/v2/` | [MDS Data Store v2](ni/measurements/data/v2/README.md) |
+
+## Layout and naming
+
+A companion of `<path>/<name>.proto` is
+`labview/<path>/<name>_labview.proto`. It keeps the canonical package, service,
+message, and field names, because the gRPC method path
+(`/<package>.<service>/<method>`) must match the server. The `_labview` suffix
+stops a build from picking the wrong file by accident.
 
 ## Why this folder is outside `ni/`
 
-A companion keeps the canonical package, service, and message names, because
-the gRPC method path (`/<package>.<service>/<method>`) must match the server.
-Compiling a companion together with its canonical file therefore fails with
-duplicate definitions. Keeping companions under `labview/` keeps them out of
-the `ni/` compilation set. Companion file names end in `_labview` so that a
-build cannot pick the wrong file by accident.
+Because a companion reuses the canonical package and message names, compiling
+it together with its canonical file fails with duplicate definitions. The
+`ni/` check compiles every file under `ni/` in one `protoc` run, so companions
+live under `labview/` and are checked in a separate run.
 
-## MDS Data Store v2
+## Allowed differences
 
-| Companion | Canonical |
+A companion may differ from its canonical file only in these ways:
+
+| Difference | Rule |
 |---|---|
-| `labview/ni/measurements/data/v2/data_store_labview.proto` | `ni/measurements/data/v2/data_store.proto` |
-| `labview/ni/measurements/data/v2/data_store_service_labview.proto` | `ni/measurements/data/v2/data_store_service.proto` |
+| A recursive well-known type (`google.protobuf.Struct`) | Replace it with `bytes` at the same field number and name. The bytes carry the binary-serialized message |
+| A field LabVIEW cannot use | Remove it and reserve both its number and its name |
+| Imports | Import companions instead of canonical files, and drop imports that are no longer used |
+| Comments | Add notes for LabVIEW client authors |
 
-Package `ni.measurements.data.v2`, service `DataStoreService`, all RPCs, all
-messages, all enums, and all other field names and numbers are identical to
-the canonical files. Only these items differ:
+Everything else must match the canonical files: package, services, RPCs and
+their request and response types, messages, enums and enum values, and field
+names, numbers, types, labels, and `oneof` membership.
 
-| Canonical | Companion | Reason |
-|---|---|---|
-| `google.protobuf.Struct value = 1` in `JsonValue` | `bytes value = 1` | `Struct` is recursive |
-| `google.protobuf.Struct extension = 18` in `Measurement` | `bytes extension = 18` | `Struct` is recursive |
-| `google.protobuf.Struct extension = 16` in `TestResult` | `bytes extension = 16` | `Struct` is recursive |
-| `google.protobuf.Struct extension = 14` in `Step` | `bytes extension = 14` | `Struct` is recursive |
-| `repeated Step children = 26` in `Step` | `reserved 26; reserved "children";` | `Step` contains `Step` |
-| `uut_instance = 26`, `operator = 27`, `test_station = 28`, `test_description = 29`, `uut = 30` in `TestResult` | `reserved 26 to 30;` and the five names | A LabVIEW cluster cannot leave these absent, and the service rejects an empty inline resource sent with its ID |
-| `ni.measurements.metadata.v1.Test test = 27` in `Step` | `reserved 27; reserved "test";` | Same as above |
-| `import "google/protobuf/struct.proto"` | removed | No longer used |
-| Service file imports `data_store.proto` | Imports `data_store_labview.proto` | Points at the companion |
+The LabVIEW generator and LabVIEW clients also require that, for every message
+reachable from a companion service:
 
-Notes for LabVIEW client code:
+1. No message contains itself, directly or indirectly.
+2. No field uses `google.protobuf.Struct`, `Value`, `ListValue`, or `Any`.
+3. No field is a proto3 `optional` field.
+4. `oneof` fields are nested no more than two messages deep.
+5. No RPC is client- or server-streaming.
 
-- A `bytes` field that replaces a `Struct` carries the binary-serialized
-  `google.protobuf.Struct` message, not JSON text. Send zero-length bytes when
-  there is no value.
-- Create child steps individually with `parent_step_id`, and rebuild the step
-  hierarchy from `parent_step_id` when reading.
-- Link metadata with `uut_instance_id`, `operator_id`, `test_station_id`,
-  `test_description_id`, `uut_id`, and `Step.test_id` (ID or alias). Do not
-  request the removed inline resources in read masks; the service would send
-  them, and the LabVIEW client would discard them as unknown fields.
-- In update and read masks, use the canonical field names.
+## Automated check
+
+`.github/check_protos/_check_protos.py` compiles every companion with `protoc`
+and compares it with its canonical file. It fails on any difference that is not
+allowed above and on any LabVIEW constraint violation. The PR check runs it.
+To run it locally:
+
+```bash
+cd .github/check_protos
+poetry install
+poetry run python _check_protos.py
+```
+
+## Keeping a companion in sync
+
+Update the companion in the same change as its canonical file, and apply only
+the allowed differences. In particular:
+
+- Add every new canonical field to the companion with the same name, number,
+  and type, or reserve it if LabVIEW cannot use it.
+- Add new values to any enum at the end, and never renumber existing values.
+  Regenerate the LabVIEW client so it knows the new values.
+- Mirror comment-only changes where they help LabVIEW client authors.
 
 ## Generating a LabVIEW client
 
-The grpc-labview generator needs the companion and every file it imports:
+The grpc-labview generator may not resolve imports that span several include
+paths, so generate from one bundle folder:
 
-| Source | Files |
-|---|---|
-| `labview/` in this repository | `ni/measurements/data/v2/data_store_labview.proto`, `ni/measurements/data/v2/data_store_service_labview.proto` |
-| `ni/` in this repository | `ni/datamonikers/v1/data_moniker.proto`, `ni/measurements/metadata/v1/metadata_store.proto`, `ni/protobuf/types/` (`array`, `attribute_value`, `precision_duration`, `precision_timestamp`, `scalar`, `vector`, `waveform`, `xydata`) |
-| Protobuf well-known types, from a `protoc` installation or the `grpcio-tools` Python package | `google/protobuf/any.proto`, `google/protobuf/empty.proto`, `google/protobuf/field_mask.proto` |
-
-The generator may not resolve imports that span several include paths, so
-generate from one bundle folder:
-
-1. **Build the bundle.** Copy all of the files above into one folder,
-   keeping their relative paths, so that the folder contains `ni/` and
-   `google/` at its top level. Use a short folder path, because the generated
-   file paths are long.
+1. **Build the bundle.** Copy the companion and every file it imports into one
+   folder, keeping their relative paths, so that the folder contains `ni/` and
+   `google/` at its top level. The companion's `README.md` lists the files.
+   Take the `google/protobuf/` files from a `protoc` installation or the
+   `grpcio-tools` Python package. Use a short folder path, because the
+   generated file paths are long.
 2. **Map a short drive.** Map the folder that contains the bundle to a drive
    letter (for example with `subst`). Use that drive for every later step,
    including the LabVIEW project; mixing two paths for the same files makes
@@ -81,39 +100,23 @@ generate from one bundle folder:
 
    | Field | Value |
    |---|---|
-   | Proto file | `ni/measurements/data/v2/data_store_service_labview.proto` in the bundle |
+   | Proto file | The companion service file in the bundle |
    | Import paths | The bundle folder only |
    | Target project | The empty project |
    | Target name | `My Computer` |
    | Generate server or client | `gRPC Client` |
 
-   Select the service file; the generator follows its imports. Generating the
-   full MDS Data Store v2 client with grpc-labview 1.7.0.1 in LabVIEW 2026
-   takes about an hour.
-5. **Check the result.** The generated library has one VI per RPC, and a
-   mass compile of the generated folder reports no `Bad VI`.
+5. **Check the result.** The generated library has one VI per RPC, and a mass
+   compile of the generated folder reports no `Bad VI`.
 
-When connecting from the generated client, use a `host:port` address without
-a URL scheme. An `http://` prefix makes the call wait instead of failing.
+When connecting from the generated client, use a `host:port` address without a
+URL scheme. An `http://` prefix makes the call wait instead of failing.
 
-## Keeping a companion in sync
+## Adding a companion
 
-Update the companion in the same change as, or immediately after, any change to
-its canonical file. Derive it by applying only the transformations listed above
-to the current canonical file.
-
-A companion is in sync when all of these hold:
-
-1. Package, services, RPCs, request and response types, messages, enums, enum
-   values, field names, numbers, types, and labels match the canonical files,
-   except for the documented differences.
-2. No message refers to itself, directly or indirectly, in the import set.
-3. The import set contains no `google.protobuf.Struct`, `Value`, or `ListValue`,
-   and no `google.protobuf.Any` is reachable from the companion's services.
-4. There are no proto3 `optional` fields.
-5. `oneof` fields are nested no more than two messages deep.
-6. The companion's services have no streaming RPCs.
-7. The companion compiles with the include paths above.
-
-When adding values to `Outcome` or `Status`, add them at the end and regenerate
-the LabVIEW client.
+1. Create `labview/<path>/<name>_labview.proto` from the canonical file, using
+   only the allowed differences.
+2. Add a `README.md` next to it that lists its differences and the files the
+   generator needs, and add it to the table at the top of this file.
+3. Add a `.github/CODEOWNERS` entry with the same owners as the canonical file.
+4. Run the automated check.

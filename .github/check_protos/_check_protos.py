@@ -6,6 +6,8 @@ import sys
 import importlib.resources
 import grpc_tools.protoc
 
+from _check_labview_companions import check_labview_companions
+
 PROTO_ROOT_PATH = pathlib.Path(__file__).parent.parent.parent
 PROTO_PATH = PROTO_ROOT_PATH / "ni"
 GRPC_DEVICE_PROTO_PATH = PROTO_ROOT_PATH / "ni" / "grpcdevice" / "v1"
@@ -35,6 +37,15 @@ def main():
     result = grpc_tools.protoc.main(arguments)
     if result != 0:
         sys.exit(result)
+
+    # The LabVIEW companions under labview/ reuse canonical package names, so they are checked
+    # in a separate protoc run instead of with the files under ni/.
+    errors = check_labview_companions(PROTO_ROOT_PATH)
+    for error in errors:
+        print(f"::error::{error}")
+    if errors:
+        sys.exit(1)
+    print("LabVIEW companion .proto files match their canonical files.")
 
 if __name__ == "__main__":
     main()

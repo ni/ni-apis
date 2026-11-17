@@ -2,7 +2,8 @@
 //
 // Use this file only to generate LabVIEW gRPC clients with grpc-labview.
 // Do not use it for servers or other clients. The canonical proto is the
-// source of truth; re-derive this file whenever the canonical proto changes.
+// source of truth; update this file in the same change as the canonical proto.
+// See README.md in this folder for the full list of differences.
 //
 // Wire-compatible with the canonical contract: same package, services,
 // RPCs, messages, field numbers, and wire types, except:
@@ -10,15 +11,20 @@
 //     JsonValue.value (1), Measurement.extension (18),
 //     TestResult.extension (16), Step.extension (14).
 //   - Step.children (26) is reserved; rebuild hierarchy with parent_step_id.
-//   - TestResult.uut_instance, operator, test_station, test_description, uut
-//     (26-30) and Step.test (27) are reserved; use the matching *_id fields.
+//   - Inline metadata fields are reserved; use the matching *_id or *_ids
+//     fields: TestResult.uut_instance, operator, test_station,
+//     test_description, uut (26-30), software_items, hardware_items,
+//     test_adapters (31-33); Step.test (27); Measurement.software_items,
+//     hardware_items, test_adapters (26-28).
+//   - Nested resource creation fields are reserved; create each resource with
+//     its own call that names its parent: TestResult.steps (25),
+//     Step.measurements (25).
 
 syntax = "proto3";
 
 package ni.measurements.data.v2;
 
 import "ni/datamonikers/v1/data_moniker.proto";
-import "ni/measurements/metadata/v1/metadata_store.proto";
 import "ni/protobuf/types/attribute_value.proto";
 import "ni/protobuf/types/precision_duration.proto";
 import "ni/protobuf/types/precision_timestamp.proto";
@@ -170,18 +176,10 @@ message Measurement {
   string created_by = 24;
   // Output only.
   string updated_by = 25;
-  // Optional. On create, find or create these items and merge their IDs with
-  // software_item_ids, removing duplicates. Populated on reads only when
-  // requested by read_mask or OData expansion.
-  repeated ni.measurements.metadata.v1.SoftwareItem software_items = 26;
-  // Optional. On create, find or create these items and merge their IDs with
-  // hardware_item_ids, removing duplicates. Populated on reads only when
-  // requested by read_mask or OData expansion.
-  repeated ni.measurements.metadata.v1.HardwareItem hardware_items = 27;
-  // Optional. On create, find or create these items and merge their IDs with
-  // test_adapter_ids, removing duplicates. Populated on reads only when
-  // requested by read_mask or OData expansion.
-  repeated ni.measurements.metadata.v1.TestAdapter test_adapters = 28;
+  // LabVIEW companion: the inline metadata lists are removed. Use
+  // software_item_ids, hardware_item_ids, and test_adapter_ids instead.
+  reserved 26 to 28;
+  reserved "software_items", "hardware_items", "test_adapters";
   // Optional. Immutable publisher-defined comparison operation. The service
   // stores this value as provenance and does not derive Outcome from it.
   string comparison_type = 29;
@@ -250,29 +248,18 @@ message TestResult {
   string created_by = 23;
   // Output only.
   string updated_by = 24;
-  // Input only. Recursively nested Steps created with this TestResult. Use
-  // QuerySteps to read the hierarchy as a flat, paged collection.
-  repeated Step steps = 25;
-  // LabVIEW companion: the singular inline metadata resources are removed
-  // because a LabVIEW cluster cannot leave them absent, and an empty inline
-  // object next to its ID is rejected by the service. Use uut_instance_id,
-  // operator_id, test_station_id, test_description_id, and uut_id (ID or
-  // alias) instead.
-  reserved 26 to 30;
+  // LabVIEW companion: nested Step creation is removed. Create each Step with
+  // CreateStep and set its test_result_id instead.
+  reserved 25;
+  reserved "steps";
+  // LabVIEW companion: the inline metadata resources are removed because a
+  // LabVIEW cluster cannot leave them absent, and an empty inline object next
+  // to its ID is rejected by the service. Use uut_instance_id, operator_id,
+  // test_station_id, test_description_id, uut_id (ID or alias),
+  // software_item_ids, hardware_item_ids, and test_adapter_ids instead.
+  reserved 26 to 33;
   reserved "uut_instance", "operator", "test_station", "test_description",
-      "uut";
-  // Optional. On create, find or create these items and merge their IDs with
-  // software_item_ids, removing duplicates. Populated on reads only when
-  // requested by read_mask or OData expansion.
-  repeated ni.measurements.metadata.v1.SoftwareItem software_items = 31;
-  // Optional. On create, find or create these items and merge their IDs with
-  // hardware_item_ids, removing duplicates. Populated on reads only when
-  // requested by read_mask or OData expansion.
-  repeated ni.measurements.metadata.v1.HardwareItem hardware_items = 32;
-  // Optional. On create, find or create these items and merge their IDs with
-  // test_adapter_ids, removing duplicates. Populated on reads only when
-  // requested by read_mask or OData expansion.
-  repeated ni.measurements.metadata.v1.TestAdapter test_adapters = 33;
+      "uut", "software_items", "hardware_items", "test_adapters";
 }
 
 // Represents one execution of a test step.
@@ -343,9 +330,10 @@ message Step {
   // Input on create and output when explicitly requested. Use AddCondition and
   // RemoveCondition to modify existing conditions.
   repeated Condition conditions = 24;
-  // Input on create and output when explicitly requested. Use Measurement
-  // methods to modify existing measurements.
-  repeated Measurement measurements = 25;
+  // LabVIEW companion: nested Measurement creation is removed. Create each
+  // Measurement with CreateMeasurement and set its step_id instead.
+  reserved 25;
+  reserved "measurements";
   // LabVIEW companion: children is removed because Step would contain Step,
   // which grpc-labview cannot generate. Create child Steps flat with
   // parent_step_id instead.
