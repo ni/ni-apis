@@ -167,6 +167,8 @@ message Measurement {
   // Optional. Immutable publisher-defined comparison operation. The service
   // stores this value as provenance and does not derive Outcome from it.
   string comparison_type = 29;
+  // Optional collection of keywords associated with the measurement.
+  repeated string keywords = 30;
 }
 
 // Represents one execution of a test process.
