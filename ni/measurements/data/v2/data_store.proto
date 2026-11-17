@@ -136,10 +136,11 @@ message Measurement {
   google.protobuf.Struct extension = 18;
   // Reserved for a future schema associated with the extension. Must be empty.
   string schema_id = 19;
-  // Optional. For this resource, the service derives the omitted timing value
-  // when exactly two of start_date_time, end_date_time, and duration are
-  // provided. All three must be consistent when provided. Zero or one is
-  // accepted without derivation. Child timing does not update this resource.
+  // Optional. Stored at microsecond precision; additional precision is dropped.
+  // When exactly two of start_date_time, end_date_time, and duration are set,
+  // the service derives the missing value. Fewer values are accepted as given.
+  // If all three are set, they are preserved without checking that they agree.
+  // Timing on the owning Step or TestResult does not update this Measurement.
   ni.protobuf.types.PrecisionDuration duration = 20;
   // Output only. Conditions copied from the owning Step.
   repeated Condition conditions = 21;
@@ -215,10 +216,11 @@ message TestResult {
   string uut_id = 18;
   // Optional. Labels used to classify the test result.
   repeated string keywords = 19;
-  // Optional. For this resource, the service derives the omitted timing value
-  // when exactly two of start_date_time, end_date_time, and duration are
-  // provided. All three must be consistent when provided. Zero or one is
-  // accepted without derivation. Child timing does not update this resource.
+  // Optional. Stored at microsecond precision; additional precision is dropped.
+  // When exactly two of start_date_time, end_date_time, and duration are set,
+  // the service derives the missing value. Fewer values are accepted as given.
+  // If all three are set, they are preserved without checking that they agree.
+  // Timing on child Steps and Measurements does not update this TestResult.
   ni.protobuf.types.PrecisionDuration duration = 20;
   // Output only.
   ni.protobuf.types.PrecisionTimestamp created_at = 21;
@@ -309,10 +311,12 @@ message Step {
   string schema_id = 15;
   // Optional. Labels used to classify the step.
   repeated string keywords = 16;
-  // Optional. For this resource, the service derives the omitted timing value
-  // when exactly two of start_date_time, end_date_time, and duration are
-  // provided. All three must be consistent when provided. Zero or one is
-  // accepted without derivation. Child timing does not update this resource.
+  // Optional. Stored at microsecond precision; additional precision is dropped.
+  // When exactly two of start_date_time, end_date_time, and duration are set,
+  // the service derives the missing value. Fewer values are accepted as given.
+  // If all three are set, they are preserved without checking that they agree.
+  // This duration does not update or validate against the parent Step or
+  // TestResult duration. Child timing does not update this Step.
   ni.protobuf.types.PrecisionDuration duration = 17;
   // Output only. Step-name path including this step.
   repeated string path = 18;
@@ -339,6 +343,10 @@ message Step {
   // both is invalid. On reads, test is populated only when requested by
   // read_mask or OData expansion.
   ni.measurements.metadata.v1.Test test = 27;
+  // Output only. True once this Step has committed at least one direct child.
+  // The service manages this historical value and does not clear it after
+  // deletion.
+  bool has_children = 28;
 }
 
 enum Outcome {
