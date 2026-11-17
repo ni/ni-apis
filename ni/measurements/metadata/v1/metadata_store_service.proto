@@ -21,6 +21,14 @@ service MetadataStoreService {
   rpc QueryUutInstances(QueryUutInstancesRequest) returns (QueryUutInstancesResponse);
   // Creates a new UUT instance in the metadata store.
   rpc CreateUutInstance(CreateUutInstanceRequest) returns (CreateUutInstanceResponse);
+  // Deletes a UutInstance and its aliases, retaining its UUT and sibling instances.
+  // Returns NOT_FOUND if the UutInstance does not exist, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc DeleteUutInstance(DeleteUutInstanceRequest) returns (DeleteUutInstanceResponse);
+  // Deletes UutInstances and their aliases without deleting their UUTs.
+  // Returns NOT_FOUND for a missing UutInstance, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc BatchDeleteUutInstances(BatchDeleteUutInstancesRequest) returns (BatchDeleteUutInstancesResponse);
 
   // Gets the UUT associated with the identifier given in the request.
   rpc GetUut(GetUutRequest) returns (GetUutResponse);
@@ -28,6 +36,14 @@ service MetadataStoreService {
   rpc QueryUuts(QueryUutsRequest) returns (QueryUutsResponse);
   // Creates a new UUT in the metadata store.
   rpc CreateUut(CreateUutRequest) returns (CreateUutResponse);
+  // Deletes a UUT and its aliases. With force, also deletes its UutInstances.
+  // Returns NOT_FOUND if the UUT does not exist, or FAILED_PRECONDITION
+  // if references or owned instances prevent deletion.
+  rpc DeleteUut(DeleteUutRequest) returns (DeleteUutResponse);
+  // Deletes UUTs and their aliases. Forced requests also delete their UutInstances.
+  // Returns NOT_FOUND for a missing UUT, or FAILED_PRECONDITION
+  // if references or owned instances prevent deletion.
+  rpc BatchDeleteUuts(BatchDeleteUutsRequest) returns (BatchDeleteUutsResponse);
 
   // Gets the operator associated with the identifier given in the request.
   rpc GetOperator(GetOperatorRequest) returns (GetOperatorResponse);
@@ -35,6 +51,14 @@ service MetadataStoreService {
   rpc QueryOperators(QueryOperatorsRequest) returns (QueryOperatorsResponse);
   // Creates a new operator in the metadata store.
   rpc CreateOperator(CreateOperatorRequest) returns (CreateOperatorResponse);
+  // Deletes an Operator and its aliases.
+  // Returns NOT_FOUND if the Operator does not exist, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc DeleteOperator(DeleteOperatorRequest) returns (DeleteOperatorResponse);
+  // Deletes Operators and their aliases using each request's force setting.
+  // Returns NOT_FOUND for a missing Operator, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc BatchDeleteOperators(BatchDeleteOperatorsRequest) returns (BatchDeleteOperatorsResponse);
 
   // Gets the test description associated with the identifier given in the request.
   rpc GetTestDescription(GetTestDescriptionRequest) returns (GetTestDescriptionResponse);
@@ -42,6 +66,14 @@ service MetadataStoreService {
   rpc QueryTestDescriptions(QueryTestDescriptionsRequest) returns (QueryTestDescriptionsResponse);
   // Creates a new test description in the metadata store.
   rpc CreateTestDescription(CreateTestDescriptionRequest) returns (CreateTestDescriptionResponse);
+  // Deletes a TestDescription and its aliases.
+  // Returns NOT_FOUND if the TestDescription does not exist, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc DeleteTestDescription(DeleteTestDescriptionRequest) returns (DeleteTestDescriptionResponse);
+  // Deletes TestDescriptions and their aliases using each request's force setting.
+  // Returns NOT_FOUND for a missing TestDescription, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc BatchDeleteTestDescriptions(BatchDeleteTestDescriptionsRequest) returns (BatchDeleteTestDescriptionsResponse);
 
   // Gets the test associated with the identifier given in the request.
   rpc GetTest(GetTestRequest) returns (GetTestResponse);
@@ -49,6 +81,14 @@ service MetadataStoreService {
   rpc QueryTests(QueryTestsRequest) returns (QueryTestsResponse);
   // Creates a new test in the metadata store.
   rpc CreateTest(CreateTestRequest) returns (CreateTestResponse);
+  // Deletes a Test and its aliases.
+  // Returns NOT_FOUND if the Test does not exist, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc DeleteTest(DeleteTestRequest) returns (DeleteTestResponse);
+  // Deletes Tests and their aliases using each request's force setting.
+  // Returns NOT_FOUND for a missing Test, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc BatchDeleteTests(BatchDeleteTestsRequest) returns (BatchDeleteTestsResponse);
 
   // Gets the test station associated with the identifier given in the request.
   rpc GetTestStation(GetTestStationRequest) returns (GetTestStationResponse);
@@ -56,6 +96,14 @@ service MetadataStoreService {
   rpc QueryTestStations(QueryTestStationsRequest) returns (QueryTestStationsResponse);
   // Creates a new test station in the metadata store.
   rpc CreateTestStation(CreateTestStationRequest) returns (CreateTestStationResponse);
+  // Deletes a TestStation and its aliases.
+  // Returns NOT_FOUND if the TestStation does not exist, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc DeleteTestStation(DeleteTestStationRequest) returns (DeleteTestStationResponse);
+  // Deletes TestStations and their aliases using each request's force setting.
+  // Returns NOT_FOUND for a missing TestStation, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc BatchDeleteTestStations(BatchDeleteTestStationsRequest) returns (BatchDeleteTestStationsResponse);
 
   // Gets the hardware item associated with the identifier given in the request.
   rpc GetHardwareItem(GetHardwareItemRequest) returns (GetHardwareItemResponse);
@@ -63,6 +111,14 @@ service MetadataStoreService {
   rpc QueryHardwareItems(QueryHardwareItemsRequest) returns (QueryHardwareItemsResponse);
   // Creates a new hardware item in the metadata store.
   rpc CreateHardwareItem(CreateHardwareItemRequest) returns (CreateHardwareItemResponse);
+  // Deletes a HardwareItem and its aliases.
+  // Returns NOT_FOUND if the HardwareItem does not exist, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc DeleteHardwareItem(DeleteHardwareItemRequest) returns (DeleteHardwareItemResponse);
+  // Deletes HardwareItems and their aliases using each request's force setting.
+  // Returns NOT_FOUND for a missing HardwareItem, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc BatchDeleteHardwareItems(BatchDeleteHardwareItemsRequest) returns (BatchDeleteHardwareItemsResponse);
 
   // Gets the software item associated with the identifier given in the request.
   rpc GetSoftwareItem(GetSoftwareItemRequest) returns (GetSoftwareItemResponse);
@@ -70,6 +126,14 @@ service MetadataStoreService {
   rpc QuerySoftwareItems(QuerySoftwareItemsRequest) returns (QuerySoftwareItemsResponse);
   // Creates a new software item in the metadata store.
   rpc CreateSoftwareItem(CreateSoftwareItemRequest) returns (CreateSoftwareItemResponse);
+  // Deletes a SoftwareItem and its aliases.
+  // Returns NOT_FOUND if the SoftwareItem does not exist, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc DeleteSoftwareItem(DeleteSoftwareItemRequest) returns (DeleteSoftwareItemResponse);
+  // Deletes SoftwareItems and their aliases using each request's force setting.
+  // Returns NOT_FOUND for a missing SoftwareItem, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc BatchDeleteSoftwareItems(BatchDeleteSoftwareItemsRequest) returns (BatchDeleteSoftwareItemsResponse);
 
   // Gets the test adapter associated with the identifier given in the request.
   rpc GetTestAdapter(GetTestAdapterRequest) returns (GetTestAdapterResponse);
@@ -77,12 +141,27 @@ service MetadataStoreService {
   rpc QueryTestAdapters(QueryTestAdaptersRequest) returns (QueryTestAdaptersResponse);
   // Creates a new test adapter in the metadata store.
   rpc CreateTestAdapter(CreateTestAdapterRequest) returns (CreateTestAdapterResponse);
+  // Deletes a TestAdapter and its aliases.
+  // Returns NOT_FOUND if the TestAdapter does not exist, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc DeleteTestAdapter(DeleteTestAdapterRequest) returns (DeleteTestAdapterResponse);
+  // Deletes TestAdapters and their aliases using each request's force setting.
+  // Returns NOT_FOUND for a missing TestAdapter, or FAILED_PRECONDITION
+  // if references prevent deletion.
+  rpc BatchDeleteTestAdapters(BatchDeleteTestAdaptersRequest) returns (BatchDeleteTestAdaptersResponse);
 
-  // Registers a schema. A registered schema cannot be modified. Schema removal is available
-  // only in v2 mode through DeleteSchema; v1 registration behavior is unchanged.
+  // Registers a schema. A registered schema cannot be modified.
   rpc RegisterSchema(RegisterSchemaRequest) returns (RegisterSchemaResponse);
   // Lists the schemas that have been previously registered
   rpc ListSchemas(ListSchemasRequest) returns (ListSchemasResponse);
+  // Deletes a Schema and clears its associations with metadata.
+  // The metadata, extension attributes, and aliases are retained.
+  // Returns NOT_FOUND if the Schema does not exist.
+  rpc DeleteSchema(DeleteSchemaRequest) returns (DeleteSchemaResponse);
+  // Deletes Schemas and clears their associations with metadata.
+  // The metadata, extension attributes, and aliases are retained.
+  // Returns NOT_FOUND for a missing Schema.
+  rpc BatchDeleteSchemas(BatchDeleteSchemasRequest) returns (BatchDeleteSchemasResponse);
 
   // Gets the alias and its target (i.e., the underlying metadata that it represents)
   rpc GetAlias(GetAliasRequest) returns (GetAliasResponse);
@@ -93,10 +172,12 @@ service MetadataStoreService {
   // - The specified metadata must have already been created prior to the alias registration.
   // - This method may be called with an already registered alias name in order to update the target mapped for that existing alias.
   rpc CreateAlias(CreateAliasRequest) returns (CreateAliasResponse);
-  // Removes a registered alias without deleting its target metadata. This method remains
-  // available in both API modes. If the alias is absent, v2 returns NOT_FOUND while v1 returns
-  // success with unregistered=false.
+  // Removes an alias without deleting its target metadata.
+  // Returns NOT_FOUND if the alias does not exist.
   rpc DeleteAlias(DeleteAliasRequest) returns (DeleteAliasResponse);
+  // Removes aliases without deleting their target metadata.
+  // Returns NOT_FOUND for a missing alias.
+  rpc BatchDeleteAliases(BatchDeleteAliasesRequest) returns (BatchDeleteAliasesResponse);
 
   // Creates all of the metadata entries contained in the provided JSON document.
   // The JSON document should conform to the schema defined by
@@ -104,101 +185,6 @@ service MetadataStoreService {
   // The response will contain all of the associated objects from the metadata store.  If the object
   // already exists, the existing object will be returned; otherwise, a new object will be created
   rpc CreateFromJsonDocument(CreateFromJsonDocumentRequest) returns (CreateFromJsonDocumentResponse);
-
-  // These delete RPCs are on the retained MetadataStoreService and are executable only in v2 API
-  // mode. In v1 mode, new RPCs return UNIMPLEMENTED without changing metadata or test data; this
-  // does not add a metadata HTTP delete route or a parallel v2 metadata service.
-  //
-  // Ordinary kinds use UUID identifiers and per-item force; Schema uses its exact registered ID,
-  // and Alias uses its exact registered name. Alias names are not ordinary UUID identifiers.
-  // Without force, references from retained test data or metadata restrict an ordinary target;
-  // Alias and Schema references do not. With force, eligible incoming links and memberships are
-  // removed while linked TestResults, Steps, Measurements, their value data and payloads, and
-  // other metadata are retained. Forced UUT deletion also removes its owned UutInstances; direct
-  // UutInstance deletion does not remove its UUT or sibling instances. Aliases targeting an
-  // ordinary resource are removed regardless of force. Force may override future
-  // finalization-based relationship immutability, but does not bypass authorization or other
-  // delete checks.
-  //
-  // Every new singular request and batch is atomic. New delete RPCs return empty responses on
-  // success; the existing successful DeleteAlias response is unchanged. Each batch is
-  // homogeneous and contains 1 to 1,000 requests. Ordinary items may use different force values;
-  // Schema and Alias requests do not have force. Empty batches return INVALID_ARGUMENT; batches
-  // larger than 1,000 return RESOURCE_EXHAUSTED before per-item validation or database access.
-  // For admitted batches, check shape (INVALID_ARGUMENT), then the first missing direct target in
-  // request order (NOT_FOUND), then reference restrictions (FAILED_PRECONDITION), then delete
-  // impact (RESOURCE_EXHAUSTED). No allow_missing option is defined.
-  //
-  // Before mutation, count distinct observed metadata rows to delete: direct targets, owned
-  // UutInstances, and aliases targeting those resources. Exclude link rows removed and retained
-  // rows whose links change. Exactly 50,000 observed rows passes; more than 50,000 returns
-  // RESOURCE_EXHAUSTED before effects. This preflight guardrail is not a commit-time ceiling:
-  // there is no capacity reservation or final recount, and concurrent changes can increase actual
-  // deletions beyond the observed count.
-  //
-  // During concurrent changes, error selection is best effort; no additional synchronization or
-  // retries guarantee a particular status. No cross-request replay guarantee is provided; a
-  // repeated request may observe that its target is already missing. Requests preserve database
-  // reference integrity. A failure has no partial effects from that request, but does not undo
-  // independent concurrent commits.
-  // Deletes an Operator by UUID.
-  rpc DeleteOperator(DeleteOperatorRequest) returns (DeleteOperatorResponse);
-  // Atomically deletes Operators by UUID using each request's force setting.
-  rpc BatchDeleteOperators(BatchDeleteOperatorsRequest) returns (BatchDeleteOperatorsResponse);
-
-  // Deletes a TestStation by UUID.
-  rpc DeleteTestStation(DeleteTestStationRequest) returns (DeleteTestStationResponse);
-  // Atomically deletes TestStations by UUID using each request's force setting.
-  rpc BatchDeleteTestStations(BatchDeleteTestStationsRequest) returns (BatchDeleteTestStationsResponse);
-
-  // Deletes a TestDescription by UUID.
-  rpc DeleteTestDescription(DeleteTestDescriptionRequest) returns (DeleteTestDescriptionResponse);
-  // Atomically deletes TestDescriptions by UUID using each request's force setting.
-  rpc BatchDeleteTestDescriptions(BatchDeleteTestDescriptionsRequest) returns (BatchDeleteTestDescriptionsResponse);
-
-  // Deletes a UUT by UUID. With force, its owned UutInstances are also deleted.
-  rpc DeleteUut(DeleteUutRequest) returns (DeleteUutResponse);
-  // Atomically deletes UUTs by UUID using each request's force setting.
-  rpc BatchDeleteUuts(BatchDeleteUutsRequest) returns (BatchDeleteUutsResponse);
-
-  // Deletes a UutInstance by UUID without deleting its UUT.
-  rpc DeleteUutInstance(DeleteUutInstanceRequest) returns (DeleteUutInstanceResponse);
-  // Atomically deletes UutInstances by UUID using each request's force setting.
-  rpc BatchDeleteUutInstances(BatchDeleteUutInstancesRequest) returns (BatchDeleteUutInstancesResponse);
-
-  // Deletes a SoftwareItem by UUID.
-  rpc DeleteSoftwareItem(DeleteSoftwareItemRequest) returns (DeleteSoftwareItemResponse);
-  // Atomically deletes SoftwareItems by UUID using each request's force setting.
-  rpc BatchDeleteSoftwareItems(BatchDeleteSoftwareItemsRequest) returns (BatchDeleteSoftwareItemsResponse);
-
-  // Deletes a HardwareItem by UUID.
-  rpc DeleteHardwareItem(DeleteHardwareItemRequest) returns (DeleteHardwareItemResponse);
-  // Atomically deletes HardwareItems by UUID using each request's force setting.
-  rpc BatchDeleteHardwareItems(BatchDeleteHardwareItemsRequest) returns (BatchDeleteHardwareItemsResponse);
-
-  // Deletes a TestAdapter by UUID.
-  rpc DeleteTestAdapter(DeleteTestAdapterRequest) returns (DeleteTestAdapterResponse);
-  // Atomically deletes TestAdapters by UUID using each request's force setting.
-  rpc BatchDeleteTestAdapters(BatchDeleteTestAdaptersRequest) returns (BatchDeleteTestAdaptersResponse);
-
-  // Deletes a Test by UUID.
-  rpc DeleteTest(DeleteTestRequest) returns (DeleteTestResponse);
-  // Atomically deletes Tests by UUID using each request's force setting.
-  rpc BatchDeleteTests(BatchDeleteTestsRequest) returns (BatchDeleteTestsResponse);
-
-  // Deletes a Schema by its exact registered schema ID and clears associations on the nine
-  // metadata kinds while retaining their Extension values, resource IDs, stored identity keys,
-  // and existing Aliases. TestResults, Steps, and Measurements have no Schema associations;
-  // non-empty v2 datastore-resource schema_id values remain rejected. This operation has no
-  // force option.
-  rpc DeleteSchema(DeleteSchemaRequest) returns (DeleteSchemaResponse);
-  // Atomically deletes Schemas by exact registered schema ID. This operation has no force option.
-  rpc BatchDeleteSchemas(BatchDeleteSchemasRequest) returns (BatchDeleteSchemasResponse);
-
-  // Atomically deletes Aliases by exact registered name without deleting their target metadata.
-  // This operation has no force option; the existing DeleteAlias RPC remains available in both
-  // API modes.
-  rpc BatchDeleteAliases(BatchDeleteAliasesRequest) returns (BatchDeleteAliasesResponse);
 }
 
 // Message sent to get the UUT instance associated with the given identifier.
@@ -207,20 +193,10 @@ message GetUutInstanceRequest {
   string uut_instance_id = 1;
 }
 
-// Message returned when getting a UUT instance associated with the given identifier.
-message GetUutInstanceResponse {
-  // The metadata of the requested UUT instance.
-  UutInstance uut_instance = 1;
-}
-
 message QueryUutInstancesRequest {
   // an OData query string.  example "$filter=name eq 'Value'"
   // $expand is not supported
   string odata_query = 1;
-}
-
-message QueryUutInstancesResponse {
-  repeated UutInstance uut_instances = 1;
 }
 
 // Message sent to create a new UUT instance in the metadata store.
@@ -229,22 +205,48 @@ message CreateUutInstanceRequest {
   UutInstance uut_instance = 1;
 }
 
+// Request to delete one UutInstance by UUID.
+message DeleteUutInstanceRequest {
+  // Required. UUID of the UutInstance to delete; aliases are not accepted.
+  string uut_instance_id = 1;
+  // If true, removes references while retaining linked test data and the UUT.
+  // Otherwise, references prevent deletion.
+  bool force = 2;
+}
+
+// Request to delete UutInstances using each item's force setting.
+message BatchDeleteUutInstancesRequest {
+  // Required. UutInstance delete requests with distinct identifiers.
+  // Returns INVALID_ARGUMENT if empty or invalid, or RESOURCE_EXHAUSTED if too large.
+  repeated DeleteUutInstanceRequest requests = 1;
+}
+
+// Message returned when getting a UUT instance associated with the given identifier.
+message GetUutInstanceResponse {
+  // The metadata of the requested UUT instance.
+  UutInstance uut_instance = 1;
+}
+
+message QueryUutInstancesResponse {
+  repeated UutInstance uut_instances = 1;
+}
+
 // Message returned when creating a new UUT instance in the metadata store.
 message CreateUutInstanceResponse {
   // The identifier of the created UUT instance.
   string uut_instance_id = 1;
 }
 
+// Empty response returned when a UutInstance is deleted successfully.
+message DeleteUutInstanceResponse {}
+
+// Empty response returned when all UutInstances are deleted successfully.
+message BatchDeleteUutInstancesResponse {}
+
 // Message sent to get the UUT associated with the given identifier.
 message GetUutRequest {
   // Required. The identifier of the desired UUT.
   string uut_id = 1;
-}
-
-// Message returned when getting a UUT associated with the given identifier.
-message GetUutResponse {
-  // The metadata of the requested UUT.
-  Uut uut = 1;
 }
 
 message QueryUutsRequest {
@@ -253,14 +255,36 @@ message QueryUutsRequest {
   string odata_query = 1;
 }
 
-message QueryUutsResponse {
-  repeated Uut uuts = 1;
-}
-
 // Message sent to create a new UUT in the metadata store.
 message CreateUutRequest {
   // Required. The metadata of the UUT to be created.
   Uut uut = 1;
+}
+
+// Request to delete one UUT by UUID.
+message DeleteUutRequest {
+  // Required. UUID of the UUT to delete; aliases are not accepted.
+  string uut_id = 1;
+  // If true, also deletes this UUT's instances and removes references to the
+  // deleted resources. Related test data and other metadata are retained.
+  bool force = 2;
+}
+
+// Request to delete UUTs using each item's force setting.
+message BatchDeleteUutsRequest {
+  // Required. UUT delete requests with distinct identifiers.
+  // Returns INVALID_ARGUMENT if empty or invalid, or RESOURCE_EXHAUSTED if too large.
+  repeated DeleteUutRequest requests = 1;
+}
+
+// Message returned when getting a UUT associated with the given identifier.
+message GetUutResponse {
+  // The metadata of the requested UUT.
+  Uut uut = 1;
+}
+
+message QueryUutsResponse {
+  repeated Uut uuts = 1;
 }
 
 // Message returned when creating a new UUT in the metadata store.
@@ -269,16 +293,16 @@ message CreateUutResponse {
   string uut_id = 1;
 }
 
+// Empty response returned when a UUT is deleted successfully.
+message DeleteUutResponse {}
+
+// Empty response returned when all UUTs are deleted successfully.
+message BatchDeleteUutsResponse {}
+
 // Message sent to get the operator associated with the given identifier.
 message GetOperatorRequest {
   // Required. The identifier of the desired operator.
   string operator_id = 1;
-}
-
-// Message returned when getting an operator associated with the given identifier.
-message GetOperatorResponse {
-  // The metadata of the requested operator.
-  Operator operator = 1;
 }
 
 message QueryOperatorsRequest {
@@ -287,14 +311,36 @@ message QueryOperatorsRequest {
   string odata_query = 1;
 }
 
-message QueryOperatorsResponse {
-  repeated Operator operators = 1;
-}
-
 // Message sent to create a new operator in the metadata store.
 message CreateOperatorRequest {
   // Required. The metadata of the operator to be created.
   Operator operator = 1;
+}
+
+// Request to delete one Operator by UUID.
+message DeleteOperatorRequest {
+  // Required. UUID of the Operator to delete; aliases are not accepted.
+  string operator_id = 1;
+  // If true, removes references from other metadata and test data, retaining
+  // those resources. Otherwise, those references prevent deletion.
+  bool force = 2;
+}
+
+// Request to delete Operators using each item's force setting.
+message BatchDeleteOperatorsRequest {
+  // Required. Operator delete requests with distinct identifiers.
+  // Returns INVALID_ARGUMENT if empty or invalid, or RESOURCE_EXHAUSTED if too large.
+  repeated DeleteOperatorRequest requests = 1;
+}
+
+// Message returned when getting an operator associated with the given identifier.
+message GetOperatorResponse {
+  // The metadata of the requested operator.
+  Operator operator = 1;
+}
+
+message QueryOperatorsResponse {
+  repeated Operator operators = 1;
 }
 
 // Message returned when creating a new operator in the metadata store.
@@ -303,16 +349,16 @@ message CreateOperatorResponse {
   string operator_id = 1;
 }
 
+// Empty response returned when an Operator is deleted successfully.
+message DeleteOperatorResponse {}
+
+// Empty response returned when all Operators are deleted successfully.
+message BatchDeleteOperatorsResponse {}
+
 // Message sent to get the test description associated with the given identifier.
 message GetTestDescriptionRequest {
   // Required. The identifier of the desired test description.
   string test_description_id = 1;
-}
-
-// Message returned when getting a test description associated with the given identifier.
-message GetTestDescriptionResponse {
-  // The metadata of the requested test description.
-  TestDescription test_description = 1;
 }
 
 message QueryTestDescriptionsRequest {
@@ -321,14 +367,36 @@ message QueryTestDescriptionsRequest {
   string odata_query = 1;
 }
 
-message QueryTestDescriptionsResponse {
-  repeated TestDescription test_descriptions = 1;
-}
-
 // Message sent to create a new test description in the metadata store.
 message CreateTestDescriptionRequest {
   // Required. The metadata of the test description to be created.
   TestDescription test_description = 1;
+}
+
+// Request to delete one TestDescription by UUID.
+message DeleteTestDescriptionRequest {
+  // Required. UUID of the TestDescription to delete; aliases are not accepted.
+  string test_description_id = 1;
+  // If true, removes references from other metadata and test data, retaining
+  // those resources. Otherwise, those references prevent deletion.
+  bool force = 2;
+}
+
+// Request to delete TestDescriptions using each item's force setting.
+message BatchDeleteTestDescriptionsRequest {
+  // Required. TestDescription delete requests with distinct identifiers.
+  // Returns INVALID_ARGUMENT if empty or invalid, or RESOURCE_EXHAUSTED if too large.
+  repeated DeleteTestDescriptionRequest requests = 1;
+}
+
+// Message returned when getting a test description associated with the given identifier.
+message GetTestDescriptionResponse {
+  // The metadata of the requested test description.
+  TestDescription test_description = 1;
+}
+
+message QueryTestDescriptionsResponse {
+  repeated TestDescription test_descriptions = 1;
 }
 
 // Message returned when creating a new test description in the metadata store.
@@ -337,16 +405,16 @@ message CreateTestDescriptionResponse {
   string test_description_id = 1;
 }
 
+// Empty response returned when a TestDescription is deleted successfully.
+message DeleteTestDescriptionResponse {}
+
+// Empty response returned when all TestDescriptions are deleted successfully.
+message BatchDeleteTestDescriptionsResponse {}
+
 // Message sent to get the test associated with the given identifier.
 message GetTestRequest {
   // Required. The identifier of the desired test.
   string test_id = 1;
-}
-
-// Message returned when getting a test associated with the given identifier.
-message GetTestResponse {
-  // The metadata of the requested test.
-  Test test = 1;
 }
 
 message QueryTestsRequest {
@@ -355,14 +423,36 @@ message QueryTestsRequest {
   string odata_query = 1;
 }
 
-message QueryTestsResponse {
-  repeated Test tests = 1;
-}
-
 // Message sent to create a new test in the metadata store.
 message CreateTestRequest {
   // Required. The metadata of the test to be created.
   Test test = 1;
+}
+
+// Request to delete one Test by UUID.
+message DeleteTestRequest {
+  // Required. UUID of the Test to delete; aliases are not accepted.
+  string test_id = 1;
+  // If true, removes references from other metadata and test data, retaining
+  // those resources. Otherwise, those references prevent deletion.
+  bool force = 2;
+}
+
+// Request to delete Tests using each item's force setting.
+message BatchDeleteTestsRequest {
+  // Required. Test delete requests with distinct identifiers.
+  // Returns INVALID_ARGUMENT if empty or invalid, or RESOURCE_EXHAUSTED if too large.
+  repeated DeleteTestRequest requests = 1;
+}
+
+// Message returned when getting a test associated with the given identifier.
+message GetTestResponse {
+  // The metadata of the requested test.
+  Test test = 1;
+}
+
+message QueryTestsResponse {
+  repeated Test tests = 1;
 }
 
 // Message returned when creating a new test in the metadata store.
@@ -371,16 +461,16 @@ message CreateTestResponse {
   string test_id = 1;
 }
 
+// Empty response returned when a Test is deleted successfully.
+message DeleteTestResponse {}
+
+// Empty response returned when all Tests are deleted successfully.
+message BatchDeleteTestsResponse {}
+
 // Message sent to get the test station associated with the given identifier.
 message GetTestStationRequest {
   // Required. The identifier of the desired test station.
   string test_station_id = 1;
-}
-
-// Message returned when getting a test station associated with the given identifier.
-message GetTestStationResponse {
-  // The metadata of the requested test station.
-  TestStation test_station = 1;
 }
 
 message QueryTestStationsRequest {
@@ -389,14 +479,36 @@ message QueryTestStationsRequest {
   string odata_query = 1;
 }
 
-message QueryTestStationsResponse {
-  repeated TestStation test_stations = 1;
-}
-
 // Message sent to create a new test station in the metadata store.
 message CreateTestStationRequest {
   // Required. The metadata of the test station to be created.
   TestStation test_station = 1;
+}
+
+// Request to delete one TestStation by UUID.
+message DeleteTestStationRequest {
+  // Required. UUID of the TestStation to delete; aliases are not accepted.
+  string test_station_id = 1;
+  // If true, removes references from other metadata and test data, retaining
+  // those resources. Otherwise, those references prevent deletion.
+  bool force = 2;
+}
+
+// Request to delete TestStations using each item's force setting.
+message BatchDeleteTestStationsRequest {
+  // Required. TestStation delete requests with distinct identifiers.
+  // Returns INVALID_ARGUMENT if empty or invalid, or RESOURCE_EXHAUSTED if too large.
+  repeated DeleteTestStationRequest requests = 1;
+}
+
+// Message returned when getting a test station associated with the given identifier.
+message GetTestStationResponse {
+  // The metadata of the requested test station.
+  TestStation test_station = 1;
+}
+
+message QueryTestStationsResponse {
+  repeated TestStation test_stations = 1;
 }
 
 // Message returned when creating a new test station in the metadata store.
@@ -405,16 +517,16 @@ message CreateTestStationResponse {
   string test_station_id = 1;
 }
 
+// Empty response returned when a TestStation is deleted successfully.
+message DeleteTestStationResponse {}
+
+// Empty response returned when all TestStations are deleted successfully.
+message BatchDeleteTestStationsResponse {}
+
 // Message sent to get the hardware item associated with the given identifier.
 message GetHardwareItemRequest {
   // Required. The identifier of the desired hardware item.
   string hardware_item_id = 1;
-}
-
-// Message returned when getting the hardware item associated with the given identifier.
-message GetHardwareItemResponse {
-  // The metadata of the requested hardware item.
-  HardwareItem hardware_item = 1;
 }
 
 message QueryHardwareItemsRequest {
@@ -423,14 +535,36 @@ message QueryHardwareItemsRequest {
   string odata_query = 1;
 }
 
-message QueryHardwareItemsResponse {
-  repeated HardwareItem hardware_items = 1;
-}
-
 // Message sent to create new hardware item in the metadata store.
 message CreateHardwareItemRequest {
   // Required. The metadata of the hardware item to be created.
   HardwareItem hardware_item = 1;
+}
+
+// Request to delete one HardwareItem by UUID.
+message DeleteHardwareItemRequest {
+  // Required. UUID of the HardwareItem to delete; aliases are not accepted.
+  string hardware_item_id = 1;
+  // If true, removes references from other metadata and test data, retaining
+  // those resources. Otherwise, those references prevent deletion.
+  bool force = 2;
+}
+
+// Request to delete HardwareItems using each item's force setting.
+message BatchDeleteHardwareItemsRequest {
+  // Required. HardwareItem delete requests with distinct identifiers.
+  // Returns INVALID_ARGUMENT if empty or invalid, or RESOURCE_EXHAUSTED if too large.
+  repeated DeleteHardwareItemRequest requests = 1;
+}
+
+// Message returned when getting the hardware item associated with the given identifier.
+message GetHardwareItemResponse {
+  // The metadata of the requested hardware item.
+  HardwareItem hardware_item = 1;
+}
+
+message QueryHardwareItemsResponse {
+  repeated HardwareItem hardware_items = 1;
 }
 
 // Message returned when creating new hardware item in the metadata store.
@@ -439,16 +573,16 @@ message CreateHardwareItemResponse {
   string hardware_item_id = 1;
 }
 
+// Empty response returned when a HardwareItem is deleted successfully.
+message DeleteHardwareItemResponse {}
+
+// Empty response returned when all HardwareItems are deleted successfully.
+message BatchDeleteHardwareItemsResponse {}
+
 // Message sent to get the software item associated with the given identifier.
 message GetSoftwareItemRequest {
   // Required. The identifier of the desired software item.
   string software_item_id = 1;
-}
-
-// Message returned when getting the software item associated with the given identifier.
-message GetSoftwareItemResponse {
-  // The metadata of the requested software item.
-  SoftwareItem software_item = 1;
 }
 
 message QuerySoftwareItemsRequest {
@@ -457,14 +591,36 @@ message QuerySoftwareItemsRequest {
   string odata_query = 1;
 }
 
-message QuerySoftwareItemsResponse {
-  repeated SoftwareItem software_items = 1;
-}
-
 // Message sent to create new software item in the metadata store.
 message CreateSoftwareItemRequest {
   // Required. The metadata of the software item to be created.
   SoftwareItem software_item = 1;
+}
+
+// Request to delete one SoftwareItem by UUID.
+message DeleteSoftwareItemRequest {
+  // Required. UUID of the SoftwareItem to delete; aliases are not accepted.
+  string software_item_id = 1;
+  // If true, removes references from other metadata and test data, retaining
+  // those resources. Otherwise, those references prevent deletion.
+  bool force = 2;
+}
+
+// Request to delete SoftwareItems using each item's force setting.
+message BatchDeleteSoftwareItemsRequest {
+  // Required. SoftwareItem delete requests with distinct identifiers.
+  // Returns INVALID_ARGUMENT if empty or invalid, or RESOURCE_EXHAUSTED if too large.
+  repeated DeleteSoftwareItemRequest requests = 1;
+}
+
+// Message returned when getting the software item associated with the given identifier.
+message GetSoftwareItemResponse {
+  // The metadata of the requested software item.
+  SoftwareItem software_item = 1;
+}
+
+message QuerySoftwareItemsResponse {
+  repeated SoftwareItem software_items = 1;
 }
 
 // Message returned when creating new software item in the metadata store.
@@ -473,16 +629,16 @@ message CreateSoftwareItemResponse {
   string software_item_id = 1;
 }
 
+// Empty response returned when a SoftwareItem is deleted successfully.
+message DeleteSoftwareItemResponse {}
+
+// Empty response returned when all SoftwareItems are deleted successfully.
+message BatchDeleteSoftwareItemsResponse {}
+
 // Message sent to get the test adapter associated with the given identifier.
 message GetTestAdapterRequest {
   // Required. The identifier of the desired test adapter.
   string test_adapter_id = 1;
-}
-
-// Message returned when getting the test adapter associated with the given identifier.
-message GetTestAdapterResponse {
-  // The metadata of the requested test adapter.
-  TestAdapter test_adapter = 1;
 }
 
 message QueryTestAdaptersRequest {
@@ -491,14 +647,36 @@ message QueryTestAdaptersRequest {
   string odata_query = 1;
 }
 
-message QueryTestAdaptersResponse {
-  repeated TestAdapter test_adapters = 1;
-}
-
 // Message sent to create new test adapter in the metadata store.
 message CreateTestAdapterRequest {
   // Required. The metadata of the test adapter to be created.
   TestAdapter test_adapter = 1;
+}
+
+// Request to delete one TestAdapter by UUID.
+message DeleteTestAdapterRequest {
+  // Required. UUID of the TestAdapter to delete; aliases are not accepted.
+  string test_adapter_id = 1;
+  // If true, removes references from other metadata and test data, retaining
+  // those resources. Otherwise, those references prevent deletion.
+  bool force = 2;
+}
+
+// Request to delete TestAdapters using each item's force setting.
+message BatchDeleteTestAdaptersRequest {
+  // Required. TestAdapter delete requests with distinct identifiers.
+  // Returns INVALID_ARGUMENT if empty or invalid, or RESOURCE_EXHAUSTED if too large.
+  repeated DeleteTestAdapterRequest requests = 1;
+}
+
+// Message returned when getting the test adapter associated with the given identifier.
+message GetTestAdapterResponse {
+  // The metadata of the requested test adapter.
+  TestAdapter test_adapter = 1;
+}
+
+message QueryTestAdaptersResponse {
+  repeated TestAdapter test_adapters = 1;
 }
 
 // Message returned when creating new test adapter in the metadata store.
@@ -507,6 +685,12 @@ message CreateTestAdapterResponse {
   string test_adapter_id = 1;
 }
 
+// Empty response returned when a TestAdapter is deleted successfully.
+message DeleteTestAdapterResponse {}
+
+// Empty response returned when all TestAdapters are deleted successfully.
+message BatchDeleteTestAdaptersResponse {}
+
 message RegisterSchemaRequest {
   // The contents of the JSON or TOML schema. This should be a
   // well-formed JSON or TOML schema.  Validation will be performed, and
@@ -514,34 +698,45 @@ message RegisterSchemaRequest {
   string schema = 1;
 }
 
-message RegisterSchemaResponse {
-  // The id of the schema
+message ListSchemasRequest {
+}
+
+// Request to delete a Schema by its exact registered ID.
+message DeleteSchemaRequest {
+  // Required. Case-sensitive registered Schema ID.
   string schema_id = 1;
 }
 
-message ListSchemasRequest {
+// Request to delete Schemas by their registered IDs.
+message BatchDeleteSchemasRequest {
+  // Required. Schema delete requests with distinct identifiers.
+  // Returns INVALID_ARGUMENT if empty or invalid, or RESOURCE_EXHAUSTED if too large.
+  repeated DeleteSchemaRequest requests = 1;
+}
+
+message RegisterSchemaResponse {
+  // The id of the schema
+  string schema_id = 1;
 }
 
 message ListSchemasResponse {
   repeated ExtensionSchema schemas = 1;
 }
 
+// Empty response returned when a Schema is deleted successfully.
+message DeleteSchemaResponse {}
+
+// Empty response returned when all Schemas are deleted successfully.
+message BatchDeleteSchemasResponse {}
+
 message GetAliasRequest {
   string alias_name = 1;
-}
-
-message GetAliasResponse {
-  Alias alias = 1;
 }
 
 message QueryAliasesRequest {
   // an OData query string.  example "$filter=name eq 'Value'"
   // $expand is not supported
   string odata_query = 1;
-}
-
-message QueryAliasesResponse {
-  repeated Alias aliases = 1;
 }
 
 message CreateAliasRequest {
@@ -564,21 +759,38 @@ message CreateAliasRequest {
   }
 }
 
+// Request to delete an Alias by its exact registered name.
+message DeleteAliasRequest {
+  // Required. Case-sensitive registered Alias name.
+  string alias_name = 1;
+}
+
+// Request to delete Aliases by their registered names.
+message BatchDeleteAliasesRequest {
+  // Required. Alias delete requests with distinct names.
+  // Returns INVALID_ARGUMENT if empty or invalid, or RESOURCE_EXHAUSTED if too large.
+  repeated DeleteAliasRequest requests = 1;
+}
+
+message GetAliasResponse {
+  Alias alias = 1;
+}
+
+message QueryAliasesResponse {
+  repeated Alias aliases = 1;
+}
+
 message CreateAliasResponse {
   Alias alias = 1;
 }
 
-// Request to delete an Alias by its exact registered name.
-message DeleteAliasRequest {
-  // Required. Exact registered Alias name.
-  string alias_name = 1;
-}
-
 message DeleteAliasResponse {
-  // Whether the action unregistered the alias. In v1 mode, false means the alias did not exist;
-  // in v2 mode, an absent alias returns NOT_FOUND.
+  // Whether the alias was unregistered.
   bool unregistered = 1;
 }
+
+// Empty response returned when all Aliases are deleted successfully.
+message BatchDeleteAliasesResponse {}
 
 message CreateFromJsonDocumentRequest {
   // The JSON document containing the metadata entries to create.
@@ -616,211 +828,3 @@ message CreateFromJsonDocumentResponse {
   // If the object specified in the request exists, the existing object is returned; otherwise, the newly created object is returned.
   repeated TestAdapter test_adapters = 9;
 }
-
-// Request to delete one Operator by UUID.
-message DeleteOperatorRequest {
-  // Required. UUID of the Operator to delete; aliases are not accepted.
-  string operator_id = 1;
-  // If true, remove incoming links but retain linked test data and other metadata.
-  bool force = 2;
-}
-
-// Empty response returned when an Operator is deleted successfully.
-message DeleteOperatorResponse {}
-
-// Request to atomically delete Operators; each item has its own force value.
-message BatchDeleteOperatorsRequest {
-  // 1 to 1,000 Operator delete requests.
-  repeated DeleteOperatorRequest requests = 1;
-}
-
-// Empty response returned when all Operators are deleted successfully.
-message BatchDeleteOperatorsResponse {}
-
-// Request to delete one TestStation by UUID.
-message DeleteTestStationRequest {
-  // Required. UUID of the TestStation to delete; aliases are not accepted.
-  string test_station_id = 1;
-  // If true, remove incoming links but retain linked test data and other metadata.
-  bool force = 2;
-}
-
-// Empty response returned when a TestStation is deleted successfully.
-message DeleteTestStationResponse {}
-
-// Request to atomically delete TestStations; each item has its own force value.
-message BatchDeleteTestStationsRequest {
-  // 1 to 1,000 TestStation delete requests.
-  repeated DeleteTestStationRequest requests = 1;
-}
-
-// Empty response returned when all TestStations are deleted successfully.
-message BatchDeleteTestStationsResponse {}
-
-// Request to delete one TestDescription by UUID.
-message DeleteTestDescriptionRequest {
-  // Required. UUID of the TestDescription to delete; aliases are not accepted.
-  string test_description_id = 1;
-  // If true, remove incoming links but retain linked test data and other metadata.
-  bool force = 2;
-}
-
-// Empty response returned when a TestDescription is deleted successfully.
-message DeleteTestDescriptionResponse {}
-
-// Request to atomically delete TestDescriptions; each item has its own force value.
-message BatchDeleteTestDescriptionsRequest {
-  // 1 to 1,000 TestDescription delete requests.
-  repeated DeleteTestDescriptionRequest requests = 1;
-}
-
-// Empty response returned when all TestDescriptions are deleted successfully.
-message BatchDeleteTestDescriptionsResponse {}
-
-// Request to delete one UUT by UUID.
-message DeleteUutRequest {
-  // Required. UUID of the UUT to delete; aliases are not accepted.
-  string uut_id = 1;
-  // If true, remove incoming links and delete the UUT's owned UutInstances. Retain linked test
-  // data and TestDescriptions.
-  bool force = 2;
-}
-
-// Empty response returned when a UUT is deleted successfully.
-message DeleteUutResponse {}
-
-// Request to atomically delete UUTs; each item has its own force value.
-message BatchDeleteUutsRequest {
-  // 1 to 1,000 UUT delete requests.
-  repeated DeleteUutRequest requests = 1;
-}
-
-// Empty response returned when all UUTs are deleted successfully.
-message BatchDeleteUutsResponse {}
-
-// Request to delete one UutInstance by UUID.
-message DeleteUutInstanceRequest {
-  // Required. UUID of the UutInstance to delete; aliases are not accepted.
-  string uut_instance_id = 1;
-  // If true, remove incoming links but retain linked test data and the owning UUT.
-  bool force = 2;
-}
-
-// Empty response returned when a UutInstance is deleted successfully.
-message DeleteUutInstanceResponse {}
-
-// Request to atomically delete UutInstances; each item has its own force value.
-message BatchDeleteUutInstancesRequest {
-  // 1 to 1,000 UutInstance delete requests.
-  repeated DeleteUutInstanceRequest requests = 1;
-}
-
-// Empty response returned when all UutInstances are deleted successfully.
-message BatchDeleteUutInstancesResponse {}
-
-// Request to delete one SoftwareItem by UUID.
-message DeleteSoftwareItemRequest {
-  // Required. UUID of the SoftwareItem to delete; aliases are not accepted.
-  string software_item_id = 1;
-  // If true, remove incoming links but retain linked test data and other metadata.
-  bool force = 2;
-}
-
-// Empty response returned when a SoftwareItem is deleted successfully.
-message DeleteSoftwareItemResponse {}
-
-// Request to atomically delete SoftwareItems; each item has its own force value.
-message BatchDeleteSoftwareItemsRequest {
-  // 1 to 1,000 SoftwareItem delete requests.
-  repeated DeleteSoftwareItemRequest requests = 1;
-}
-
-// Empty response returned when all SoftwareItems are deleted successfully.
-message BatchDeleteSoftwareItemsResponse {}
-
-// Request to delete one HardwareItem by UUID.
-message DeleteHardwareItemRequest {
-  // Required. UUID of the HardwareItem to delete; aliases are not accepted.
-  string hardware_item_id = 1;
-  // If true, remove incoming links but retain linked test data and other metadata.
-  bool force = 2;
-}
-
-// Empty response returned when a HardwareItem is deleted successfully.
-message DeleteHardwareItemResponse {}
-
-// Request to atomically delete HardwareItems; each item has its own force value.
-message BatchDeleteHardwareItemsRequest {
-  // 1 to 1,000 HardwareItem delete requests.
-  repeated DeleteHardwareItemRequest requests = 1;
-}
-
-// Empty response returned when all HardwareItems are deleted successfully.
-message BatchDeleteHardwareItemsResponse {}
-
-// Request to delete one TestAdapter by UUID.
-message DeleteTestAdapterRequest {
-  // Required. UUID of the TestAdapter to delete; aliases are not accepted.
-  string test_adapter_id = 1;
-  // If true, remove incoming links but retain linked test data and other metadata.
-  bool force = 2;
-}
-
-// Empty response returned when a TestAdapter is deleted successfully.
-message DeleteTestAdapterResponse {}
-
-// Request to atomically delete TestAdapters; each item has its own force value.
-message BatchDeleteTestAdaptersRequest {
-  // 1 to 1,000 TestAdapter delete requests.
-  repeated DeleteTestAdapterRequest requests = 1;
-}
-
-// Empty response returned when all TestAdapters are deleted successfully.
-message BatchDeleteTestAdaptersResponse {}
-
-// Request to delete one Test by UUID.
-message DeleteTestRequest {
-  // Required. UUID of the Test to delete; aliases are not accepted.
-  string test_id = 1;
-  // If true, remove incoming links but retain linked test data and other metadata.
-  bool force = 2;
-}
-
-// Empty response returned when a Test is deleted successfully.
-message DeleteTestResponse {}
-
-// Request to atomically delete Tests; each item has its own force value.
-message BatchDeleteTestsRequest {
-  // 1 to 1,000 Test delete requests.
-  repeated DeleteTestRequest requests = 1;
-}
-
-// Empty response returned when all Tests are deleted successfully.
-message BatchDeleteTestsResponse {}
-
-// Request to delete a Schema by its exact registered ID.
-message DeleteSchemaRequest {
-  // Required. Exact registered Schema ID; this is not an ordinary UUID identifier.
-  string schema_id = 1;
-}
-
-// Empty response returned when a Schema is deleted successfully.
-message DeleteSchemaResponse {}
-
-// Request to atomically delete Schemas by their exact registered IDs; no force option is available.
-message BatchDeleteSchemasRequest {
-  // 1 to 1,000 Schema delete requests.
-  repeated DeleteSchemaRequest requests = 1;
-}
-
-// Empty response returned when all Schemas are deleted successfully.
-message BatchDeleteSchemasResponse {}
-
-// Request to atomically delete Aliases by their exact registered names; no force option is available.
-message BatchDeleteAliasesRequest {
-  // 1 to 1,000 Alias delete requests. Each uses the exact registered alias_name.
-  repeated DeleteAliasRequest requests = 1;
-}
-
-// Empty response returned when all Aliases are deleted successfully.
-message BatchDeleteAliasesResponse {}
