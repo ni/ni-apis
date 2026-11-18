@@ -7,6 +7,4 @@
 
 # Code owners for specific APIs (e.g. /ni/grpcdevice/)
 /ni/measurements/**/*.proto @rbell517 @ccifra @jasonmreding
-
-# LabVIEW companions use the same owners as their canonical APIs
 /labview/ni/measurements/**/*.proto @rbell517 @ccifra @jasonmreding
