@@ -154,13 +154,13 @@ service MetadataStoreService {
   rpc RegisterSchema(RegisterSchemaRequest) returns (RegisterSchemaResponse);
   // Lists the schemas that have been previously registered
   rpc ListSchemas(ListSchemasRequest) returns (ListSchemasResponse);
-  // Deletes a Schema and clears its associations with metadata.
-  // The metadata, extension attributes, and aliases are retained.
-  // Returns NOT_FOUND if the Schema does not exist.
+  // Deletes a Schema that is not referenced by metadata.
+  // Returns NOT_FOUND if the Schema does not exist, or FAILED_PRECONDITION
+  // if metadata still references the Schema.
   rpc DeleteSchema(DeleteSchemaRequest) returns (DeleteSchemaResponse);
-  // Deletes Schemas and clears their associations with metadata.
-  // The metadata, extension attributes, and aliases are retained.
-  // Returns NOT_FOUND for a missing Schema.
+  // Deletes Schemas that are not referenced by metadata.
+  // Returns NOT_FOUND for a missing Schema, or FAILED_PRECONDITION
+  // if metadata still references any requested Schema.
   rpc BatchDeleteSchemas(BatchDeleteSchemasRequest) returns (BatchDeleteSchemasResponse);
 
   // Gets the alias and its target (i.e., the underlying metadata that it represents)
