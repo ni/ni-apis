@@ -7,3 +7,4 @@
 
 # Code owners for specific APIs (e.g. /ni/grpcdevice/)
 /ni/measurements/**/*.proto @rbell517 @ccifra @jasonmreding
+/labview/ni/measurements/**/*.proto @rbell517 @ccifra @jasonmreding
