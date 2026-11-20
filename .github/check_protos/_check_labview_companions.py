@@ -146,16 +146,9 @@ def _compare_messages(name: str, canonical: descriptor_pb2.DescriptorProto, comp
             and canonical_field.type_name == STRUCT_TYPE
             and companion_field.type == FieldDescriptorProto.TYPE_BYTES
         )
-        
-        is_message_as_repeated = (
-            canonical_field.type == FieldDescriptorProto.TYPE_MESSAGE
-            and canonical_field.label == FieldDescriptorProto.LABEL_OPTIONAL
-            and companion_field.label == FieldDescriptorProto.LABEL_REPEATED
-            and not canonical_field.HasField("oneof_index")
-        )
         if (
             companion_field.name != canonical_field.name
-            or (companion_field.label != canonical_field.label and not is_message_as_repeated)
+            or companion_field.label != canonical_field.label
             or _oneof_name(canonical, canonical_field) != _oneof_name(companion, companion_field)
             or companion_field.proto3_optional != canonical_field.proto3_optional
             or not (

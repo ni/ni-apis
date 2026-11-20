@@ -39,13 +39,12 @@ A companion may differ from its canonical file only in these ways:
 |---|---|
 | A recursive well-known type (`google.protobuf.Struct`) | Replace it with `bytes` at the same field number and name. The bytes carry the binary-serialized message |
 | A field LabVIEW cannot use | Remove it and reserve both its number and its name |
-| A singular message field that a LabVIEW client must be able to omit | Make it `repeated` with the same name, number, and message type, outside any `oneof`. Zero or one element is wire-compatible with the singular field; list the field in the companion's `README.md` |
 | Imports | Import companions instead of canonical files, and drop imports that are no longer used |
 | Comments | Add notes for LabVIEW client authors |
 
 Everything else must match the canonical files: package, services, RPCs and
 their request and response types, messages, enums and enum values, and field
-names, numbers, types, labels, and `oneof` membership, except as allowed above.
+names, numbers, types, labels, and `oneof` membership.
 
 The LabVIEW generator and LabVIEW clients also require that, for every message
 reachable from a companion service:
