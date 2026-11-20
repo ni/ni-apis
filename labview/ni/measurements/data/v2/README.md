@@ -27,6 +27,7 @@ the canonical files. Only these items differ:
 | `software_items = 26`, `hardware_items = 27`, `test_adapters = 28` in `Measurement` | Reserved numbers and names | Same as above |
 | `repeated Step steps = 25` in `TestResult` | `reserved 25; reserved "steps";` | LabVIEW clients create each resource with its own call |
 | `repeated Measurement measurements = 25` in `Step` | `reserved 25; reserved "measurements";` | Same as above |
+| `MeasurementValue upper_limit = 8`, `MeasurementValue lower_limit = 9` in `Measurement` | `repeated MeasurementValue upper_limit = 8`, `repeated MeasurementValue lower_limit = 9` | A LabVIEW cluster cannot leave a limit absent, and the service rejects an empty limit. An empty array sends nothing |
 | `import "google/protobuf/struct.proto"` and `import "ni/measurements/metadata/v1/metadata_store.proto"` | Removed | No longer used |
 | Service file imports `data_store.proto` | Imports `data_store_labview.proto` | Points at the companion |
 
@@ -43,6 +44,10 @@ the canonical files. Only these items differ:
   `CreateMeasurement`, naming the parent with `test_result_id`,
   `parent_step_id`, or `step_id`. Rebuild the Step hierarchy from
   `parent_step_id` when reading.
+- Send `Measurement.upper_limit` and `lower_limit` as an array of zero or one
+  element. An empty array omits the limit; more than one element is merged
+  into one value by the service. When reading, a limit is present when its
+  array has one element.
 - Do not request removed fields in read masks. The service would send them, and
   the LabVIEW client would discard them as unknown fields.
 - In update and read masks, use the canonical field names.

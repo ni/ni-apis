@@ -19,6 +19,10 @@
 //   - Nested resource creation fields are reserved; create each resource with
 //     its own call that names its parent: TestResult.steps (25),
 //     Step.measurements (25).
+//   - Measurement.upper_limit (8) and lower_limit (9) are repeated, so a
+//     LabVIEW client can omit a limit by sending an empty array. Send zero or
+//     one element; zero or one element is wire-compatible with the canonical
+//     singular field.
 
 syntax = "proto3";
 
@@ -127,10 +131,12 @@ message Measurement {
   MeasurementValue value = 6;
   // Optional. Immutable engineering units for the scalar or primary value.
   string units = 7;
-  // Optional. Immutable.
-  MeasurementValue upper_limit = 8;
-  // Optional. Immutable.
-  MeasurementValue lower_limit = 9;
+  // Optional. Immutable. LabVIEW: zero elements omits the limit; send at most
+  // one element.
+  repeated MeasurementValue upper_limit = 8;
+  // Optional. Immutable. LabVIEW: zero elements omits the limit; send at most
+  // one element.
+  repeated MeasurementValue lower_limit = 9;
   // Optional on create. Use AddMeasurementMetadata or
   // RemoveMeasurementMetadata after creation; UpdateMeasurement rejects this
   // field in an update mask.
